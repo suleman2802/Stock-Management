@@ -21,7 +21,10 @@ class ListPageScaffold extends StatelessWidget {
         actions: [
           Padding(
             padding: const EdgeInsets.only(right: 10.0),
-            child: action,
+            child: CircleAvatar(
+              backgroundColor: Colors.white,
+              child: action,
+            ),
           )
         ],
         title: Text(
@@ -29,9 +32,7 @@ class ListPageScaffold extends StatelessWidget {
         ),
       ),
       bottomNavigationBar: BottomNavigationBar(
-        onTap: (value) {
-          
-        },
+        onTap: (value) {},
         items: [
           BottomNavigationBarItem(
               icon: Icon(

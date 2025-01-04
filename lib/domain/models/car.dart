@@ -7,6 +7,8 @@ class Car {
   final String carCompany;
   final CarFuelType carFuelType;
   final CarAutomation carAutomation;
+  final int fromYear;
+  final int toYear;
 
   Car({
     required this.carName,
@@ -14,6 +16,8 @@ class Car {
     required this.carCompany,
     required this.carFuelType,
     required this.carAutomation,
+    required this.fromYear,
+    required this.toYear,
   });
 
 }

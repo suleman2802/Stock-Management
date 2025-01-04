@@ -39,6 +39,7 @@ class AppThemes {
     )),
     //s useMaterial3: true,
     appBarTheme: const AppBarTheme(
+      centerTitle: true,
       actionsIconTheme: IconThemeData(color: Colors.white),
       titleTextStyle: TextStyle(
         color: Colors.white,

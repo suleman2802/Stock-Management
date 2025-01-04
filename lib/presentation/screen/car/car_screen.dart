@@ -1,22 +1,49 @@
 import 'package:flutter/material.dart';
+import 'package:stock_management_application/presentation/widgets/spaces/space.dart';
 
 import '../../widgets/layouts/page_scaffolds/list_page_scaffold.dart';
 
 class CarScreen extends StatelessWidget {
-  const CarScreen({super.key});
+  CarScreen({super.key});
+  final TextEditingController searchController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return ListPageScaffold(
       label: "Car",
-      body: ListView.builder(
-        itemCount: 15,
-        itemBuilder: (context, index) => ListTile(
-          title: Text("Car (automatic)"),
-          subtitle: Text("model $index"),
-          leading: Icon(Icons.car_rental),
-          trailing: Icon(Icons.edit),
-        ),
+      action: IconButton(
+        icon: Icon(Icons.add, color: Theme.of(context).primaryColor),
+        onPressed: () {
+          // Implement add functionality here
+        },
+      ),
+      body: Column(
+        children: [
+          SearchBar(
+            controller: searchController,
+            onChanged: (text) {
+              // Implement search functionality here
+            },
+          ),
+          mediumHeightSpace(),
+          Expanded(
+            child: ListView.builder(
+              itemCount: 15,
+              itemBuilder: (context, index) => ListTile(
+                title: Text("Car"),
+                subtitle: Text("model $index"),
+                leading: CircleAvatar(
+                  backgroundColor: Theme.of(context).primaryColor,
+                  child: Text(
+                    "A",
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ),
+                trailing: Icon(Icons.edit),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

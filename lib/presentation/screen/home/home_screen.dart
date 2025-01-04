@@ -18,10 +18,31 @@ class HomeScreen extends StatelessWidget {
           mainAxisSpacing: 8.0,
         ),
         children: [
-         DashboardTileGrid(title: "Stock",icon: Icons.inventory,onTap: (){}),
-         DashboardTileGrid(title: "Purchase",icon: Icons.arrow_outward_rounded,onTap: (){}),
-         DashboardTileGrid(title: "Car",icon: Icons.car_crash,onTap: (){}),
-         DashboardTileGrid(title: "Size",icon: Icons.miscellaneous_services_sharp,onTap: (){}),
+          DashboardTileGrid(
+            title: "Stock",
+            icon: Icons.inventory,
+            onTap: () {},
+          ),
+          DashboardTileGrid(
+            title: "Purchase",
+            icon: Icons.arrow_outward_rounded,
+            onTap: () {},
+          ),
+          DashboardTileGrid(
+            title: "Car",
+            icon: Icons.car_crash,
+            onTap: () {},
+          ),
+          DashboardTileGrid(
+            title: "Size",
+            icon: Icons.miscellaneous_services_sharp,
+            onTap: () {},
+          ),
+          DashboardTileGrid(
+            title: "Reports",
+            icon: Icons.query_stats_sharp,
+            onTap: () {},
+          ),
         ],
       ),
     );
