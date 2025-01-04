@@ -71,8 +71,15 @@ class AppThemes {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.all(Radius.circular(30)),
       ),
-      
     ),
+    iconTheme: const IconThemeData(
+      color: Color(0xFF0B56C4),
+    ),
+    // bottomNavigationBarTheme: const BottomNavigationBarThemeData(
+    //   backgroundColor: Color(0xFF0B56C4),
+    //   selectedItemColor: Colors.white,
+    //   unselectedItemColor: Colors.black,
+    // ),
   );
 
   static final darkTheme = ThemeData(

@@ -28,6 +28,28 @@ class ListPageScaffold extends StatelessWidget {
           label,
         ),
       ),
+      bottomNavigationBar: BottomNavigationBar(
+        onTap: (value) {
+          
+        },
+        items: [
+          BottomNavigationBarItem(
+              icon: Icon(
+                Icons.home,
+              ),
+              label: "Home"),
+          BottomNavigationBarItem(
+              icon: Icon(
+                Icons.inventory,
+              ),
+              label: "Stock"),
+          BottomNavigationBarItem(
+              icon: Icon(
+                Icons.arrow_outward,
+              ),
+              label: "Purchase"),
+        ],
+      ),
       body: Padding(
         padding: EdgeInsets.all(20),
         child: body,
