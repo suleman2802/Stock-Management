@@ -5,6 +5,10 @@ import 'firebase_options.dart';
 import 'presentation/screen/authentication/authentication_screen.dart';
 import 'presentation/screen/car/car_screen.dart';
 import 'presentation/screen/home/home_screen.dart';
+import 'presentation/screen/purchase/purchase_screen.dart';
+import 'presentation/screen/size/size_screen.dart';
+import 'presentation/screen/stock/stock_screen.dart';
+import 'utilities/app_routes/app_routes.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -22,7 +26,15 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Stock Management',
       theme: AppThemes.lightTheme,
-      home: CarScreen(),
+      home: AuthenticationScreen(),
+      routes: {
+        homeScreen: (context) => HomeScreen(),
+        authenticationScreen: (context) => AuthenticationScreen(),
+        carScreen: (context) => CarScreen(),
+        purchaseScreen: (context) => PurchaseScreen(),
+        stockScreen: (context) => StockScreen(),
+        sizeScreen: (context) => SizeScreen(),
+      },
     );
   }
 }

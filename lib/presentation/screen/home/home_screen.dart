@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../utilities/app_routes/app_routes.dart';
 import '../../widgets/layouts/page_scaffolds/list_page_scaffold.dart';
 import 'widgets/dashboard_tile_grid.dart';
 
@@ -31,7 +32,7 @@ class HomeScreen extends StatelessWidget {
           DashboardTileGrid(
             title: "Car",
             icon: Icons.car_crash,
-            onTap: () {},
+            onTap: () => navigateToCarScreen(context),
           ),
           DashboardTileGrid(
             title: "Size",

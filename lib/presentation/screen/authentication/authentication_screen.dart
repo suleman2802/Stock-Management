@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:stock_management_application/utilities/app_routes/app_routes.dart';
 
 import '../../../utilities/app_alerts/app_alerts.dart';
 import '../../widgets/layouts/page_scaffolds/list_page_scaffold.dart';
@@ -34,7 +35,7 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> {
             pinController3.text.trim() +
             pinController4.text.trim() ==
         "0202") {
-  
+      navigateToHomeScreen(context);
     }
     AppAlertUtil.showError(context, "Invalid pin");
   }

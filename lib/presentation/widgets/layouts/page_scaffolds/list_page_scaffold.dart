@@ -32,7 +32,15 @@ class ListPageScaffold extends StatelessWidget {
         ),
       ),
       bottomNavigationBar: BottomNavigationBar(
-        onTap: (value) {},
+        onTap: (value) {
+          if (value == 0) {
+            Navigator.pushNamed(context, "/home");
+          } else if (value == 1) {
+            Navigator.pushNamed(context, "/stock");
+          } else if (value == 2) {
+            Navigator.pushNamed(context, "/purchase");
+          }
+        },
         items: [
           BottomNavigationBarItem(
               icon: Icon(
