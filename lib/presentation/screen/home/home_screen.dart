@@ -11,40 +11,43 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListPageScaffold(
       label: "Home",
-      body: GridView(
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2,
-          childAspectRatio: 1.0,
-          crossAxisSpacing: 10.0,
-          mainAxisSpacing: 8.0,
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: GridView(
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2,
+            childAspectRatio: 1.0,
+            crossAxisSpacing: 10.0,
+            mainAxisSpacing: 8.0,
+          ),
+          children: [
+            DashboardTileGrid(
+              title: "Stock",
+              icon: Icons.inventory,
+              onTap: () => navigateToStockScreen(context),
+            ),
+            DashboardTileGrid(
+              title: "Purchase",
+              icon: Icons.arrow_outward_rounded,
+              onTap: () => navigateToPurchaseScreen(context),
+            ),
+            DashboardTileGrid(
+              title: "Car",
+              icon: Icons.car_crash,
+              onTap: () => navigateToCarScreen(context),
+            ),
+            DashboardTileGrid(
+              title: "Size",
+              icon: Icons.miscellaneous_services_sharp,
+              onTap: () => navigateToSizeScreen(context),
+            ),
+            DashboardTileGrid(
+              title: "Reports",
+              icon: Icons.query_stats_sharp,
+              onTap: () => navigateToReportsScreen(context),
+            ),
+          ],
         ),
-        children: [
-          DashboardTileGrid(
-            title: "Stock",
-            icon: Icons.inventory,
-            onTap: () {},
-          ),
-          DashboardTileGrid(
-            title: "Purchase",
-            icon: Icons.arrow_outward_rounded,
-            onTap: () {},
-          ),
-          DashboardTileGrid(
-            title: "Car",
-            icon: Icons.car_crash,
-            onTap: () => navigateToCarScreen(context),
-          ),
-          DashboardTileGrid(
-            title: "Size",
-            icon: Icons.miscellaneous_services_sharp,
-            onTap: () {},
-          ),
-          DashboardTileGrid(
-            title: "Reports",
-            icon: Icons.query_stats_sharp,
-            onTap: () {},
-          ),
-        ],
       ),
     );
   }

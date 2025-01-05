@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:stock_management_application/presentation/widgets/spaces/space.dart';
+import 'package:stock_management_application/utilities/app_routes/app_routes.dart';
 
 import '../../widgets/layouts/page_scaffolds/list_page_scaffold.dart';
 
@@ -14,16 +15,26 @@ class CarScreen extends StatelessWidget {
       action: IconButton(
         icon: Icon(Icons.add, color: Theme.of(context).primaryColor),
         onPressed: () {
-          // Implement add functionality here
+          navigateToCarFormScreen(context);
         },
       ),
       body: Column(
         children: [
-          SearchBar(
-            controller: searchController,
-            onChanged: (text) {
-              // Implement search functionality here
-            },
+          Container(
+            color: Theme.of(context).appBarTheme.backgroundColor,
+            child: Padding(
+              padding: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+              child: SearchBar(
+                onTap: () {},
+                controller: searchController,
+                hintText: "Search by car name",
+                onChanged: (value) {},
+                leading: IconButton(
+                  icon: Icon(Icons.search),
+                  onPressed: () {},
+                ),
+              ),
+            ),
           ),
           mediumHeightSpace(),
           Expanded(

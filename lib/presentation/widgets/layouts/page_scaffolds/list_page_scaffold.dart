@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:stock_management_application/utilities/app_routes/app_routes.dart';
 
 class ListPageScaffold extends StatelessWidget {
   const ListPageScaffold({
@@ -18,15 +19,17 @@ class ListPageScaffold extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        actions: [
-          Padding(
-            padding: const EdgeInsets.only(right: 10.0),
-            child: CircleAvatar(
-              backgroundColor: Colors.white,
-              child: action,
-            ),
-          )
-        ],
+        actions: action != null
+            ? [
+                Padding(
+                  padding: const EdgeInsets.only(right: 10.0),
+                  child: CircleAvatar(
+                    backgroundColor: Colors.white,
+                    child: action,
+                  ),
+                )
+              ]
+            : [],
         title: Text(
           label,
         ),
@@ -34,11 +37,11 @@ class ListPageScaffold extends StatelessWidget {
       bottomNavigationBar: BottomNavigationBar(
         onTap: (value) {
           if (value == 0) {
-            Navigator.pushNamed(context, "/home");
+            Navigator.pushNamed(context, homeScreen);
           } else if (value == 1) {
-            Navigator.pushNamed(context, "/stock");
+            Navigator.pushNamed(context, stockScreen);
           } else if (value == 2) {
-            Navigator.pushNamed(context, "/purchase");
+            Navigator.pushNamed(context, purchaseScreen);
           }
         },
         items: [
@@ -59,10 +62,7 @@ class ListPageScaffold extends StatelessWidget {
               label: "Purchase"),
         ],
       ),
-      body: Padding(
-        padding: EdgeInsets.all(20),
-        child: body,
-      ),
+      body: body,
       floatingActionButton: floatingActionButton,
     );
   }

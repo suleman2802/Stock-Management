@@ -36,8 +36,9 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> {
             pinController4.text.trim() ==
         "0202") {
       navigateToHomeScreen(context);
+    } else {
+      AppAlertUtil.showError(context, "Invalid pin");
     }
-    AppAlertUtil.showError(context, "Invalid pin");
   }
 
   @override

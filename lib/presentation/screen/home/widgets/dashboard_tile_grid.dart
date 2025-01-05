@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../../widgets/styling/bordered_container.dart';
+
 class DashboardTileGrid extends StatelessWidget {
   const DashboardTileGrid({
     super.key,
@@ -16,12 +18,7 @@ class DashboardTileGrid extends StatelessWidget {
     return GridTile(
       child: InkWell(
         onTap: onTap,
-        child: Container(
-          decoration: BoxDecoration(
-            border:
-                Border.all(color: Theme.of(context).primaryColor, width: 2.0),
-            borderRadius: BorderRadius.circular(10),
-          ),
+        child: BorderedContainer(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
