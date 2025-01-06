@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:stock_management_application/presentation/widgets/spaces/space.dart';
 import 'package:stock_management_application/utilities/app_routes/app_routes.dart';
 
 import '../../../domain/models/car.dart';
@@ -122,29 +123,36 @@ class _CarFormScreenState extends State<CarFormScreen> {
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Text(
-                        "Car Automation Type",
+                        "Automation Type",
                         style: TextStyle(fontWeight: FontWeight.bold),
                       ),
-                      DropdownButton<CarAutomation>(
-                        hint: Text('Select Car Automation Type'),
-                        value: _selectedCarAutomationType,
-                        onChanged: (CarAutomation? newValue) {
-                          setState(() {
-                            _selectedCarAutomationType = newValue!;
-                          });
-                        },
-                        items: CarAutomation.values
-                            .map((CarAutomation carAutomationType) {
-                          return DropdownMenuItem<CarAutomation>(
-                            value: carAutomationType,
-                            child: Text(
-                              carAutomationType.toString().split('.').last,
-                              style: Theme.of(context).textTheme.bodyMedium,
-                            ),
-                          );
-                        }).toList(),
+                      smallWidthSpace(),
+                      Expanded(
+                        child: DropdownButton<CarAutomation>(
+                          hint: Text('Select Car Automation Type'),
+                          value: _selectedCarAutomationType,
+
+                          isExpanded:
+                              true, // This ensures the dropdown takes up the full width of its container
+                          onChanged: (CarAutomation? newValue) {
+                            setState(() {
+                              _selectedCarAutomationType = newValue!;
+                            });
+                          },
+                          items: CarAutomation.values
+                              .map((CarAutomation carAutomationType) {
+                            return DropdownMenuItem<CarAutomation>(
+                              value: carAutomationType,
+                              child: Text(
+                                carAutomationType.toString().split('.').last,
+                                style: Theme.of(context).textTheme.bodyMedium,
+                              ),
+                            );
+                          }).toList(),
+                        ),
                       ),
                     ],
                   ),
