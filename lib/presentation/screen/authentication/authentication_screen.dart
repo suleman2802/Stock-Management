@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:stock_management_application/utilities/app_routes/app_routes.dart';
 
 import '../../../utilities/app_alerts/app_alerts.dart';
-import '../../widgets/layouts/page_scaffolds/list_page_scaffold.dart';
+import '../../../utilities/app_routes/app_routes.dart';
 import '../../widgets/spaces/space.dart';
 import 'widgets/single_input_pin.dart';
 
@@ -43,8 +42,7 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return ListPageScaffold(
-      label: "Authentication",
+    return Scaffold(
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,

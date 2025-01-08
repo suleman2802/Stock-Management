@@ -1,22 +1,23 @@
 import 'package:flutter/material.dart';
+import '../../../domain/models/fin.dart';
 import '../../../domain/models/size.dart';
 import '../../widgets/layouts/page_scaffolds/list_page_scaffold.dart';
-import 'widgets/size_dialogue.dart';
+import 'widgets/fin_dialogue.dart';
 
-class SizeScreen extends StatelessWidget {
-  const SizeScreen({super.key});
+class FinScreen extends StatelessWidget {
+  const FinScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return ListPageScaffold(
-      label: "Size",
+      label: "Fin Screen",
       curentIndex: 0,
       action: IconButton(
         icon: Icon(Icons.add, color: Theme.of(context).primaryColor),
         onPressed: () {
           showDialog(
             context: context,
-            builder: (context) => SizeDialogue(),
+            builder: (context) => FinDialogue(),
           );
         },
       ),
@@ -28,15 +29,12 @@ class SizeScreen extends StatelessWidget {
             onPressed: () {
               showDialog(
                 context: context,
-                builder: (context) => SizeDialogue(
-                  size: Size(width: index),
+                builder: (context) => FinDialogue(
+                  fin: Fin(finSize: index),
                 ),
               );
             },
-            icon: Icon(
-              Icons.edit,
-              color: Theme.of(context).primaryColor,
-            ),
+            icon: Icon(Icons.edit, color: Theme.of(context).primaryColor),
           ),
         ),
       ),

@@ -6,6 +6,7 @@ class ListPageScaffold extends StatelessWidget {
     super.key,
     required this.label,
     required this.body,
+    required this.curentIndex,
     this.action,
     this.floatingActionButton,
   });
@@ -14,6 +15,7 @@ class ListPageScaffold extends StatelessWidget {
   final Widget? action;
   final Widget body;
   final Widget? floatingActionButton;
+  final int curentIndex;
 
   @override
   Widget build(BuildContext context) {
@@ -44,6 +46,7 @@ class ListPageScaffold extends StatelessWidget {
             Navigator.pushNamed(context, purchaseScreen);
           }
         },
+        currentIndex: curentIndex,
         items: [
           BottomNavigationBarItem(
               icon: Icon(

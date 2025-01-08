@@ -11,6 +11,7 @@ class CarScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListPageScaffold(
+      curentIndex: 0,
       label: "Car",
       action: IconButton(
         icon: Icon(Icons.add, color: Theme.of(context).primaryColor),

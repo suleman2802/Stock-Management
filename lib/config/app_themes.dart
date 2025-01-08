@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 class AppThemes {
   static final lightTheme = ThemeData(
-    
     brightness: Brightness.light,
     scaffoldBackgroundColor: Colors.white,
     canvasColor: const Color.fromARGB(255, 197, 204, 248),
@@ -76,6 +75,11 @@ class AppThemes {
     iconTheme: const IconThemeData(
       color: Color(0xFF0B56C4),
     ),
+    // iconButtonTheme: IconButtonThemeData(
+    //   style: ButtonStyle(
+    //     iconColor: WidgetStateProperty.all(Color(0xFF0B56C4)),
+    //   ),
+    // ),
     // bottomNavigationBarTheme: const BottomNavigationBarThemeData(
     //   backgroundColor: Color(0xFF0B56C4),
     //   selectedItemColor: Colors.white,
@@ -104,7 +108,7 @@ class AppThemes {
         fontSize: 18,
       ),
       bodyMedium: TextStyle(color: Colors.white70, fontSize: 18),
-      displayLarge:TextStyle(
+      displayLarge: TextStyle(
         color: Colors.white,
         fontWeight: FontWeight.bold,
         fontSize: 26,
@@ -134,7 +138,7 @@ class AppThemes {
       backgroundColor: Color(0xFF0B56C4),
       actionTextColor: Colors.white,
     ),
-    cardColor: null,//const Color.fromARGB(255, 166, 167, 169),
+    cardColor: null, //const Color.fromARGB(255, 166, 167, 169),
     outlinedButtonTheme: OutlinedButtonThemeData(
       style: OutlinedButton.styleFrom(
         minimumSize: const Size(50, 50),

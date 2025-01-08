@@ -11,6 +11,7 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListPageScaffold(
       label: "Home",
+      curentIndex: 0,
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: GridView(
@@ -32,14 +33,19 @@ class HomeScreen extends StatelessWidget {
               onTap: () => navigateToPurchaseScreen(context),
             ),
             DashboardTileGrid(
-              title: "Car",
-              icon: Icons.car_crash,
-              onTap: () => navigateToCarScreen(context),
+              title: "Fin",
+              icon: Icons.line_weight_rounded,
+              onTap: () => navigateToFinScreen(context),
             ),
             DashboardTileGrid(
               title: "Size",
               icon: Icons.miscellaneous_services_sharp,
               onTap: () => navigateToSizeScreen(context),
+            ),
+            DashboardTileGrid(
+              title: "Car",
+              icon: Icons.car_crash,
+              onTap: () => navigateToCarScreen(context),
             ),
             DashboardTileGrid(
               title: "Reports",
