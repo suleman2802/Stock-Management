@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class NumberInputField extends StatelessWidget {
-  const NumberInputField(
+class TextInputField extends StatelessWidget {
+  const TextInputField(
       {super.key,
       required this.label,
       required this.controller,
@@ -13,11 +13,10 @@ class NumberInputField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.symmetric(vertical:4 ),
+      margin: const EdgeInsets.symmetric(vertical: 4),
       child: TextFormField(
         validator: validator,
         controller: controller,
-        keyboardType: TextInputType.number,
         decoration: InputDecoration(
           labelText: label,
         ),

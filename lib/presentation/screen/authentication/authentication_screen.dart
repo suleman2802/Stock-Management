@@ -20,7 +20,6 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> {
 
   @override
   void dispose() {
-    // TODO: implement dispose
     super.dispose();
     pinController1.dispose();
     pinController2.dispose();

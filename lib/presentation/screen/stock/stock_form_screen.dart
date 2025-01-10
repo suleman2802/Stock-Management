@@ -14,9 +14,9 @@ class StockFormScreen extends StatefulWidget {
 
 class _StockFormScreenState extends State<StockFormScreen> {
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
-//? variables
-  String date = DateFormat('dd MM yyyy').format(DateTime.now());
-  String time = DateFormat('hh:mm').format(DateTime.now());
+
+  DateTime? _selectedDate = DateTime.now();
+  String? _selectedTime;
 
 //? controllers
   final TextEditingController profitInWholesalePriceController =
@@ -34,7 +34,6 @@ class _StockFormScreenState extends State<StockFormScreen> {
 
   @override
   void dispose() {
-    // TODO: implement dispose
     super.dispose();
     profitInWholesalePriceController.dispose();
     profitInRetailPriceController.dispose();
@@ -44,6 +43,40 @@ class _StockFormScreenState extends State<StockFormScreen> {
     wholesaleProfitMarginController.dispose();
     unitCostController.dispose();
     quantityController.dispose();
+  }
+
+  Future<void> _startDatePicker() async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: _selectedDate ?? DateTime.now(),
+      firstDate: DateTime(DateTime.now().year),
+      lastDate: DateTime(2501),
+    );
+    if (picked != null && picked != _selectedDate) {
+      setState(() {
+        _selectedDate = picked;
+      });
+    }
+  }
+
+  String getFormattedDate(DateTime date) {
+    final DateFormat formatter = DateFormat('dd-MM-yyyy');
+    return formatter.format(date);
+  }
+
+  void _timePicker() {
+    showTimePicker(
+      context: context,
+      initialTime: TimeOfDay.now(),
+    ).then((pickedTime) {
+      if (pickedTime == null) {
+        return;
+      } else {
+        setState(() {
+          _selectedTime = pickedTime.format(context).toString(); //pickedTime;
+        });
+      }
+    });
   }
 
   @override
@@ -69,12 +102,50 @@ class _StockFormScreenState extends State<StockFormScreen> {
               key: formKey,
               child: Column(
                 children: [
-                  Padding(padding: const EdgeInsets.all(8.0), child: Row(
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text("Stock Buy Date"),
-                      Text("Time: $time"),
+                      Row(
+                        //mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: <Widget>[
+                          Text(
+                            _selectedDate == null
+                                ? 'Pick up Date'
+                                : getFormattedDate(_selectedDate!),
+                            style: const TextStyle(
+                                fontSize: 20, fontWeight: FontWeight.w500),
+                          ),
+                          IconButton(
+                              icon: Icon(
+                                Icons.calendar_month,
+                                size: 30,
+                                color: Theme.of(context).primaryColor,
+                              ),
+                              onPressed: _startDatePicker)
+                        ],
+                      ),
+                      Row(
+                        //mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: <Widget>[
+                          Text(
+                            _selectedTime == null
+                                ? 'Pick up Time'
+                                : _selectedTime!,
+                            //!.format(context).toString(),
+                            style: const TextStyle(
+                                fontSize: 20, fontWeight: FontWeight.w500),
+                          ),
+                          IconButton(
+                              icon: Icon(
+                                Icons.lock_clock,
+                                size: 30,
+                                color: Theme.of(context).primaryColor,
+                              ),
+                              onPressed: _timePicker),
+                        ],
+                      ),
                     ],
-                  )),
+                  ),
                   NumberInputField(
                     controller: quantityController,
                     label: "Quantity",

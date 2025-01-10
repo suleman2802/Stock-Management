@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:stock_management_application/presentation/widgets/spaces/space.dart';
-import 'package:stock_management_application/utilities/app_routes/app_routes.dart';
 
 import '../../../domain/models/car.dart';
+import '../../../utilities/app_routes/app_routes.dart';
+import '../../widgets/input_feilds/number_input_field.dart';
+import '../../widgets/input_feilds/text_input_field.dart';
 import '../../widgets/layouts/page_scaffolds/list_page_scaffold.dart';
+import '../../widgets/spaces/space.dart';
 import '../../widgets/styling/bordered_container.dart';
 
 class CarFormScreen extends StatefulWidget {
@@ -27,7 +29,6 @@ class _CarFormScreenState extends State<CarFormScreen> {
 
   @override
   void dispose() {
-    // TODO: implement dispose
     super.dispose();
     carNameController.dispose();
     carModelController.dispose();
@@ -59,35 +60,41 @@ class _CarFormScreenState extends State<CarFormScreen> {
               key: formKey,
               child: Column(
                 children: [
-                  TextFormField(
+                  TextInputField(
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter Car name';
+                      } else if (value.length <= 2) {
+                        return 'Car name must be more than 2 characters';
+                      }
+                      return null;
+                    },
                     controller: carNameController,
-                    decoration: InputDecoration(
-                      labelText: "Enter Car Name",
-                    ),
+                    label: "Enter Car Name",
                   ),
-                  TextFormField(
+                  TextInputField(
                     controller: carModelController,
-                    decoration: InputDecoration(
-                      labelText: "Enter Car Model",
-                    ),
+                    label: "Enter Car Model",
                   ),
-                  TextFormField(
+                  TextInputField(
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter Car company name';
+                      } else if (value.length <= 2) {
+                        return 'Compnay name must be more than 2 characters';
+                      }
+                      return null;
+                    },
                     controller: carCompanyController,
-                    decoration: InputDecoration(
-                      labelText: "Enter Car Company",
-                    ),
+                    label: "Enter Car Company",
                   ),
-                  TextFormField(
+                  NumberInputField(
                     controller: fromYearController,
-                    decoration: InputDecoration(
-                      labelText: "Enter From Year",
-                    ),
+                    label: "Enter From Year",
                   ),
-                  TextFormField(
+                  NumberInputField(
                     controller: toYearController,
-                    decoration: InputDecoration(
-                      labelText: "Enter To Year",
-                    ),
+                    label: "Enter To Year",
                   ),
                   Padding(
                     padding: const EdgeInsets.all(5.0),

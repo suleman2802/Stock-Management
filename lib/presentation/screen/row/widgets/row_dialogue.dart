@@ -2,15 +2,15 @@ import 'package:flutter/material.dart';
 import '../../../../domain/models/size.dart';
 import '../../../../utilities/app_routes/app_routes.dart';
 
-class SizeDialogue extends StatefulWidget {
-  const SizeDialogue({super.key, this.size});
+class RowDialogue extends StatefulWidget {
+  const RowDialogue({super.key, this.size});
   final Size? size;
 
   @override
-  State<SizeDialogue> createState() => _SizeDialogueState();
+  State<RowDialogue> createState() => _RowDialogueState();
 }
 
-class _SizeDialogueState extends State<SizeDialogue> {
+class _RowDialogueState extends State<RowDialogue> {
   final TextEditingController sizeController = TextEditingController();
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   @override

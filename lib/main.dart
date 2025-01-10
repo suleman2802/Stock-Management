@@ -9,7 +9,7 @@ import 'presentation/screen/fin/fin_screen.dart';
 import 'presentation/screen/home/home_screen.dart';
 import 'presentation/screen/purchase/purchase_screen.dart';
 import 'presentation/screen/reports/reports_screen.dart';
-import 'presentation/screen/size/size_screen.dart';
+import 'presentation/screen/row/row_screen.dart';
 import 'presentation/screen/stock/stock_form_screen.dart';
 import 'presentation/screen/stock/stock_screen.dart';
 import 'utilities/app_routes/app_routes.dart';
@@ -30,7 +30,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Stock Management',
       theme: AppThemes.lightTheme,
-      // home: AuthenticationScreen(),
+      //  home: AuthenticationScreen(),
       home: HomeScreen(),
       routes: {
         homeScreen: (context) => HomeScreen(),
@@ -38,7 +38,7 @@ class MyApp extends StatelessWidget {
         carScreen: (context) => CarScreen(),
         purchaseScreen: (context) => PurchaseScreen(),
         stockScreen: (context) => StockScreen(),
-        sizeScreen: (context) => SizeScreen(),
+        rowScreen: (context) => RowScreen(),
         reportsScreen: (context) => ReportsScreen(),
         carFormScreen: (context) => CarFormScreen(),
         stockFormScreen: (context) => StockFormScreen(),

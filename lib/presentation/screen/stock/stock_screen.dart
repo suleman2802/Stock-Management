@@ -15,7 +15,6 @@ class _StockScreenState extends State<StockScreen> {
   final TextEditingController searchController = TextEditingController();
   @override
   void dispose() {
-    // TODO: implement dispose
     super.dispose();
     searchController.dispose();
   }

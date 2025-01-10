@@ -40,7 +40,7 @@ class HomeScreen extends StatelessWidget {
             DashboardTileGrid(
               title: "Size",
               icon: Icons.miscellaneous_services_sharp,
-              onTap: () => navigateToSizeScreen(context),
+              onTap: () => navigateToRowScreen(context),
             ),
             DashboardTileGrid(
               title: "Car",

@@ -5,6 +5,14 @@ class AppThemes {
     brightness: Brightness.light,
     scaffoldBackgroundColor: Colors.white,
     canvasColor: const Color.fromARGB(255, 197, 204, 248),
+    inputDecorationTheme: const InputDecorationTheme(
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.all(Radius.circular(20)),
+      ),
+      hintStyle: TextStyle(
+        fontSize: 12,
+      ),
+    ),
     textTheme: const TextTheme(
       titleLarge: TextStyle(
         fontWeight: FontWeight.bold,
@@ -29,7 +37,7 @@ class AppThemes {
     colorScheme: ColorScheme.fromSeed(
       brightness: Brightness.light,
       seedColor: const Color(0xFF0B56C4),
-      background: const Color(0xfff3f4fa),
+      surface: const Color(0xfff3f4fa),
     ),
     elevatedButtonTheme: const ElevatedButtonThemeData(
         style: ButtonStyle(
@@ -61,11 +69,7 @@ class AppThemes {
         ),
       ),
     ),
-    inputDecorationTheme: const InputDecorationTheme(
-      hintStyle: TextStyle(
-        fontSize: 12,
-      ),
-    ),
+
     cardTheme: const CardTheme(
       elevation: 10,
       shape: RoundedRectangleBorder(
@@ -75,6 +79,7 @@ class AppThemes {
     iconTheme: const IconThemeData(
       color: Color(0xFF0B56C4),
     ),
+
     // iconButtonTheme: IconButtonThemeData(
     //   style: ButtonStyle(
     //     iconColor: WidgetStateProperty.all(Color(0xFF0B56C4)),

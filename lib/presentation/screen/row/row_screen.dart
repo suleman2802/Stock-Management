@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import '../../../domain/models/size.dart';
 import '../../widgets/layouts/page_scaffolds/list_page_scaffold.dart';
-import 'widgets/size_dialogue.dart';
+import 'widgets/row_dialogue.dart';
 
-class SizeScreen extends StatelessWidget {
-  const SizeScreen({super.key});
+class RowScreen extends StatelessWidget {
+  const RowScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +16,7 @@ class SizeScreen extends StatelessWidget {
         onPressed: () {
           showDialog(
             context: context,
-            builder: (context) => SizeDialogue(),
+            builder: (context) => RowDialogue(),
           );
         },
       ),
@@ -28,7 +28,7 @@ class SizeScreen extends StatelessWidget {
             onPressed: () {
               showDialog(
                 context: context,
-                builder: (context) => SizeDialogue(
+                builder: (context) => RowDialogue(
                   size: Size(width: index),
                 ),
               );

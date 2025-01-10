@@ -5,7 +5,7 @@ const String authenticationScreen = "./authentication_screen";
 const String carScreen = "./car_screen";
 const String stockScreen = "./stock_screen";
 const String purchaseScreen = "./purchase_screen";
-const String sizeScreen = "./size_screen";
+const String rowScreen = "./row_screen";
 const String reportsScreen = "./reports_screen";
 const String carFormScreen = "./car_form_screen";
 const String stockFormScreen = "./stock_form_screen";
@@ -35,8 +35,8 @@ void navigateToPurchaseScreen(BuildContext context) {
   Navigator.pushNamed(context, purchaseScreen);
 }
 
-void navigateToSizeScreen(BuildContext context) {
-  Navigator.pushNamed(context, sizeScreen);
+void navigateToRowScreen(BuildContext context) {
+  Navigator.pushNamed(context, rowScreen);
 }
 
 void navigateToReportsScreen(BuildContext context) {

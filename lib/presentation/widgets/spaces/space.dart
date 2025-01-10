@@ -4,6 +4,10 @@ SizedBox empty() {
   return const SizedBox();
 }
 
+SizedBox smallestHeightSpace() {
+  return const SizedBox(height: 5.0);
+}
+
 SizedBox smallHeightSpace() {
   return const SizedBox(height: 8.0);
 }
