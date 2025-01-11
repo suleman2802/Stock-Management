@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../../domain/models/size.dart';
+import '../../../domain/models/rows.dart';
 import '../../widgets/layouts/page_scaffolds/list_page_scaffold.dart';
 import 'widgets/row_dialogue.dart';
 
@@ -29,7 +29,7 @@ class RowScreen extends StatelessWidget {
               showDialog(
                 context: context,
                 builder: (context) => RowDialogue(
-                  size: Size(width: index),
+                  rows: Rows(noOfRows: index),
                 ),
               );
             },

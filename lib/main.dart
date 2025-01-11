@@ -9,7 +9,7 @@ import 'presentation/screen/fin/fin_screen.dart';
 import 'presentation/screen/home/home_screen.dart';
 import 'presentation/screen/purchase/purchase_screen.dart';
 import 'presentation/screen/reports/reports_screen.dart';
-import 'presentation/screen/row/row_screen.dart';
+import 'presentation/screen/rows/rows_screen.dart';
 import 'presentation/screen/stock/stock_form_screen.dart';
 import 'presentation/screen/stock/stock_screen.dart';
 import 'utilities/app_routes/app_routes.dart';

@@ -1,4 +1,4 @@
-import 'size.dart';
+import 'rows.dart';
 import 'car.dart';
 
 class Stock {
@@ -12,7 +12,7 @@ class Stock {
   final double unitCost;
   final DateTime dateTimeOfAddingStock;
   final int quantity;
-  final Size size;
+  final Rows rows;
   final Car car;
 
   Stock({
@@ -26,7 +26,7 @@ class Stock {
     required this.unitCost,
     required this.dateTimeOfAddingStock,
     required this.quantity,
-    required this.size,
+    required this.rows,
     required this.car,
   });
 }

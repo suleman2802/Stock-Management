@@ -8,7 +8,10 @@ class BorderedContainer extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        border: Border.all(color: Theme.of(context).primaryColor, width: 3.0,),
+        border: Border.all(
+          color: Theme.of(context).primaryColor,
+          width: 3.0,
+        ),
         borderRadius: BorderRadius.circular(10),
       ),
       child: child,

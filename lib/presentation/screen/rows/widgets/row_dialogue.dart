@@ -1,30 +1,30 @@
 import 'package:flutter/material.dart';
-import '../../../../domain/models/size.dart';
+import '../../../../domain/models/rows.dart';
 import '../../../../utilities/app_routes/app_routes.dart';
 
 class RowDialogue extends StatefulWidget {
-  const RowDialogue({super.key, this.size});
-  final Size? size;
+  const RowDialogue({super.key, this.rows});
+  final Rows? rows;
 
   @override
   State<RowDialogue> createState() => _RowDialogueState();
 }
 
 class _RowDialogueState extends State<RowDialogue> {
-  final TextEditingController sizeController = TextEditingController();
+  final TextEditingController rowsController = TextEditingController();
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   @override
   void initState() {
     super.initState();
-    widget.size != null
-        ? sizeController.text = widget.size!.width.toString()
-        : sizeController.text = "";
+    widget.rows != null
+        ? rowsController.text = widget.rows!.noOfRows.toString()
+        : rowsController.text = "";
   }
 
   @override
   void dispose() {
     super.dispose();
-    sizeController.dispose();
+    rowsController.dispose();
   }
 
   @override
@@ -38,7 +38,7 @@ class _RowDialogueState extends State<RowDialogue> {
         ElevatedButton(
           onPressed: () {
             if (formKey.currentState!.validate()) {
-              //? save size here
+              //? save rows here
               navigateBack(context);
             }
           },
@@ -46,7 +46,7 @@ class _RowDialogueState extends State<RowDialogue> {
         ),
       ],
       title: Text(
-        "Size (width)",
+        "Rows",
         style: Theme.of(context).textTheme.titleMedium,
       ),
       content: Padding(
@@ -55,19 +55,19 @@ class _RowDialogueState extends State<RowDialogue> {
           key: formKey,
           child: TextFormField(
             decoration: InputDecoration(
-              labelText: "Enter Size in mm",
+              labelText: "Enter Rows in mm",
             ),
             validator: (value) {
               if (value == null || value.isEmpty) {
-                return "Size is required";
+                return "Number of Rows is required";
               }
               if (int.parse(value) <= 0) {
-                return "Size must be greater than 0";
+                return "Number of Rows must be greater than 0";
               }
               return null;
             },
             keyboardType: TextInputType.number,
-            controller: sizeController,
+            controller: rowsController,
           ),
         ),
       ),

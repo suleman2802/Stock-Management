@@ -41,7 +41,7 @@ class ListPageScaffold extends StatelessWidget {
           if (value == 0) {
             navigateToHomeScreen(context);
           } else if (value == 1) {
-            navigateToHomeScreen(context);
+            navigateToStockScreen(context);
           } else if (value == 2) {
             navigateToPurchaseScreen(context);
           }
