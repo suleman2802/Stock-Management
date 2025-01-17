@@ -1,25 +1,25 @@
 import 'package:flutter/material.dart';
 
 import '../../../config/dimensions.dart';
-import '../../../domain/models/car.dart';
+import '../../../domain/models/rows.dart';
 import '../../../utilities/app_routes/app_routes.dart';
 import '../styling/bordered_container.dart';
 import '../styling/bottom_sheet_header.dart';
 import '../styling/round_icon_button.dart';
 
-class CarSelectionTileDialogue extends StatefulWidget {
-  const CarSelectionTileDialogue({super.key, this.car});
-  final Car? car;
+class RowSelectionTileDialogue extends StatefulWidget {
+  const RowSelectionTileDialogue({super.key, this.rows});
+  final Rows? rows;
 
   @override
-  State<CarSelectionTileDialogue> createState() =>
-      _CarSelectionTileDialogueState();
+  State<RowSelectionTileDialogue> createState() =>
+      _RowSelectionTileDialogueState();
 }
 
-class _CarSelectionTileDialogueState extends State<CarSelectionTileDialogue> {
+class _RowSelectionTileDialogueState extends State<RowSelectionTileDialogue> {
   @override
   Widget build(BuildContext context) {
-    return widget.car != null
+    return widget.rows != null
         ? ListTile(
             onTap: () {
               showModalBottomSheet(
@@ -28,17 +28,16 @@ class _CarSelectionTileDialogueState extends State<CarSelectionTileDialogue> {
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
                 ),
-                builder: (context) => CarListBottomSheet(),
+                builder: (context) => RowListBottomSheet(),
               );
             },
             leading: CircleAvatar(
               backgroundColor: Theme.of(context).primaryColor,
               child: Text(
-                widget.car!.carCompany[0].toUpperCase(),
+                widget.rows!.noOfRows.toString(),
               ),
             ),
-            title: Text(widget.car!.carName),
-            subtitle: Text(widget.car!.carModel),
+            title: Text(widget.rows!.noOfRows.toString()),
           )
         : BorderedContainer(
             child: Center(
@@ -51,18 +50,18 @@ class _CarSelectionTileDialogueState extends State<CarSelectionTileDialogue> {
                       borderRadius:
                           BorderRadius.vertical(top: Radius.circular(16)),
                     ),
-                    builder: (context) => CarListBottomSheet(),
+                    builder: (context) => RowListBottomSheet(),
                   );
                 },
-                child: Text("Select Car"),
+                child: Text("Select Fin"),
               ),
             ),
           );
   }
 }
 
-class CarListBottomSheet extends StatelessWidget {
-  const CarListBottomSheet({super.key});
+class RowListBottomSheet extends StatelessWidget {
+  const RowListBottomSheet({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -79,7 +78,7 @@ class CarListBottomSheet extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    "Select Car",
+                    "Select Number of Rows",
                     style: Theme.of(context).textTheme.titleMedium!.copyWith(
                           color: Colors.white,
                         ),
@@ -96,12 +95,11 @@ class CarListBottomSheet extends StatelessWidget {
             child: ListView.builder(
               itemCount: 4, // Replace with the actual number of cars
               itemBuilder: (context, index) => ListTile(
-                title: Text("Car $index"),
-                subtitle: Text("Model $index"),
+                title: Text("rows $index"),
                 leading: CircleAvatar(
                   backgroundColor: Theme.of(context).primaryColor,
                   child: Text(
-                    "A",
+                    "3",
                     style: TextStyle(color: Colors.white),
                   ),
                 ),

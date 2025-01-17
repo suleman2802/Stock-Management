@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import '../../../../domain/models/radiator.dart';
 import '../../../../utilities/app_routes/app_routes.dart';
 import '../../../widgets/car_selection_tile_dialogue/car_selection_tile_dialogue.dart';
+import '../../../widgets/fin_selection_tile_dialogue/fin_selection_tile_dialogue.dart';
 import '../../../widgets/input_feilds/number_input_field.dart';
 import '../../../widgets/input_feilds/text_input_field.dart';
+import '../../../widgets/row_selection_tile_dialogue/row_selection_tile_dialogue.dart';
 import '../../../widgets/spaces/space.dart';
 
 class RadiatorDialogue extends StatefulWidget {
@@ -65,6 +67,11 @@ class _RadiatorDialogueState extends State<RadiatorDialogue> {
             child: Column(
               children: [
                 CarSelectionTileDialogue(),
+                smallestHeightSpace(),
+                FinSelectionTileDialogue(),
+                smallestHeightSpace(),
+                RowSelectionTileDialogue(),
+                smallestHeightSpace(),
                 TextInputField(
                   validator: (value) {
                     if (value == null || value.isEmpty) {

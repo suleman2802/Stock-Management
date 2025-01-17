@@ -19,7 +19,10 @@ class RadiatorScreen extends StatelessWidget {
         iconData: Icons.add,
         onPress: () {
           // add new radiator
-          navigateToRadiatorFormScreen(context);
+          showDialog(
+            context: context,
+            builder: (context) => RadiatorDialogue(),
+          );
         },
       ),
       body: Column(
@@ -46,7 +49,7 @@ class RadiatorScreen extends StatelessWidget {
               itemCount: 15,
               itemBuilder: (context, index) => ListTile(
                 onTap: () {
-                  // view radiator
+                  // view & edit radiator
                   showDialog(
                     context: context,
                     builder: (context) => RadiatorDialogue(),
