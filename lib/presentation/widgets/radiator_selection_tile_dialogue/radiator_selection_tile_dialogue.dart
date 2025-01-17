@@ -1,25 +1,26 @@
 import 'package:flutter/material.dart';
 
 import '../../../config/dimensions.dart';
-import '../../../domain/models/car.dart';
+import '../../../domain/models/radiator.dart';
 import '../../../utilities/app_routes/app_routes.dart';
 import '../styling/bordered_container.dart';
 import '../styling/bottom_sheet_header.dart';
 import '../styling/round_icon_button.dart';
 
-class CarSelectionTileDialogue extends StatefulWidget {
-  const CarSelectionTileDialogue({super.key, this.car});
-  final Car? car;
+class RadiatorSelectionTileDialogue extends StatefulWidget {
+  const RadiatorSelectionTileDialogue({super.key, this.radiator});
+  final Radiator? radiator;
 
   @override
-  State<CarSelectionTileDialogue> createState() =>
-      _CarSelectionTileDialogueState();
+  State<RadiatorSelectionTileDialogue> createState() =>
+      _RadiatorSelectionTileDialogueState();
 }
 
-class _CarSelectionTileDialogueState extends State<CarSelectionTileDialogue> {
+class _RadiatorSelectionTileDialogueState
+    extends State<RadiatorSelectionTileDialogue> {
   @override
   Widget build(BuildContext context) {
-    return widget.car != null
+    return widget.radiator != null
         ? ListTile(
             onTap: () {
               showModalBottomSheet(
@@ -28,17 +29,17 @@ class _CarSelectionTileDialogueState extends State<CarSelectionTileDialogue> {
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
                 ),
-                builder: (context) => CarListBottomSheet(),
+                builder: (context) => RadiatorListBottomSheet(),
               );
             },
             leading: CircleAvatar(
               backgroundColor: Theme.of(context).primaryColor,
               child: Text(
-                widget.car!.carCompany[0].toUpperCase(),
+                widget.radiator!.car.carCompany.substring(1).toUpperCase(),
               ),
             ),
-            title: Text(widget.car!.carName),
-            subtitle: Text(widget.car!.carModel),
+            title: Text(widget.radiator!.car.carName),
+            subtitle: Text(widget.radiator!.size),
           )
         : BorderedContainer(
             child: Center(
@@ -51,7 +52,7 @@ class _CarSelectionTileDialogueState extends State<CarSelectionTileDialogue> {
                       borderRadius:
                           BorderRadius.vertical(top: Radius.circular(16)),
                     ),
-                    builder: (context) => CarListBottomSheet(),
+                    builder: (context) => RadiatorListBottomSheet(),
                   );
                 },
                 child: Text("Select Car"),
@@ -61,14 +62,14 @@ class _CarSelectionTileDialogueState extends State<CarSelectionTileDialogue> {
   }
 }
 
-class CarListBottomSheet extends StatelessWidget {
-  const CarListBottomSheet({super.key});
+class RadiatorListBottomSheet extends StatelessWidget {
+  const RadiatorListBottomSheet({super.key});
 
   @override
   Widget build(BuildContext context) {
     final dimensions = Dimensions(context);
     return SizedBox(
-      height: dimensions.height50,
+      height: dimensions.height80,
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -79,7 +80,7 @@ class CarListBottomSheet extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    "Select Car",
+                    "Select Radiator",
                     style: Theme.of(context).textTheme.titleMedium!.copyWith(
                           color: Colors.white,
                         ),
@@ -96,15 +97,14 @@ class CarListBottomSheet extends StatelessWidget {
             child: ListView.builder(
               itemCount: 4, // Replace with the actual number of cars
               itemBuilder: (context, index) => ListTile(
-                title: Text("Tesla"),
-                subtitle: Text("Model $index"),
                 leading: CircleAvatar(
                   backgroundColor: Theme.of(context).primaryColor,
                   child: Text(
-                    "A",
-                    style: TextStyle(color: Colors.white),
+                    "H",
                   ),
                 ),
+                title: Text("car name"),
+                subtitle: Text("37 x 8 x 9"),
                 onTap: () {
                   navigateBack(context);
                 },

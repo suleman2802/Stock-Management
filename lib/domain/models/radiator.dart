@@ -5,7 +5,7 @@ import 'car.dart';
 enum CarFuelType { petrol, diesel }
 enum CarAutomation {automatic,manual}
 
-class Radidator {
+class Radiator {
   final String id;
   final String size;
   final CarFuelType carFuelType;
@@ -16,7 +16,7 @@ class Radidator {
   final Fin fin;
   final Car car;
 
-  Radidator({
+  Radiator({
     required this.id,
     required this.size,
     required this.carFuelType,

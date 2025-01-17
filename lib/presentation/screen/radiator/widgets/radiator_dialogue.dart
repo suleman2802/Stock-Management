@@ -9,8 +9,8 @@ import '../../../widgets/row_selection_tile_dialogue/row_selection_tile_dialogue
 import '../../../widgets/spaces/space.dart';
 
 class RadiatorDialogue extends StatefulWidget {
-  const RadiatorDialogue({super.key, this.radidator});
-  final Radidator? radidator;
+  const RadiatorDialogue({super.key, this.radiator});
+  final Radiator? radiator;
 
   @override
   State<RadiatorDialogue> createState() => _RadiatorDialogueState();
@@ -52,7 +52,7 @@ class _RadiatorDialogueState extends State<RadiatorDialogue> {
               navigateBack(context);
             }
           },
-          child: Text(widget.radidator != null ? "Edit" : "Save"),
+          child: Text(widget.radiator != null ? "Edit" : "Save"),
         ),
       ],
       title: Text(
@@ -68,9 +68,9 @@ class _RadiatorDialogueState extends State<RadiatorDialogue> {
               children: [
                 CarSelectionTileDialogue(),
                 smallestHeightSpace(),
-                FinSelectionTileDialogue(),
-                smallestHeightSpace(),
                 RowSelectionTileDialogue(),
+                smallestHeightSpace(),
+                FinSelectionTileDialogue(),
                 smallestHeightSpace(),
                 TextInputField(
                   validator: (value) {

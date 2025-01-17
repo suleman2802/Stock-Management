@@ -11,7 +11,7 @@ class RadiatorStock {
   final double wholesaleProfitMargin;
   final double unitCost;
   final String company;
-  final Radidator radidator;
+  final Radiator radiator;
   RadiatorStock({
     required this.id,
     required this.quantity,
@@ -23,6 +23,6 @@ class RadiatorStock {
     required this.wholesaleProfitMargin,
     required this.unitCost,
     required this.company,
-    required this.radidator,
+    required this.radiator,
   });
 }

@@ -53,7 +53,7 @@ class _RowSelectionTileDialogueState extends State<RowSelectionTileDialogue> {
                     builder: (context) => RowListBottomSheet(),
                   );
                 },
-                child: Text("Select Fin"),
+                child: Text("Select Rows"),
               ),
             ),
           );
