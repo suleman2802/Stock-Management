@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../domain/models/rows.dart';
 import '../../widgets/layouts/page_scaffolds/list_page_scaffold.dart';
+import '../../widgets/styling/round_icon_button.dart';
 import 'widgets/rows_dialogue.dart';
 
 class RowScreen extends StatelessWidget {
@@ -11,9 +12,9 @@ class RowScreen extends StatelessWidget {
     return ListPageScaffold(
       label: "Row",
       curentIndex: 0,
-      action: IconButton(
-        icon: Icon(Icons.add, color: Theme.of(context).primaryColor),
-        onPressed: () {
+      action: RoundIconButton(
+        iconData: Icons.add, 
+        onPress: () {
           showDialog(
             context: context,
             builder: (context) => RowDialogue(),

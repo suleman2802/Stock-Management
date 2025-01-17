@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../utilities/app_routes/app_routes.dart';
 import '../../widgets/layouts/page_scaffolds/list_page_scaffold.dart';
 import '../../widgets/spaces/space.dart';
+import '../../widgets/styling/round_icon_button.dart';
 import 'widgets/radiator_dialogue.dart';
 
 class RadiatorScreen extends StatelessWidget {
@@ -14,9 +15,9 @@ class RadiatorScreen extends StatelessWidget {
     return ListPageScaffold(
       curentIndex: 0,
       label: "Radiators",
-      action: IconButton(
-        icon: Icon(Icons.add, color: Theme.of(context).primaryColor),
-        onPressed: () {
+      action: RoundIconButton(
+        iconData: Icons.add,
+        onPress: () {
           // add new radiator
           navigateToRadiatorFormScreen(context);
         },

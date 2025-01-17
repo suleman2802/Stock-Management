@@ -21,17 +21,12 @@ class ListPageScaffold extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        actions: action != null
-            ? [
-                Padding(
-                  padding: const EdgeInsets.only(right: 10.0),
-                  child: CircleAvatar(
-                    backgroundColor: Colors.white,
-                    child: action,
-                  ),
-                )
-              ]
-            : [],
+        actions: [
+          Padding(
+            padding: const EdgeInsets.only(right: 10.0),
+            child: action,
+          )
+        ],
         title: Text(
           label,
         ),

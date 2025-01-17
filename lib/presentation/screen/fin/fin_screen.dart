@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../domain/models/fin.dart';
 import '../../widgets/layouts/page_scaffolds/list_page_scaffold.dart';
+import '../../widgets/styling/round_icon_button.dart';
 import 'widgets/fin_dialogue.dart';
 
 class FinScreen extends StatelessWidget {
@@ -11,9 +12,9 @@ class FinScreen extends StatelessWidget {
     return ListPageScaffold(
       label: "Fin Screen",
       curentIndex: 0,
-      action: IconButton(
-        icon: Icon(Icons.add, color: Theme.of(context).primaryColor),
-        onPressed: () {
+      action: RoundIconButton(
+        iconData: Icons.add,
+        onPress: () {
           showDialog(
             context: context,
             builder: (context) => FinDialogue(),

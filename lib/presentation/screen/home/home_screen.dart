@@ -48,8 +48,8 @@ class HomeScreen extends StatelessWidget {
               onTap: () => navigateToFinScreen(context),
             ),
             DashboardTileGrid(
-              title: "Size",
-              icon: Icons.miscellaneous_services_sharp,
+              title: "Row",
+              icon: Icons.view_column_rounded,
               onTap: () => navigateToRowScreen(context),
             ),
             DashboardTileGrid(

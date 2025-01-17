@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../utilities/app_routes/app_routes.dart';
 import '../../widgets/layouts/page_scaffolds/list_page_scaffold.dart';
 import '../../widgets/spaces/space.dart';
+import '../../widgets/styling/round_icon_button.dart';
 
 class StockScreen extends StatefulWidget {
   const StockScreen({super.key});
@@ -24,9 +25,9 @@ class _StockScreenState extends State<StockScreen> {
     return ListPageScaffold(
       curentIndex: 1,
       label: "Stock",
-      action: IconButton(
-        icon: Icon(Icons.add, color: Theme.of(context).primaryColor),
-        onPressed: () {
+      action: RoundIconButton(
+        iconData: Icons.add,
+        onPress: () {
           navigateToStockFormScreen(context);
         },
       ),

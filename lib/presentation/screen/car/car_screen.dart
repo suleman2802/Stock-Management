@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../domain/models/car.dart';
 import '../../widgets/layouts/page_scaffolds/list_page_scaffold.dart';
 import '../../widgets/spaces/space.dart';
+import '../../widgets/styling/round_icon_button.dart';
 import 'widgets/car_dialogue.dart';
 
 class CarScreen extends StatelessWidget {
@@ -14,9 +15,9 @@ class CarScreen extends StatelessWidget {
     return ListPageScaffold(
       curentIndex: 0,
       label: "Car",
-      action: IconButton(
-        icon: Icon(Icons.add, color: Theme.of(context).primaryColor),
-        onPressed: () {
+      action: RoundIconButton(
+        iconData: Icons.add,
+        onPress: () {
           showDialog(
             context: context,
             builder: (context) => CarDialogue(),

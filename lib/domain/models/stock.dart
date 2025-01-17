@@ -1,5 +1,5 @@
 import 'car.dart';
-import 'radiatorStock.dart';
+import 'radiator_stock.dart';
 
 class Stock {
   final String id;
