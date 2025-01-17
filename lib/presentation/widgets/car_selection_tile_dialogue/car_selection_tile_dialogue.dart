@@ -66,23 +66,6 @@ class CarSelectionTileDialogue extends StatelessWidget {
       subtitle: Text(
         car.carModel,
       ),
-      trailing: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          CircleAvatar(
-            backgroundColor: Theme.of(context).primaryColor,
-            child: Text(
-              car.carFuelType.toString().substring(1),
-            ),
-          ),
-          CircleAvatar(
-            backgroundColor: Theme.of(context).primaryColor,
-            child: Text(
-              car.carAutomation.toString().substring(1),
-            ),
-          )
-        ],
-      ),
     );
   }
 }
