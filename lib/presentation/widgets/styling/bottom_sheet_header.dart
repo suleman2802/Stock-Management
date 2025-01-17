@@ -14,8 +14,8 @@ class BottomSheetHeader extends StatelessWidget {
         decoration: BoxDecoration(
           color: Theme.of(context).primaryColor,
           borderRadius: const BorderRadius.only(
-            topLeft: Radius.circular(20),
-            topRight: Radius.circular(20),
+            topLeft: Radius.circular(15),
+            topRight: Radius.circular(15),
           ),
         ),
         child: child);

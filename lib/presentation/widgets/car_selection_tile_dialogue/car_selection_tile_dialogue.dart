@@ -90,10 +90,13 @@
 //   }
 // }
 import 'package:flutter/material.dart';
-import 'package:stock_management_application/presentation/widgets/styling/bordered_container.dart';
-import 'package:stock_management_application/utilities/app_routes/app_routes.dart';
+import 'package:stock_management_application/presentation/widgets/styling/bottom_sheet_header.dart';
+import 'package:stock_management_application/presentation/widgets/styling/round_icon_button.dart';
 
+import '../../../config/dimensions.dart';
 import '../../../domain/models/car.dart';
+import '../../../utilities/app_routes/app_routes.dart';
+import '../styling/bordered_container.dart';
 
 class CarSelectionTileDialogue extends StatefulWidget {
   const CarSelectionTileDialogue({super.key, this.car});
@@ -154,21 +157,32 @@ class CarListBottomSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+    final dimensions = Dimensions(context);
+    return SizedBox(
+      height: dimensions.height80,
       child: Column(
         mainAxisSize:
             MainAxisSize.min, // Ensures the bottom sheet wraps content
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text("Select Car"),
-              IconButton(
-                icon: Icon(Icons.check),
-                onPressed: () {},
+          BottomSheetHeader(
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    "Select Car",
+                    style: Theme.of(context).textTheme.titleMedium!.copyWith(
+                          color: Colors.white,
+                        ),
+                  ),
+                  RoundIconButton(
+                    iconData: Icons.check,
+                    onPress: () {},
+                  ),
+                ],
               ),
-            ],
+            ),
           ),
           Expanded(
             child: ListView.builder(
