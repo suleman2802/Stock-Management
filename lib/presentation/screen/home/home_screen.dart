@@ -33,6 +33,16 @@ class HomeScreen extends StatelessWidget {
               onTap: () => navigateToPurchaseScreen(context),
             ),
             DashboardTileGrid(
+              title: "Radiators",
+              icon: Icons.apps_rounded,
+              onTap: () => navigateToRadiatorScreen(context),
+            ),
+            DashboardTileGrid(
+              title: "Car",
+              icon: Icons.car_crash,
+              onTap: () => navigateToCarScreen(context),
+            ),
+            DashboardTileGrid(
               title: "Fin",
               icon: Icons.line_weight_rounded,
               onTap: () => navigateToFinScreen(context),
@@ -41,11 +51,6 @@ class HomeScreen extends StatelessWidget {
               title: "Size",
               icon: Icons.miscellaneous_services_sharp,
               onTap: () => navigateToRowScreen(context),
-            ),
-            DashboardTileGrid(
-              title: "Car",
-              icon: Icons.car_crash,
-              onTap: () => navigateToCarScreen(context),
             ),
             DashboardTileGrid(
               title: "Reports",

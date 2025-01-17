@@ -9,6 +9,8 @@ const String rowScreen = "./row_screen";
 const String reportsScreen = "./reports_screen";
 const String stockFormScreen = "./stock_form_screen";
 const String finScreen = "./fin_screen";
+const String radiatorScreen = "./radiator_screen";
+const String radiatorFormScreen = "./radiator_form_screen";
 
 void navigateBack(BuildContext context){
   Navigator.pop(context);
@@ -48,4 +50,12 @@ void navigateToStockFormScreen(BuildContext context) {
 
 void navigateToFinScreen(BuildContext context) {
   Navigator.pushNamed(context, finScreen);
+}
+
+void navigateToRadiatorScreen(BuildContext context) {
+  Navigator.pushNamed(context, radiatorScreen);
+}
+
+void navigateToRadiatorFormScreen(BuildContext context) {
+  Navigator.pushNamed(context, radiatorFormScreen);
 }

@@ -23,17 +23,16 @@ class FinScreen extends StatelessWidget {
       body: ListView.builder(
         itemCount: 11,
         itemBuilder: (context, index) => ListTile(
+          onTap: () => showDialog(
+            context: context,
+            builder: (context) => FinDialogue(
+              fin: Fin(finSize: index),
+            ),
+          ),
           title: Text("$index mm"),
           trailing: IconButton(
-            onPressed: () {
-              showDialog(
-                context: context,
-                builder: (context) => FinDialogue(
-                  fin: Fin(finSize: index),
-                ),
-              );
-            },
-            icon: Icon(Icons.edit, color: Theme.of(context).primaryColor),
+            onPressed: () {},
+            icon: Icon(Icons.delete_forever, color: Colors.red),
           ),
         ),
       ),

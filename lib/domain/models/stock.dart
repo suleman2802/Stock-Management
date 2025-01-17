@@ -2,7 +2,7 @@ import 'car.dart';
 import 'radiatorStock.dart';
 
 class Stock {
-  final int id;
+  final String id;
   final DateTime date;
   final DateTime time;
   final Car car;

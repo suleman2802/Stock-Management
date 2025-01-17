@@ -1,5 +1,4 @@
-enum CarFuelType { petrol, diesel }
-enum CarAutomation {automatic,manual}
+
 
 class Car {
   final String id;

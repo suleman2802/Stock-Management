@@ -7,6 +7,8 @@ import 'presentation/screen/car/car_screen.dart';
 import 'presentation/screen/fin/fin_screen.dart';
 import 'presentation/screen/home/home_screen.dart';
 import 'presentation/screen/purchase/purchase_screen.dart';
+import 'presentation/screen/radiator/radiator_form_screen.dart';
+import 'presentation/screen/radiator/radiator_screen.dart';
 import 'presentation/screen/reports/reports_screen.dart';
 import 'presentation/screen/rows/rows_screen.dart';
 import 'presentation/screen/stock/stock_form_screen.dart';
@@ -41,6 +43,8 @@ class MyApp extends StatelessWidget {
         reportsScreen: (context) => ReportsScreen(),
         stockFormScreen: (context) => StockFormScreen(),
         finScreen: (context) => FinScreen(),
+        radiatorScreen: (context) => RadiatorScreen(),
+        radiatorFormScreen: (context) => RadiatorFormScreen(),
       },
     );
   }

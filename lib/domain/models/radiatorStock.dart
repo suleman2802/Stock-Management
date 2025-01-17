@@ -1,6 +1,7 @@
 import 'radiator.dart';
 
 class RadiatorStock {
+  final String id;
   final int quantity;
   final double profitInWholesalePrice;
   final double profitInRetailPrice;
@@ -9,8 +10,10 @@ class RadiatorStock {
   final double wholesaleRate;
   final double wholesaleProfitMargin;
   final double unitCost;
+  final String company;
   final Radidator radidator;
   RadiatorStock({
+    required this.id,
     required this.quantity,
     required this.profitInWholesalePrice,
     required this.profitInRetailPrice,
@@ -19,6 +22,7 @@ class RadiatorStock {
     required this.wholesaleRate,
     required this.wholesaleProfitMargin,
     required this.unitCost,
+    required this.company,
     required this.radidator,
   });
 }

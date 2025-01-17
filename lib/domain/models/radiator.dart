@@ -1,14 +1,19 @@
+import 'fin.dart';
 import 'rows.dart';
 import 'car.dart';
 
+enum CarFuelType { petrol, diesel }
+enum CarAutomation {automatic,manual}
+
 class Radidator {
-  final int id;
+  final String id;
   final String size;
   final CarFuelType carFuelType;
   final CarAutomation carAutomation;
   final int fromYear;
   final int toYear;
   final Rows rows;
+  final Fin fin;
   final Car car;
 
   Radidator({
@@ -20,5 +25,6 @@ class Radidator {
     required this.toYear,
     required this.rows,
     required this.car,
+    required this.fin,
   });
 }

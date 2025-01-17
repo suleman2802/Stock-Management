@@ -9,7 +9,7 @@ class RowScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListPageScaffold(
-      label: "Size",
+      label: "Row",
       curentIndex: 0,
       action: IconButton(
         icon: Icon(Icons.add, color: Theme.of(context).primaryColor),
@@ -23,19 +23,18 @@ class RowScreen extends StatelessWidget {
       body: ListView.builder(
         itemCount: 11,
         itemBuilder: (context, index) => ListTile(
+          onTap: () => showDialog(
+            context: context,
+            builder: (context) => RowDialogue(
+              rows: Rows(noOfRows: index),
+            ),
+          ),
           title: Text("$index mm"),
           trailing: IconButton(
-            onPressed: () {
-              showDialog(
-                context: context,
-                builder: (context) => RowDialogue(
-                  rows: Rows(noOfRows: index),
-                ),
-              );
-            },
+            onPressed: () {},
             icon: Icon(
-              Icons.edit,
-              color: Theme.of(context).primaryColor,
+              Icons.delete_forever,
+              color: Colors.red,
             ),
           ),
         ),
