@@ -3,7 +3,6 @@ import 'package:firebase_core/firebase_core.dart';
 import 'config/app_themes.dart';
 import 'firebase_options.dart';
 import 'presentation/screen/authentication/authentication_screen.dart';
-import 'presentation/screen/car/car_form_screen.dart';
 import 'presentation/screen/car/car_screen.dart';
 import 'presentation/screen/fin/fin_screen.dart';
 import 'presentation/screen/home/home_screen.dart';
@@ -40,7 +39,6 @@ class MyApp extends StatelessWidget {
         stockScreen: (context) => StockScreen(),
         rowScreen: (context) => RowScreen(),
         reportsScreen: (context) => ReportsScreen(),
-        carFormScreen: (context) => CarFormScreen(),
         stockFormScreen: (context) => StockFormScreen(),
         finScreen: (context) => FinScreen(),
       },

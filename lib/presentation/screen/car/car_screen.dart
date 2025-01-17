@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:stock_management_application/presentation/widgets/spaces/space.dart';
-import 'package:stock_management_application/utilities/app_routes/app_routes.dart';
 
+import '../../../domain/models/car.dart';
 import '../../widgets/layouts/page_scaffolds/list_page_scaffold.dart';
+import '../../widgets/spaces/space.dart';
+import 'widgets/car_dialogue.dart';
 
 class CarScreen extends StatelessWidget {
   CarScreen({super.key});
@@ -16,7 +17,10 @@ class CarScreen extends StatelessWidget {
       action: IconButton(
         icon: Icon(Icons.add, color: Theme.of(context).primaryColor),
         onPressed: () {
-          navigateToCarFormScreen(context);
+          showDialog(
+            context: context,
+            builder: (context) => CarDialogue(),
+          );
         },
       ),
       body: Column(
@@ -42,16 +46,32 @@ class CarScreen extends StatelessWidget {
             child: ListView.builder(
               itemCount: 15,
               itemBuilder: (context, index) => ListTile(
+                onTap: () {
+                  showDialog(
+                    context: context,
+                    builder: (context) => CarDialogue(
+                      car: Car(
+                        id: "-4",
+                        carCompany: "test",
+                        carModel: "test",
+                        carName: "test",
+                      ),
+                    ),
+                  );
+                },
                 title: Text("Car"),
                 subtitle: Text("model $index"),
                 leading: CircleAvatar(
                   backgroundColor: Theme.of(context).primaryColor,
                   child: Text(
-                    "A",
+                    "H",
                     style: TextStyle(color: Colors.white),
                   ),
                 ),
-                trailing: Icon(Icons.edit),
+                trailing: Icon(
+                  Icons.delete_forever,
+                  color: Colors.red,
+                ),
               ),
             ),
           ),
