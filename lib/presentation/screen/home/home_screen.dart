@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:stock_management_application/domain/models/fin.dart';
+import 'package:stock_management_application/domain/repositories/fin/abstract_fin_repository/abstract_fin_repository.dart';
 
 import '../../../utilities/app_routes/app_routes.dart';
 import '../../widgets/layouts/page_scaffolds/list_page_scaffold.dart';
@@ -55,7 +58,10 @@ class HomeScreen extends StatelessWidget {
             DashboardTileGrid(
               title: "Reports",
               icon: Icons.query_stats_sharp,
-              onTap: () => navigateToReportsScreen(context),
+              onTap: () => context.read<FinRepository>().addNewFinSize(
+                    Fin(finSize: 20),
+                  ),
+              // onTap: () => navigateToReportsScreen(context),
             ),
           ],
         ),

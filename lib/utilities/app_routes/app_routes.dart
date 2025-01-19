@@ -64,3 +64,39 @@ void navigateToRadiatorFormScreen(BuildContext context) {
 void navigateToSaleFormScreen(BuildContext context) {
   Navigator.pushNamed(context, saleFormScreen);
 }
+// import 'package:flutter/material.dart';
+
+// class AppRouter {
+//   static final GlobalKey<NavigatorState> navigatorKey =
+//       GlobalKey<NavigatorState>();
+
+//   static Future<dynamic> push(Widget screen) {
+//     return navigatorKey.currentState!.push(
+//       _pageRoute(screen),
+//     );
+//   }
+
+//   static Future<dynamic> pushReplacement(Widget screen) {
+//     return navigatorKey.currentState!.pushReplacement(
+//       _pageRoute(screen),
+//     );
+//   }
+
+//   static void pop() {
+//     navigatorKey.currentState!.pop();
+//   }
+
+//   static void popUntil(RoutePredicate predicate) {
+//     navigatorKey.currentState!.popUntil(predicate);
+//   }
+
+//   static bool canPop() {
+//     return navigatorKey.currentState!.canPop();
+//   }
+
+//   static PageRoute _pageRoute(Widget screen) {
+//     return MaterialPageRoute(
+//       builder: (ctx) => screen,
+//     );
+//   }
+// }

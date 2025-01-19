@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:stock_management_application/presentation/widgets/spaces/space.dart';
 import '../../../utilities/app_routes/app_routes.dart';
 import '../../widgets/input_feilds/text_input_field.dart';
 import '../../widgets/layouts/page_scaffolds/list_page_scaffold.dart';
@@ -16,7 +15,7 @@ class SaleFormScreen extends StatefulWidget {
 
 class _SaleFormScreenState extends State<SaleFormScreen> {
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
-  final TextEditingController customerNameController  = TextEditingController();
+  final TextEditingController customerNameController = TextEditingController();
   DateTime? _selectedDate = DateTime.now();
   String? _selectedTime;
   Future<void> _startDatePicker() async {
@@ -115,14 +114,14 @@ class _SaleFormScreenState extends State<SaleFormScreen> {
               ],
             ),
             TextInputField(
-                controller: customerNameController,
-                label: "Enter Customer Name",
-              ),
+              controller: customerNameController,
+              label: "Enter Customer Name",
+            ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 Text("Total Bill : 1000 /pkr"),
-                 IconButton.filledTonal(
+                IconButton.filledTonal(
                     color: Theme.of(context).primaryColor,
                     onPressed: () {},
                     icon: Icon(
