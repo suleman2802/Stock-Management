@@ -2,20 +2,21 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:stock_management_application/presentation/widgets/spaces/space.dart';
 import '../../../utilities/app_routes/app_routes.dart';
-import '../../widgets/car_selection_tile_dialogue/car_selection_tile_dialogue.dart';
+import '../../widgets/input_feilds/text_input_field.dart';
 import '../../widgets/layouts/page_scaffolds/list_page_scaffold.dart';
 import '../../widgets/styling/round_icon_button.dart';
-import 'widgets/single_stock_block.dart';
+import 'widgets/single_sale_block.dart';
 
-class StockFormScreen extends StatefulWidget {
-  const StockFormScreen({super.key});
+class SaleFormScreen extends StatefulWidget {
+  const SaleFormScreen({super.key});
 
   @override
-  State<StockFormScreen> createState() => _StockFormScreenState();
+  State<SaleFormScreen> createState() => _SaleFormScreenState();
 }
 
-class _StockFormScreenState extends State<StockFormScreen> {
+class _SaleFormScreenState extends State<SaleFormScreen> {
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  final TextEditingController customerNameController  = TextEditingController();
   DateTime? _selectedDate = DateTime.now();
   String? _selectedTime;
   Future<void> _startDatePicker() async {
@@ -56,7 +57,7 @@ class _StockFormScreenState extends State<StockFormScreen> {
   Widget build(BuildContext context) {
     return ListPageScaffold(
       curentIndex: 1,
-      label: "Add Stock",
+      label: "Add Sale",
       action: RoundIconButton(
         iconData: Icons.save,
         onPress: () {
@@ -113,20 +114,23 @@ class _StockFormScreenState extends State<StockFormScreen> {
                 ),
               ],
             ),
+            TextInputField(
+                controller: customerNameController,
+                label: "Enter Customer Name",
+              ),
             Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                Expanded(child: CarSelectionTileDialogue()),
-                smallWidthSpace(),
-                IconButton.filledTonal(
+                Text("Total Bill : 1000 /pkr"),
+                 IconButton.filledTonal(
                     color: Theme.of(context).primaryColor,
                     onPressed: () {},
                     icon: Icon(
                       Icons.add,
                       color: Theme.of(context).primaryColor,
-                    ),),
+                    )),
               ],
             ),
-            smallWidthSpace(),
             Expanded(
               child: ListView.builder(
                 itemCount: 2,
@@ -147,7 +151,7 @@ class _StockFormScreenState extends State<StockFormScreen> {
                         Text(")----------------------"),
                       ],
                     ),
-                    SingleStockBlock(),
+                    SingleSaleBlock(),
                   ],
                 ),
               ),

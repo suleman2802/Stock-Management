@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../config/dimensions.dart';
-import '../../../domain/models/radiator.dart';
+import '../../../domain/models/radiator_stock.dart';
 import '../../../utilities/app_routes/app_routes.dart';
 import '../../screen/radiator/widgets/radiator_dialogue.dart';
 import '../spaces/space.dart';
@@ -9,17 +9,17 @@ import '../styling/bordered_container.dart';
 import '../styling/bottom_sheet_header.dart';
 import '../styling/round_icon_button.dart';
 
-class RadiatorSelectionTileDialogue extends StatefulWidget {
-  const RadiatorSelectionTileDialogue({super.key, this.radiator});
-  final Radiator? radiator;
+class RadiatorStockSelectionTileDialogue extends StatefulWidget {
+  const RadiatorStockSelectionTileDialogue({super.key, this.radiator});
+  final RadiatorStock? radiator;
 
   @override
-  State<RadiatorSelectionTileDialogue> createState() =>
-      _RadiatorSelectionTileDialogueState();
+  State<RadiatorStockSelectionTileDialogue> createState() =>
+      _RadiatorStockSelectionTileDialogueState();
 }
 
-class _RadiatorSelectionTileDialogueState
-    extends State<RadiatorSelectionTileDialogue> {
+class _RadiatorStockSelectionTileDialogueState
+    extends State<RadiatorStockSelectionTileDialogue> {
   @override
   Widget build(BuildContext context) {
     return widget.radiator != null
@@ -31,17 +31,19 @@ class _RadiatorSelectionTileDialogueState
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
                 ),
-                builder: (context) => RadiatorListBottomSheet(),
+                builder: (context) => RadiatorStockListBottomSheet(),
               );
             },
             leading: CircleAvatar(
               backgroundColor: Theme.of(context).primaryColor,
               child: Text(
-                widget.radiator!.car.carCompany.substring(1).toUpperCase(),
+                widget.radiator!.radiator.car.carCompany
+                    .substring(1)
+                    .toUpperCase(),
               ),
             ),
-            title: Text(widget.radiator!.car.carName),
-            subtitle: Text(widget.radiator!.size),
+            title: Text(widget.radiator!.radiator.car.carName),
+            subtitle: Text(widget.radiator!.radiator.size),
             trailing: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -62,7 +64,7 @@ class _RadiatorSelectionTileDialogueState
                       borderRadius:
                           BorderRadius.vertical(top: Radius.circular(16)),
                     ),
-                    builder: (context) => RadiatorListBottomSheet(),
+                    builder: (context) => RadiatorStockListBottomSheet(),
                   );
                 },
                 child: Text("Select Radiator"),
@@ -72,8 +74,8 @@ class _RadiatorSelectionTileDialogueState
   }
 }
 
-class RadiatorListBottomSheet extends StatelessWidget {
-  const RadiatorListBottomSheet({super.key});
+class RadiatorStockListBottomSheet extends StatelessWidget {
+  const RadiatorStockListBottomSheet({super.key});
 
   @override
   Widget build(BuildContext context) {

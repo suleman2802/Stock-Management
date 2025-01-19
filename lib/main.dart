@@ -6,7 +6,8 @@ import 'presentation/screen/authentication/authentication_screen.dart';
 import 'presentation/screen/car/car_screen.dart';
 import 'presentation/screen/fin/fin_screen.dart';
 import 'presentation/screen/home/home_screen.dart';
-import 'presentation/screen/purchase/purchase_screen.dart';
+import 'presentation/screen/sale/sale_form_screen.dart';
+import 'presentation/screen/sale/sale_screen.dart';
 import 'presentation/screen/radiator/radiator_form_screen.dart';
 import 'presentation/screen/radiator/radiator_screen.dart';
 import 'presentation/screen/reports/reports_screen.dart';
@@ -37,7 +38,7 @@ class MyApp extends StatelessWidget {
         homeScreen: (context) => HomeScreen(),
         authenticationScreen: (context) => AuthenticationScreen(),
         carScreen: (context) => CarScreen(),
-        purchaseScreen: (context) => PurchaseScreen(),
+        saleScreen: (context) => SaleScreen(),
         stockScreen: (context) => StockScreen(),
         rowScreen: (context) => RowScreen(),
         reportsScreen: (context) => ReportsScreen(),
@@ -45,6 +46,7 @@ class MyApp extends StatelessWidget {
         finScreen: (context) => FinScreen(),
         radiatorScreen: (context) => RadiatorScreen(),
         radiatorFormScreen: (context) => RadiatorFormScreen(),
+        saleFormScreen: (context) => SaleFormScreen(),
       },
     );
   }

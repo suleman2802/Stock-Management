@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../widgets/input_feilds/number_input_field.dart';
 import '../../../widgets/radiator_selection_tile_dialogue/radiator_selection_tile_dialogue.dart';
+import '../../../widgets/spaces/space.dart';
 import '../../../widgets/styling/bordered_container.dart';
 
 class SingleStockBlock extends StatefulWidget {
@@ -42,13 +43,14 @@ class _SingleStockBlockState extends State<SingleStockBlock> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(8.0),
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
       child: BorderedContainer(
         child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: Column(
             children: [
               RadiatorSelectionTileDialogue(),
+              smallHeightSpace(),
               NumberInputField(
                 controller: quantityController,
                 label: "Quantity",

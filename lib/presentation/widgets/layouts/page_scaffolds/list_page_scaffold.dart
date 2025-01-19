@@ -38,7 +38,7 @@ class ListPageScaffold extends StatelessWidget {
           } else if (value == 1) {
             navigateToStockScreen(context);
           } else if (value == 2) {
-            navigateToPurchaseScreen(context);
+            navigateToSaleScreen(context);
           }
         },
         currentIndex: curentIndex,

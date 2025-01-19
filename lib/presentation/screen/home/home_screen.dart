@@ -28,9 +28,9 @@ class HomeScreen extends StatelessWidget {
               onTap: () => navigateToStockScreen(context),
             ),
             DashboardTileGrid(
-              title: "Purchase",
+              title: "Sale",
               icon: Icons.arrow_outward_rounded,
-              onTap: () => navigateToPurchaseScreen(context),
+              onTap: () => navigateToSaleScreen(context),
             ),
             DashboardTileGrid(
               title: "Radiators",
