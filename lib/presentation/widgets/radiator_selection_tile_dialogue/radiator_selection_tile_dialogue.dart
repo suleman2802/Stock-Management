@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:stock_management_application/presentation/widgets/spaces/space.dart';
 
 import '../../../config/dimensions.dart';
 import '../../../domain/models/radiator.dart';
 import '../../../utilities/app_routes/app_routes.dart';
+import '../../screen/radiator/widgets/radiator_dialogue.dart';
 import '../styling/bordered_container.dart';
 import '../styling/bottom_sheet_header.dart';
 import '../styling/round_icon_button.dart';
@@ -40,6 +42,14 @@ class _RadiatorSelectionTileDialogueState
             ),
             title: Text(widget.radiator!.car.carName),
             subtitle: Text(widget.radiator!.size),
+            trailing: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Text("Rows : 5"),
+                Text("Fin : 8 mm"),
+              ],
+            ),
           )
         : BorderedContainer(
             child: Center(
@@ -55,7 +65,7 @@ class _RadiatorSelectionTileDialogueState
                     builder: (context) => RadiatorListBottomSheet(),
                   );
                 },
-                child: Text("Select Car"),
+                child: Text("Select Radiator"),
               ),
             ),
           );
@@ -85,9 +95,21 @@ class RadiatorListBottomSheet extends StatelessWidget {
                           color: Colors.white,
                         ),
                   ),
-                  RoundIconButton(
-                    iconData: Icons.check,
-                    onPress: () {},
+                  Row(
+                    children: [
+                      RoundIconButton(
+                        iconData: Icons.add,
+                        onPress: () => showDialog(
+                          context: context,
+                          builder: (context) => RadiatorDialogue(),
+                        ),
+                      ),
+                      smallWidthSpace(),
+                      RoundIconButton(
+                        iconData: Icons.close,
+                        onPress: () => navigateBack(context),
+                      ),
+                    ],
                   ),
                 ],
               ),
@@ -101,10 +123,22 @@ class RadiatorListBottomSheet extends StatelessWidget {
                   backgroundColor: Theme.of(context).primaryColor,
                   child: Text(
                     "H",
+                    style: TextStyle(color: Colors.white),
                   ),
                 ),
-                title: Text("car name"),
+                title: Text(
+                  "car name",
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
                 subtitle: Text("37 x 8 x 9"),
+                trailing: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text("Rows : 5"),
+                    Text("Fin : 8 mm"),
+                  ],
+                ),
                 onTap: () {
                   navigateBack(context);
                 },

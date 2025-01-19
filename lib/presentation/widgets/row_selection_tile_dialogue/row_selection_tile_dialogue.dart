@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import '../../../config/dimensions.dart';
 import '../../../domain/models/rows.dart';
 import '../../../utilities/app_routes/app_routes.dart';
+import '../../screen/rows/widgets/rows_dialogue.dart';
+import '../spaces/space.dart';
 import '../styling/bordered_container.dart';
 import '../styling/bottom_sheet_header.dart';
 import '../styling/round_icon_button.dart';
@@ -83,9 +85,21 @@ class RowListBottomSheet extends StatelessWidget {
                           color: Colors.white,
                         ),
                   ),
-                  RoundIconButton(
-                    iconData: Icons.check,
-                    onPress: () {},
+                  Row(
+                    children: [
+                      RoundIconButton(
+                        iconData: Icons.add,
+                        onPress: () => showDialog(
+                          context: context,
+                          builder: (context) => RowDialogue(),
+                        ),
+                      ),
+                      smallWidthSpace(),
+                      RoundIconButton(
+                        iconData: Icons.close,
+                        onPress: () => navigateBack(context),
+                      ),
+                    ],
                   ),
                 ],
               ),
@@ -95,7 +109,10 @@ class RowListBottomSheet extends StatelessWidget {
             child: ListView.builder(
               itemCount: 4, // Replace with the actual number of cars
               itemBuilder: (context, index) => ListTile(
-                title: Text("rows $index"),
+                title: Text(
+                  "rows $index",
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
                 leading: CircleAvatar(
                   backgroundColor: Theme.of(context).primaryColor,
                   child: Text(

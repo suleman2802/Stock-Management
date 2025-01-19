@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 
-
 import '../../../widgets/input_feilds/number_input_field.dart';
+import '../../../widgets/radiator_selection_tile_dialogue/radiator_selection_tile_dialogue.dart';
 import '../../../widgets/styling/bordered_container.dart';
+
 class SingleStockBlock extends StatefulWidget {
   const SingleStockBlock({super.key});
 
@@ -11,9 +12,6 @@ class SingleStockBlock extends StatefulWidget {
 }
 
 class _SingleStockBlockState extends State<SingleStockBlock> {
-  
- 
-
 //? controllers
   final TextEditingController profitInWholesalePriceController =
       TextEditingController();
@@ -41,108 +39,108 @@ class _SingleStockBlockState extends State<SingleStockBlock> {
     quantityController.dispose();
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: BorderedContainer(
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Column(
-              children: [
-                NumberInputField(
-                  controller: quantityController,
-                  label: "Quantity",
-                  validator: (value) {
-                    if (value!.isEmpty) {
-                      return "Please enter quantity";
-                    } else if (int.parse(value) < 0) {
-                      return "Stock quantity can not be negative";
-                    }
-                    return null;
-                  },
-                ),
-                NumberInputField(
-                  controller: unitCostController,
-                  label: "Unit Cost",
-                  validator: (value) {
-                    if (value!.isEmpty) {
-                      return "Please enter unit cost";
-                    } else if (double.parse(value) < 0) {
-                      return "Unit cost can not be negative";
-                    }
-                    return null;
-                  },
-                ),
-                NumberInputField(
-                  controller: profitInWholesalePriceController,
-                  label: "Profit in Wholesale Price",
-                  validator: (value) {
-                    if (value!.isEmpty) {
-                      return "Please enter profit in wholesale price";
-                    }
-                    return null;
-                  },
-                ),
-                NumberInputField(
-                  controller: profitInRetailPriceController,
-                  label: "Profit in Retail Price",
-                  validator: (value) {
-                    if (value!.isEmpty) {
-                      return "Please enter profit in retail price";
-                    }
-                    return null;
-                  },
-                ),
-                NumberInputField(
-                  controller: retailPriceController,
-                  label: "Retail Price",
-                  validator: (value) {
-                    if (value!.isEmpty) {
-                      return "Please enter retail price";
-                    } else if (double.parse(value) < 0) {
-                      return "Retail price can not be negative";
-                    }
-                    return null;
-                  },
-                ),
-                NumberInputField(
-                  controller: reatilProfitMarginController,
-                  label: "Retail Profit Margin",
-                  validator: (value) {
-                    if (value!.isEmpty) {
-                      return "Please enter retail profit margin";
-                    }
-                    return null;
-                  },
-                ),
-                NumberInputField(
-                  controller: wholesaleRateController,
-                  label: "Wholesale Rate",
-                  validator: (value) {
-                    if (value!.isEmpty) {
-                      return "Please enter wholesale rate";
-                    } else if (double.parse(value) < 0) {
-                      return "Wholesale rate can not be negative";
-                    }
-                    return null;
-                  },
-                ),
-                NumberInputField(
-                  controller: wholesaleProfitMarginController,
-                  label: "Wholesale Profit Margin",
-                  validator: (value) {
-                    if (value!.isEmpty) {
-                      return "Please enter wholesale profit margin";
-                    }
-                    return null;
-                  },
-                ),
-              ],
-            ),
+      padding: const EdgeInsets.all(8.0),
+      child: BorderedContainer(
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            children: [
+              RadiatorSelectionTileDialogue(),
+              NumberInputField(
+                controller: quantityController,
+                label: "Quantity",
+                validator: (value) {
+                  if (value!.isEmpty) {
+                    return "Please enter quantity";
+                  } else if (int.parse(value) < 0) {
+                    return "Stock quantity can not be negative";
+                  }
+                  return null;
+                },
+              ),
+              NumberInputField(
+                controller: unitCostController,
+                label: "Unit Cost",
+                validator: (value) {
+                  if (value!.isEmpty) {
+                    return "Please enter unit cost";
+                  } else if (double.parse(value) < 0) {
+                    return "Unit cost can not be negative";
+                  }
+                  return null;
+                },
+              ),
+              NumberInputField(
+                controller: profitInWholesalePriceController,
+                label: "Profit in Wholesale Price",
+                validator: (value) {
+                  if (value!.isEmpty) {
+                    return "Please enter profit in wholesale price";
+                  }
+                  return null;
+                },
+              ),
+              NumberInputField(
+                controller: profitInRetailPriceController,
+                label: "Profit in Retail Price",
+                validator: (value) {
+                  if (value!.isEmpty) {
+                    return "Please enter profit in retail price";
+                  }
+                  return null;
+                },
+              ),
+              NumberInputField(
+                controller: retailPriceController,
+                label: "Retail Price",
+                validator: (value) {
+                  if (value!.isEmpty) {
+                    return "Please enter retail price";
+                  } else if (double.parse(value) < 0) {
+                    return "Retail price can not be negative";
+                  }
+                  return null;
+                },
+              ),
+              NumberInputField(
+                controller: reatilProfitMarginController,
+                label: "Retail Profit Margin",
+                validator: (value) {
+                  if (value!.isEmpty) {
+                    return "Please enter retail profit margin";
+                  }
+                  return null;
+                },
+              ),
+              NumberInputField(
+                controller: wholesaleRateController,
+                label: "Wholesale Rate",
+                validator: (value) {
+                  if (value!.isEmpty) {
+                    return "Please enter wholesale rate";
+                  } else if (double.parse(value) < 0) {
+                    return "Wholesale rate can not be negative";
+                  }
+                  return null;
+                },
+              ),
+              NumberInputField(
+                controller: wholesaleProfitMarginController,
+                label: "Wholesale Profit Margin",
+                validator: (value) {
+                  if (value!.isEmpty) {
+                    return "Please enter wholesale profit margin";
+                  }
+                  return null;
+                },
+              ),
+            ],
           ),
         ),
-      );
+      ),
+    );
   }
 }

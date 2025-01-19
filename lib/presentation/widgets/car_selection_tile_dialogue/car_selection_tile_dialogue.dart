@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import '../../../config/dimensions.dart';
 import '../../../domain/models/car.dart';
 import '../../../utilities/app_routes/app_routes.dart';
+import '../../screen/car/widgets/car_dialogue.dart';
+import '../spaces/space.dart';
 import '../styling/bordered_container.dart';
 import '../styling/bottom_sheet_header.dart';
 import '../styling/round_icon_button.dart';
@@ -84,9 +86,21 @@ class CarListBottomSheet extends StatelessWidget {
                           color: Colors.white,
                         ),
                   ),
-                  RoundIconButton(
-                    iconData: Icons.check,
-                    onPress: () {},
+                 Row(
+                    children: [
+                      RoundIconButton(
+                        iconData: Icons.add,
+                        onPress: () => showDialog(
+                          context: context,
+                          builder: (context) => CarDialogue(),
+                        ),
+                      ),
+                      smallWidthSpace(),
+                      RoundIconButton(
+                        iconData: Icons.close,
+                        onPress: () => navigateBack(context),
+                      ),
+                    ],
                   ),
                 ],
               ),
@@ -96,7 +110,10 @@ class CarListBottomSheet extends StatelessWidget {
             child: ListView.builder(
               itemCount: 4, // Replace with the actual number of cars
               itemBuilder: (context, index) => ListTile(
-                title: Text("Tesla"),
+                title: Text(
+                  "Tesla",
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
                 subtitle: Text("Model $index"),
                 leading: CircleAvatar(
                   backgroundColor: Theme.of(context).primaryColor,

@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import '../../../config/dimensions.dart';
 import '../../../domain/models/fin.dart';
 import '../../../utilities/app_routes/app_routes.dart';
+import '../../screen/fin/widgets/fin_dialogue.dart';
+import '../spaces/space.dart';
 import '../styling/bordered_container.dart';
 import '../styling/bottom_sheet_header.dart';
 import '../styling/round_icon_button.dart';
@@ -78,14 +80,26 @@ class FinListBottomSheet extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    "Select Fin",
+                    "Select Fin size",
                     style: Theme.of(context).textTheme.titleMedium!.copyWith(
                           color: Colors.white,
                         ),
                   ),
-                  RoundIconButton(
-                    iconData: Icons.check,
-                    onPress: () {},
+                  Row(
+                    children: [
+                      RoundIconButton(
+                        iconData: Icons.add,
+                        onPress: () => showDialog(
+                          context: context,
+                          builder: (context) => FinDialogue(),
+                        ),
+                      ),
+                      smallWidthSpace(),
+                      RoundIconButton(
+                        iconData: Icons.close,
+                        onPress: () => navigateBack(context),
+                      ),
+                    ],
                   ),
                 ],
               ),
@@ -95,7 +109,10 @@ class FinListBottomSheet extends StatelessWidget {
             child: ListView.builder(
               itemCount: 4, // Replace with the actual number of cars
               itemBuilder: (context, index) => ListTile(
-                title: Text("fin $index"),
+                title: Text(
+                  "fin $index",
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
                 leading: CircleAvatar(
                   backgroundColor: Theme.of(context).primaryColor,
                   child: Text(

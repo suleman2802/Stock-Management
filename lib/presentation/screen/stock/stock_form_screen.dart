@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:stock_management_application/presentation/widgets/spaces/space.dart';
 import '../../../utilities/app_routes/app_routes.dart';
+import '../../widgets/car_selection_tile_dialogue/car_selection_tile_dialogue.dart';
 import '../../widgets/layouts/page_scaffolds/list_page_scaffold.dart';
+import '../../widgets/styling/round_icon_button.dart';
 import 'widgets/single_stock_block.dart';
 
 class StockFormScreen extends StatefulWidget {
@@ -54,9 +57,9 @@ class _StockFormScreenState extends State<StockFormScreen> {
     return ListPageScaffold(
       curentIndex: 1,
       label: "Add Stock",
-      action: IconButton(
-        icon: Icon(Icons.save, color: Theme.of(context).primaryColor),
-        onPressed: () {
+      action: RoundIconButton(
+        iconData: Icons.save,
+        onPress: () {
           //? validate form
 
           //? navigate to car screen
@@ -110,8 +113,14 @@ class _StockFormScreenState extends State<StockFormScreen> {
                 ),
               ],
             ),
-            SingleStockBlock(),
-            SingleStockBlock(),
+            CarSelectionTileDialogue(),
+            smallHeightSpace(),
+            Expanded(
+              child: ListView.builder(
+                itemCount: 2,
+                itemBuilder: (context, index) => SingleStockBlock(),
+              ),
+            ),
           ]),
         ),
       ),

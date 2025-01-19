@@ -54,6 +54,7 @@ class _StockScreenState extends State<StockScreen> {
             child: ListView.builder(
               itemCount: 15,
               itemBuilder: (context, index) => ListTile(
+                onTap: () => navigateToStockFormScreen(context),
                 title: Text("Stock"),
                 subtitle: Text("model $index"),
                 leading: CircleAvatar(
@@ -63,7 +64,10 @@ class _StockScreenState extends State<StockScreen> {
                     style: TextStyle(color: Colors.white),
                   ),
                 ),
-                trailing: Icon(Icons.edit),
+                trailing: Icon(
+                  Icons.delete_forever,
+                  color: Colors.red,
+                ),
               ),
             ),
           ),
