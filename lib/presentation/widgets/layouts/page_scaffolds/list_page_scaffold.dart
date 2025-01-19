@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:stock_management_application/utilities/app_routes/app_routes.dart';
+
+import '../../../../utilities/app_routes/app_routes.dart';
+import '../../../screen/home/home_screen.dart';
+import '../../../screen/stock/stock_screen.dart';
+
 
 class ListPageScaffold extends StatelessWidget {
   const ListPageScaffold({
@@ -34,9 +38,9 @@ class ListPageScaffold extends StatelessWidget {
       bottomNavigationBar: BottomNavigationBar(
         onTap: (value) {
           if (value == 0) {
-          
+          AppRouter.push(HomeScreen());
           } else if (value == 1) {
-      
+      AppRouter.push(StockScreen());
           } else if (value == 2) {
       
           }

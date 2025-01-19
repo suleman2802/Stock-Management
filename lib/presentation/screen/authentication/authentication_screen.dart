@@ -37,13 +37,13 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> {
     //         pinController3.text.trim() +
     //         pinController4.text.trim() ==
     //     "0202") {
-      AppRouter.push(
-        MultiRepositoryProvider(providers: [
-          RepositoryProvider<FinRepository>(
-            create: (context) => FinRepositoryImplementation(),
-          ),
-        ], child: HomeScreen()),
-      );
+    AppRouter.push(
+      MultiRepositoryProvider(providers: [
+        RepositoryProvider<FinRepository>(
+          create: (context) => FinRepositoryImplementation(),
+        ),
+      ], child: HomeScreen()),
+    );
     // } else {
     //   AppAlertUtil.showError(context, "Invalid pin");
     // }
@@ -86,7 +86,7 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> {
           ),
           mediumHeightSpace(),
           ElevatedButton(
-            onPressed: validatePin(),
+            onPressed: validatePin,
             child: const Text("Submit"),
           ),
         ],
