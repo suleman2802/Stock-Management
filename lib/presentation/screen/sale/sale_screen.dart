@@ -28,7 +28,7 @@ class _SaleScreenState extends State<SaleScreen> {
       action: RoundIconButton(
         iconData: Icons.add,
         onPress: () {
-          navigateToSaleFormScreen(context);
+         
         },
       ),
       body: Column(
@@ -54,7 +54,7 @@ class _SaleScreenState extends State<SaleScreen> {
             child: ListView.builder(
               itemCount: 15,
               itemBuilder: (context, index) => ListTile(
-                onTap: () => navigateToSaleFormScreen(context),
+                onTap: (){},
                 title: Text("Customer Name"),
                 subtitle: Text("radiator size"),
                 leading: CircleAvatar(

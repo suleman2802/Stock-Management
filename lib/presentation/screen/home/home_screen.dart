@@ -28,32 +28,32 @@ class HomeScreen extends StatelessWidget {
             DashboardTileGrid(
               title: "Stock",
               icon: Icons.inventory,
-              onTap: () => navigateToStockScreen(context),
+              onTap: () {},
             ),
             DashboardTileGrid(
               title: "Sale",
               icon: Icons.arrow_outward_rounded,
-              onTap: () => navigateToSaleScreen(context),
+              onTap: () {},
             ),
             DashboardTileGrid(
               title: "Radiators",
               icon: Icons.apps_rounded,
-              onTap: () => navigateToRadiatorScreen(context),
+              onTap: () {},
             ),
             DashboardTileGrid(
               title: "Car",
               icon: Icons.car_crash,
-              onTap: () => navigateToCarScreen(context),
+              onTap: () {},
             ),
             DashboardTileGrid(
               title: "Fin",
               icon: Icons.line_weight_rounded,
-              onTap: () => navigateToFinScreen(context),
+              onTap: () {},
             ),
             DashboardTileGrid(
               title: "Row",
               icon: Icons.view_column_rounded,
-              onTap: () => navigateToRowScreen(context),
+              onTap: () {},
             ),
             DashboardTileGrid(
               title: "Reports",

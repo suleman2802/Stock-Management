@@ -42,14 +42,14 @@ class _RadiatorDialogueState extends State<RadiatorDialogue> {
     return AlertDialog(
       actions: [
         ElevatedButton(
-          onPressed: () => navigateBack(context),
+          onPressed: () => AppRouter.pop(),
           child: Text("Cancel"),
         ),
         ElevatedButton(
           onPressed: () {
             if (formKey.currentState!.validate()) {
               // Save functionality here
-              navigateBack(context);
+              AppRouter.pop();
             }
           },
           child: Text(widget.radiator != null ? "Edit" : "Save"),

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../../../utilities/app_routes/app_routes.dart';
 import '../../widgets/layouts/page_scaffolds/list_page_scaffold.dart';
 import '../../widgets/spaces/space.dart';
 import '../../widgets/styling/round_icon_button.dart';
@@ -28,7 +27,7 @@ class _StockScreenState extends State<StockScreen> {
       action: RoundIconButton(
         iconData: Icons.add,
         onPress: () {
-          navigateToStockFormScreen(context);
+          
         },
       ),
       body: Column(
@@ -54,7 +53,7 @@ class _StockScreenState extends State<StockScreen> {
             child: ListView.builder(
               itemCount: 15,
               itemBuilder: (context, index) => ListTile(
-                onTap: () => navigateToStockFormScreen(context),
+                onTap: () {},
                 title: Text("Stock"),
                 subtitle: Text("model $index"),
                 leading: CircleAvatar(

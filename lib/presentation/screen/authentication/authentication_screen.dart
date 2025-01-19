@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../domain/repositories/fin/abstract_fin_repository/abstract_fin_repository.dart';
+import '../../../domain/repositories/fin/fin_repository_implementation/fin_repository_implementation.dart';
 import '../../../utilities/app_alerts/app_alerts.dart';
 import '../../../utilities/app_routes/app_routes.dart';
 import '../../widgets/spaces/space.dart';
+import '../home/home_screen.dart';
 import 'widgets/single_input_pin.dart';
 
 class AuthenticationScreen extends StatefulWidget {
@@ -28,15 +32,21 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> {
   }
 
   validatePin() {
-    if (pinController1.text.trim() +
-            pinController2.text.trim() +
-            pinController3.text.trim() +
-            pinController4.text.trim() ==
-        "0202") {
-      navigateToHomeScreen(context);
-    } else {
-      AppAlertUtil.showError(context, "Invalid pin");
-    }
+    // if (pinController1.text.trim() +
+    //         pinController2.text.trim() +
+    //         pinController3.text.trim() +
+    //         pinController4.text.trim() ==
+    //     "0202") {
+      AppRouter.push(
+        MultiRepositoryProvider(providers: [
+          RepositoryProvider<FinRepository>(
+            create: (context) => FinRepositoryImplementation(),
+          ),
+        ], child: HomeScreen()),
+      );
+    // } else {
+    //   AppAlertUtil.showError(context, "Invalid pin");
+    // }
   }
 
   @override
@@ -76,7 +86,7 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> {
           ),
           mediumHeightSpace(),
           ElevatedButton(
-            onPressed: validatePin,
+            onPressed: validatePin(),
             child: const Text("Submit"),
           ),
         ],

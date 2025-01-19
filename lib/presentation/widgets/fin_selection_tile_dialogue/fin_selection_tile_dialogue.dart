@@ -97,7 +97,7 @@ class FinListBottomSheet extends StatelessWidget {
                       smallWidthSpace(),
                       RoundIconButton(
                         iconData: Icons.close,
-                        onPress: () => navigateBack(context),
+                        onPress: () => AppRouter.pop(),
                       ),
                     ],
                   ),
@@ -121,7 +121,7 @@ class FinListBottomSheet extends StatelessWidget {
                   ),
                 ),
                 onTap: () {
-                  navigateBack(context);
+                  AppRouter.pop();
                 },
               ),
             ),

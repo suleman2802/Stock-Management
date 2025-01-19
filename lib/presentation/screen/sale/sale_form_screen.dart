@@ -63,7 +63,7 @@ class _SaleFormScreenState extends State<SaleFormScreen> {
           //? validate form
 
           //? navigate to car screen
-          navigateToStockScreen(context);
+         
         },
       ),
       body: Padding(

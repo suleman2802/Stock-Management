@@ -39,14 +39,14 @@ Widget build(BuildContext context) {
   return AlertDialog(
     actions: [
       ElevatedButton(
-        onPressed: () => navigateBack(context),
+        onPressed: () => AppRouter.pop(),
         child: Text("Cancel"),
       ),
       ElevatedButton(
         onPressed: () {
           if (formKey.currentState!.validate()) {
             // Save functionality here
-            navigateBack(context);
+            AppRouter.pop();
           }
         },
         child: Text("Save"),

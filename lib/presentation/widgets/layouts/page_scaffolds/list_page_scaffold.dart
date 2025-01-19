@@ -34,11 +34,11 @@ class ListPageScaffold extends StatelessWidget {
       bottomNavigationBar: BottomNavigationBar(
         onTap: (value) {
           if (value == 0) {
-            navigateToHomeScreen(context);
+          
           } else if (value == 1) {
-            navigateToStockScreen(context);
+      
           } else if (value == 2) {
-            navigateToSaleScreen(context);
+      
           }
         },
         currentIndex: curentIndex,

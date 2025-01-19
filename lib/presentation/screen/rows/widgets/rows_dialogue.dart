@@ -32,14 +32,14 @@ class _RowDialogueState extends State<RowDialogue> {
     return AlertDialog(
       actions: [
         ElevatedButton(
-          onPressed: () => navigateBack(context),
+          onPressed: () => AppRouter.pop(),
           child: Text("Concel"),
         ),
         ElevatedButton(
           onPressed: () {
             if (formKey.currentState!.validate()) {
               //? save rows here
-              navigateBack(context);
+              AppRouter.pop();
             }
           },
           child: Text("Save"),

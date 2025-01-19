@@ -1,102 +1,102 @@
-import 'package:flutter/material.dart';
-
-const String homeScreen = "./home_screen";
-const String authenticationScreen = "./authentication_screen";
-const String carScreen = "./car_screen";
-const String stockScreen = "./stock_screen";
-const String saleFormScreen = "./sale_form_screen";
-const String saleScreen = "./sale_screen";
-const String rowScreen = "./row_screen";
-const String reportsScreen = "./reports_screen";
-const String stockFormScreen = "./stock_form_screen";
-const String finScreen = "./fin_screen";
-const String radiatorScreen = "./radiator_screen";
-const String radiatorFormScreen = "./radiator_form_screen";
-
-void navigateBack(BuildContext context) {
-  Navigator.pop(context);
-}
-
-void navigateToHomeScreen(BuildContext context) {
-  Navigator.pushNamed(context, homeScreen);
-}
-
-void navigateToAuthenticationScreen(BuildContext context) {
-  Navigator.pushNamed(context, authenticationScreen);
-}
-
-void navigateToCarScreen(BuildContext context) {
-  Navigator.pushNamed(context, carScreen);
-}
-
-void navigateToStockScreen(BuildContext context) {
-  Navigator.pushNamed(context, stockScreen);
-}
-
-void navigateToSaleScreen(BuildContext context) {
-  Navigator.pushNamed(context, saleScreen);
-}
-
-void navigateToRowScreen(BuildContext context) {
-  Navigator.pushNamed(context, rowScreen);
-}
-
-void navigateToReportsScreen(BuildContext context) {
-  Navigator.pushNamed(context, reportsScreen);
-}
-
-void navigateToStockFormScreen(BuildContext context) {
-  Navigator.pushNamed(context, stockFormScreen);
-}
-
-void navigateToFinScreen(BuildContext context) {
-  Navigator.pushNamed(context, finScreen);
-}
-
-void navigateToRadiatorScreen(BuildContext context) {
-  Navigator.pushNamed(context, radiatorScreen);
-}
-
-void navigateToRadiatorFormScreen(BuildContext context) {
-  Navigator.pushNamed(context, radiatorFormScreen);
-}
-
-void navigateToSaleFormScreen(BuildContext context) {
-  Navigator.pushNamed(context, saleFormScreen);
-}
 // import 'package:flutter/material.dart';
 
-// class AppRouter {
-//   static final GlobalKey<NavigatorState> navigatorKey =
-//       GlobalKey<NavigatorState>();
+// const String homeScreen = "./home_screen";
+// const String authenticationScreen = "./authentication_screen";
+// const String carScreen = "./car_screen";
+// const String stockScreen = "./stock_screen";
+// const String saleFormScreen = "./sale_form_screen";
+// const String saleScreen = "./sale_screen";
+// const String rowScreen = "./row_screen";
+// const String reportsScreen = "./reports_screen";
+// const String stockFormScreen = "./stock_form_screen";
+// const String finScreen = "./fin_screen";
+// const String radiatorScreen = "./radiator_screen";
+// const String radiatorFormScreen = "./radiator_form_screen";
 
-//   static Future<dynamic> push(Widget screen) {
-//     return navigatorKey.currentState!.push(
-//       _pageRoute(screen),
-//     );
-//   }
-
-//   static Future<dynamic> pushReplacement(Widget screen) {
-//     return navigatorKey.currentState!.pushReplacement(
-//       _pageRoute(screen),
-//     );
-//   }
-
-//   static void pop() {
-//     navigatorKey.currentState!.pop();
-//   }
-
-//   static void popUntil(RoutePredicate predicate) {
-//     navigatorKey.currentState!.popUntil(predicate);
-//   }
-
-//   static bool canPop() {
-//     return navigatorKey.currentState!.canPop();
-//   }
-
-//   static PageRoute _pageRoute(Widget screen) {
-//     return MaterialPageRoute(
-//       builder: (ctx) => screen,
-//     );
-//   }
+// void navigateBack(BuildContext context) {
+//   Navigator.pop(context);
 // }
+
+// void navigateToHomeScreen(BuildContext context) {
+//   Navigator.pushNamed(context, homeScreen);
+// }
+
+// void navigateToAuthenticationScreen(BuildContext context) {
+//   Navigator.pushNamed(context, authenticationScreen);
+// }
+
+// void navigateToCarScreen(BuildContext context) {
+//   Navigator.pushNamed(context, carScreen);
+// }
+
+// void navigateToStockScreen(BuildContext context) {
+//   Navigator.pushNamed(context, stockScreen);
+// }
+
+// void navigateToSaleScreen(BuildContext context) {
+//   Navigator.pushNamed(context, saleScreen);
+// }
+
+// void navigateToRowScreen(BuildContext context) {
+//   Navigator.pushNamed(context, rowScreen);
+// }
+
+// void navigateToReportsScreen(BuildContext context) {
+//   Navigator.pushNamed(context, reportsScreen);
+// }
+
+// void navigateToStockFormScreen(BuildContext context) {
+//   Navigator.pushNamed(context, stockFormScreen);
+// }
+
+// void navigateToFinScreen(BuildContext context) {
+//   Navigator.pushNamed(context, finScreen);
+// }
+
+// void navigateToRadiatorScreen(BuildContext context) {
+//   Navigator.pushNamed(context, radiatorScreen);
+// }
+
+// void navigateToRadiatorFormScreen(BuildContext context) {
+//   Navigator.pushNamed(context, radiatorFormScreen);
+// }
+
+// void navigateToSaleFormScreen(BuildContext context) {
+//   Navigator.pushNamed(context, saleFormScreen);
+// }
+import 'package:flutter/material.dart';
+
+class AppRouter {
+  static final GlobalKey<NavigatorState> navigatorKey =
+      GlobalKey<NavigatorState>();
+
+  static Future<dynamic> push(Widget screen) {
+    return navigatorKey.currentState!.push(
+      _pageRoute(screen),
+    );
+  }
+
+  static Future<dynamic> pushReplacement(Widget screen) {
+    return navigatorKey.currentState!.pushReplacement(
+      _pageRoute(screen),
+    );
+  }
+
+  static void pop() {
+    navigatorKey.currentState!.pop();
+  }
+
+  static void popUntil(RoutePredicate predicate) {
+    navigatorKey.currentState!.popUntil(predicate);
+  }
+
+  static bool canPop() {
+    return navigatorKey.currentState!.canPop();
+  }
+
+  static PageRoute _pageRoute(Widget screen) {
+    return MaterialPageRoute(
+      builder: (ctx) => screen,
+    );
+  }
+}

@@ -32,14 +32,14 @@ class _FinDialogueState extends State<FinDialogue> {
     return AlertDialog(
       actions: [
         ElevatedButton(
-          onPressed: () => navigateBack(context),
+          onPressed: () => AppRouter.pop(),
           child: Text("Concel"),
         ),
         ElevatedButton(
           onPressed: () {
             if (formKey.currentState!.validate()) {
               //? save fin here
-              navigateBack(context);
+              AppRouter.pop();
             }
           },
           child: Text("Save"),
