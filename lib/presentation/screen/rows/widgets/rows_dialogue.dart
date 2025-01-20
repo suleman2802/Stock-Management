@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../../domain/models/rows.dart';
-import '../../../../utilities/app_routes/app_routes.dart';
+import '../../../../utilities/app_routes/app_router.dart';
 
 class RowDialogue extends StatefulWidget {
   const RowDialogue({super.key, this.rows});

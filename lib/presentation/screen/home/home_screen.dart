@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:stock_management_application/domain/models/fin.dart';
-import 'package:stock_management_application/domain/repositories/fin/abstract_fin_repository/abstract_fin_repository.dart';
-
-import '../../../utilities/app_routes/app_routes.dart';
+import 'package:stock_management_application/presentation/screen/fin/cubit/fin_cubit.dart';
+import '../../../domain/repositories/fin/abstract_fin_repository/abstract_fin_repository.dart';
+import '../../../utilities/app_routes/app_router.dart';
 import '../../widgets/layouts/page_scaffolds/list_page_scaffold.dart';
+import '../fin/fin_screen.dart';
 import 'widgets/dashboard_tile_grid.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -48,7 +48,14 @@ class HomeScreen extends StatelessWidget {
             DashboardTileGrid(
               title: "Fin",
               icon: Icons.line_weight_rounded,
-              onTap: () {},
+              onTap: () => AppRouter.push(RepositoryProvider.value(
+                  value: context.read<FinRepository>(),
+                  child: BlocProvider(
+                    create: (context) => FinCubit(
+                      finRepository: context.read<FinRepository>(),
+                    ),
+                    child: FinScreen(),
+                  ))),
             ),
             DashboardTileGrid(
               title: "Row",
@@ -58,10 +65,7 @@ class HomeScreen extends StatelessWidget {
             DashboardTileGrid(
               title: "Reports",
               icon: Icons.query_stats_sharp,
-              onTap: () => context.read<FinRepository>().addNewFinSize(
-                    Fin(finSize: 20),
-                  ),
-              // onTap: () => navigateToReportsScreen(context),
+              onTap: () {},
             ),
           ],
         ),

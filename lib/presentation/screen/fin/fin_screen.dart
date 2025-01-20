@@ -1,7 +1,14 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
-import '../../../domain/models/fin.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../utilities/app_alerts/app_alerts.dart';
+import '../../widgets/state_indicators/error_text/error_text.dart';
 import '../../widgets/layouts/page_scaffolds/list_page_scaffold.dart';
+import '../../widgets/state_indicators/loading_indicator/loading_indicator.dart';
+import '../../widgets/state_indicators/no_data_avaliable_text/no_data_avaliable_text.dart';
 import '../../widgets/styling/round_icon_button.dart';
+import 'cubit/fin_cubit.dart';
 import 'widgets/fin_dialogue.dart';
 
 class FinScreen extends StatelessWidget {
@@ -21,21 +28,51 @@ class FinScreen extends StatelessWidget {
           );
         },
       ),
-      body: ListView.builder(
-        itemCount: 11,
-        itemBuilder: (context, index) => ListTile(
-          onTap: () => showDialog(
-            context: context,
-            builder: (context) => FinDialogue(
-              fin: Fin(finSize: index),
-            ),
-          ),
-          title: Text("$index mm"),
-          trailing: IconButton(
-            onPressed: () {},
-            icon: Icon(Icons.delete_forever, color: Colors.red),
-          ),
-        ),
+      body: BlocBuilder<FinCubit, FinState>(
+        builder: (context, state) {
+          if (state is FinLoadingState) {
+            return LoadingIndicator();
+          } else if (state is FinErrorState) {
+            return ErrorText(
+              errorMessage: state.errorMessage,
+            );
+          } else if (state is FinLoadedState) {
+            return state.finList.isEmpty
+                ? NoDataAvaliableText()
+                : ListView.builder(
+                    itemCount: state.finList.length,
+                    itemBuilder: (context, index) => ListTile(
+                      onTap: () => showDialog(
+                        context: context,
+                        builder: (context) => FinDialogue(
+                          fin: state.finList[index],
+                        ),
+                      ),
+                      title: Text("${state.finList[index].finSize} mm"),
+                      trailing: IconButton(
+                        onPressed: () async {
+                          final isDeletedSuccessfully = await context
+                              .read<FinCubit>()
+                              .deleteFinSize(state.finList[index].id);
+                          if (context.mounted) {
+                            if (isDeletedSuccessfully) {
+                              AppAlertUtil.showSuccess(
+                                  context, "Fin Size Deleted Successfully");
+                            } else {
+                              AppAlertUtil.showError(
+                                  context, "Unable to delete Fin Size");
+                            }
+                          }
+                        },
+                        icon: Icon(Icons.delete_forever, color: Colors.red),
+                      ),
+                    ),
+                  );
+          } else {
+            log("inside else of Fin Cubit state");
+            return LoadingIndicator();
+          }
+        },
       ),
     );
   }

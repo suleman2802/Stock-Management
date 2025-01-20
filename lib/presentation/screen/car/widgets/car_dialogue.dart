@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../../domain/models/car.dart';
-import '../../../../utilities/app_routes/app_routes.dart';
+import '../../../../utilities/app_routes/app_router.dart';
 import '../../../widgets/input_feilds/text_input_field.dart';
 
 class CarDialogue extends StatefulWidget {

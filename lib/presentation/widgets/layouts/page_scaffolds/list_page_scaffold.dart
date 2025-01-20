@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../../utilities/app_routes/app_routes.dart';
+import '../../../../utilities/app_routes/app_router.dart';
 import '../../../screen/home/home_screen.dart';
 import '../../../screen/stock/stock_screen.dart';
 

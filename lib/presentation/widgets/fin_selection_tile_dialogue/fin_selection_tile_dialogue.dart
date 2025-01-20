@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../config/dimensions.dart';
 import '../../../domain/models/fin.dart';
-import '../../../utilities/app_routes/app_routes.dart';
+import '../../../utilities/app_routes/app_router.dart';
 import '../../screen/fin/widgets/fin_dialogue.dart';
 import '../spaces/space.dart';
 import '../styling/bordered_container.dart';

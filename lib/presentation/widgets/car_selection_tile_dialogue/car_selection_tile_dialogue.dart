@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../config/dimensions.dart';
 import '../../../domain/models/car.dart';
-import '../../../utilities/app_routes/app_routes.dart';
+import '../../../utilities/app_routes/app_router.dart';
 import '../../screen/car/widgets/car_dialogue.dart';
 import '../spaces/space.dart';
 import '../styling/bordered_container.dart';

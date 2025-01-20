@@ -1,10 +1,10 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../domain/repositories/fin/abstract_fin_repository/abstract_fin_repository.dart';
 import '../../../domain/repositories/fin/fin_repository_implementation/fin_repository_implementation.dart';
-import '../../../utilities/app_alerts/app_alerts.dart';
-import '../../../utilities/app_routes/app_routes.dart';
+import '../../../utilities/app_routes/app_router.dart';
 import '../../widgets/spaces/space.dart';
 import '../home/home_screen.dart';
 import 'widgets/single_input_pin.dart';
@@ -21,7 +21,7 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> {
   final TextEditingController pinController2 = TextEditingController();
   final TextEditingController pinController3 = TextEditingController();
   final TextEditingController pinController4 = TextEditingController();
-
+  final firestoreInstance = FirebaseFirestore.instance;
   @override
   void dispose() {
     super.dispose();
@@ -40,7 +40,7 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> {
     AppRouter.push(
       MultiRepositoryProvider(providers: [
         RepositoryProvider<FinRepository>(
-          create: (context) => FinRepositoryImplementation(),
+          create: (context) => FinRepositoryImplementation(firestoreInstance),
         ),
       ], child: HomeScreen()),
     );

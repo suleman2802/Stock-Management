@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:stock_management_application/presentation/widgets/spaces/space.dart';
-import '../../../utilities/app_routes/app_routes.dart';
 import '../../widgets/car_selection_tile_dialogue/car_selection_tile_dialogue.dart';
 import '../../widgets/layouts/page_scaffolds/list_page_scaffold.dart';
 import '../../widgets/styling/round_icon_button.dart';

@@ -3,7 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'config/app_themes.dart';
 import 'firebase_options.dart';
 import 'presentation/screen/authentication/authentication_screen.dart';
-import 'utilities/app_routes/app_routes.dart';
+import 'utilities/app_routes/app_router.dart';
 
 
 void main() async {
