@@ -14,10 +14,15 @@ class FinCubit extends Cubit<FinState> {
   }
 
   Future<void> fetchAllFinSizes() async {
+    log("inside get");
     try {
       emit(FinLoadingState());
       final List<Fin> finSizesList = await finRepository.getAllFinSizes();
-      emit(FinLoadedState(finList: finSizesList));
+      emit(
+        FinLoadedState(
+          finList: finSizesList,
+        ),
+      );
     } catch (error) {
       emit(FinErrorState(errorMessage: error.toString()));
     }
@@ -26,10 +31,16 @@ class FinCubit extends Cubit<FinState> {
   Future<bool> addNewFinSize(Fin fin) async {
     try {
       final bool isAddedSuccessfully = await finRepository.addNewFinSize(fin);
-      fetchAllFinSizes();
-      return isAddedSuccessfully;
+      // await fetchAllFinSizes();
+      // return isAddedSuccessfully;
+       if (isAddedSuccessfully) {
+      await Future.delayed(Duration(milliseconds: 300)); // Small delay
+      await fetchAllFinSizes();
+    }
+    return isAddedSuccessfully;
     } catch (error) {
       log("Unable to add Fin Size $error");
+      await fetchAllFinSizes();
       return false;
     }
   }
@@ -37,10 +48,11 @@ class FinCubit extends Cubit<FinState> {
   Future<bool> uppdateFinSize(Fin fin) async {
     try {
       final bool isUpdatedSuccessfully = await finRepository.updateFinSize(fin);
-      fetchAllFinSizes();
+      await fetchAllFinSizes();
       return isUpdatedSuccessfully;
     } catch (error) {
       log("Unable to upadate Fin Size $error");
+      await fetchAllFinSizes();
       return false;
     }
   }
@@ -48,10 +60,11 @@ class FinCubit extends Cubit<FinState> {
   Future<bool> deleteFinSize(String id) async {
     try {
       final bool isDeletedSuccessfully = await finRepository.deleteFinSize(id);
-      fetchAllFinSizes();
+      await fetchAllFinSizes();
       return isDeletedSuccessfully;
     } catch (error) {
       log("Unable to delete Fin Size $error");
+      await fetchAllFinSizes();
       return false;
     }
   }

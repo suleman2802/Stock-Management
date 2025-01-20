@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:stock_management_application/presentation/screen/fin/cubit/fin_cubit.dart';
 import '../../../../domain/models/fin.dart';
-import '../../../../domain/repositories/fin/abstract_fin_repository/abstract_fin_repository.dart';
 import '../../../../utilities/app_routes/app_router.dart';
 import '../../../widgets/state_indicators/general_alert/general_alert.dart';
 
@@ -34,9 +34,9 @@ class _FinDialogueState extends State<FinDialogue> {
     if (formKey.currentState?.validate() ?? false) {
       if (widget.fin == null) {
         //? save fin here
-        final isAddedSuccessfully =
-            await RepositoryProvider.of<FinRepository>(context).addNewFinSize(
-                Fin(finSize: int.parse(finController.text.trim())));
+        final isAddedSuccessfully = await context
+            .read<FinCubit>()
+            .addNewFinSize(Fin(finSize: int.parse(finController.text.trim())));
 
         if (mounted) {
           generalAlert(
@@ -48,11 +48,11 @@ class _FinDialogueState extends State<FinDialogue> {
         }
       } else {
         //? edit fin
-        final isUpdatedSuccessfully =
-            await RepositoryProvider.of<FinRepository>(context).updateFinSize(
-                Fin(
-                    id: widget.fin!.id,
-                    finSize: int.parse(finController.text.trim())));
+        final isUpdatedSuccessfully = await context
+            .read<FinCubit>()
+            .uppdateFinSize(Fin(
+                id: widget.fin!.id,
+                finSize: int.parse(finController.text.trim())));
         if (mounted) {
           generalAlert(
             context: context,

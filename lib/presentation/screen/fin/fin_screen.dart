@@ -2,9 +2,9 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../utilities/app_alerts/app_alerts.dart';
 import '../../widgets/state_indicators/error_text/error_text.dart';
 import '../../widgets/layouts/page_scaffolds/list_page_scaffold.dart';
+import '../../widgets/state_indicators/general_alert/general_alert.dart';
 import '../../widgets/state_indicators/loading_indicator/loading_indicator.dart';
 import '../../widgets/state_indicators/no_data_avaliable_text/no_data_avaliable_text.dart';
 import '../../widgets/styling/round_icon_button.dart';
@@ -24,7 +24,10 @@ class FinScreen extends StatelessWidget {
         onPress: () {
           showDialog(
             context: context,
-            builder: (context) => FinDialogue(),
+            builder: (ctx) => BlocProvider.value(
+              value: context.read<FinCubit>(),
+              child: FinDialogue(),
+            ),
           );
         },
       ),
@@ -44,25 +47,26 @@ class FinScreen extends StatelessWidget {
                     itemBuilder: (context, index) => ListTile(
                       onTap: () => showDialog(
                         context: context,
-                        builder: (context) => FinDialogue(
-                          fin: state.finList[index],
+                        builder: (ctx) => BlocProvider.value(
+                          value: context.read<FinCubit>(),
+                          child: FinDialogue(
+                            fin: state.finList[index],
+                          ),
                         ),
                       ),
                       title: Text("${state.finList[index].finSize} mm"),
                       trailing: IconButton(
                         onPressed: () async {
-                          final isDeletedSuccessfully = await context
+                          final bool isDeletedSuccessfully = await context
                               .read<FinCubit>()
                               .deleteFinSize(state.finList[index].id);
-                          if (context.mounted) {
-                            if (isDeletedSuccessfully) {
-                              AppAlertUtil.showSuccess(
-                                  context, "Fin Size Deleted Successfully");
-                            } else {
-                              AppAlertUtil.showError(
-                                  context, "Unable to delete Fin Size");
-                            }
-                          }
+
+                          generalAlert(
+                            context: context,
+                            isSuccessful: isDeletedSuccessfully,
+                            tile: "Fin Size",
+                            type: AlertType.deleted,
+                          );
                         },
                         icon: Icon(Icons.delete_forever, color: Colors.red),
                       ),
