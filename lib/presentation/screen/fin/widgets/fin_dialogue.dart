@@ -50,7 +50,7 @@ class _FinDialogueState extends State<FinDialogue> {
         //? edit fin
         final isUpdatedSuccessfully = await context
             .read<FinCubit>()
-            .uppdateFinSize(Fin(
+            .updateFinSize(Fin(
                 id: widget.fin!.id,
                 finSize: int.parse(finController.text.trim())));
         if (mounted) {

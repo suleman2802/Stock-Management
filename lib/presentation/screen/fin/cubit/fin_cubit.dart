@@ -31,13 +31,8 @@ class FinCubit extends Cubit<FinState> {
   Future<bool> addNewFinSize(Fin fin) async {
     try {
       final bool isAddedSuccessfully = await finRepository.addNewFinSize(fin);
-      // await fetchAllFinSizes();
-      // return isAddedSuccessfully;
-       if (isAddedSuccessfully) {
-      await Future.delayed(Duration(milliseconds: 300)); // Small delay
       await fetchAllFinSizes();
-    }
-    return isAddedSuccessfully;
+      return isAddedSuccessfully;
     } catch (error) {
       log("Unable to add Fin Size $error");
       await fetchAllFinSizes();
@@ -45,7 +40,7 @@ class FinCubit extends Cubit<FinState> {
     }
   }
 
-  Future<bool> uppdateFinSize(Fin fin) async {
+  Future<bool> updateFinSize(Fin fin) async {
     try {
       final bool isUpdatedSuccessfully = await finRepository.updateFinSize(fin);
       await fetchAllFinSizes();

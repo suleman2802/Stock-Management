@@ -73,8 +73,7 @@ class FinScreen extends StatelessWidget {
                     ),
                   );
           } else {
-            log("inside else of Fin Cubit state");
-            return LoadingIndicator();
+            return NoDataAvaliableText();
           }
         },
       ),

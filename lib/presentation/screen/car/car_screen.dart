@@ -1,9 +1,16 @@
-import 'package:flutter/material.dart';
+import 'dart:developer';
 
-import '../../../domain/models/car.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
 import '../../widgets/layouts/page_scaffolds/list_page_scaffold.dart';
 import '../../widgets/spaces/space.dart';
+import '../../widgets/state_indicators/error_text/error_text.dart';
+import '../../widgets/state_indicators/general_alert/general_alert.dart';
+import '../../widgets/state_indicators/loading_indicator/loading_indicator.dart';
+import '../../widgets/state_indicators/no_data_avaliable_text/no_data_avaliable_text.dart';
 import '../../widgets/styling/round_icon_button.dart';
+import 'cubit/car_cubit.dart';
 import 'widgets/car_dialogue.dart';
 
 class CarScreen extends StatelessWidget {
@@ -20,7 +27,10 @@ class CarScreen extends StatelessWidget {
         onPress: () {
           showDialog(
             context: context,
-            builder: (context) => CarDialogue(),
+            builder: (ctx) => BlocProvider.value(
+              value: context.read<CarCubit>(),
+              child: CarDialogue(),
+            ),
           );
         },
       ),
@@ -44,36 +54,67 @@ class CarScreen extends StatelessWidget {
           ),
           mediumHeightSpace(),
           Expanded(
-            child: ListView.builder(
-              itemCount: 15,
-              itemBuilder: (context, index) => ListTile(
-                onTap: () {
-                  showDialog(
-                    context: context,
-                    builder: (context) => CarDialogue(
-                      car: Car(
-                        id: "-4",
-                        carCompany: "test",
-                        carModel: "test",
-                        carName: "test",
-                      ),
-                    ),
+            child: BlocBuilder<CarCubit, CarState>(
+              builder: (context, state) {
+                if (state is CarLoadingState) {
+                  return LoadingIndicator();
+                } else if (state is CarErrorState) {
+                  return ErrorText(
+                    errorMessage: state.errorMessage,
                   );
-                },
-                title: Text("Car"),
-                subtitle: Text("model $index"),
-                leading: CircleAvatar(
-                  backgroundColor: Theme.of(context).primaryColor,
-                  child: Text(
-                    "H",
-                    style: TextStyle(color: Colors.white),
-                  ),
-                ),
-                trailing: Icon(
-                  Icons.delete_forever,
-                  color: Colors.red,
-                ),
-              ),
+                } else if (state is CarLoadedState) {
+                  return state.carList.isEmpty
+                      ? NoDataAvaliableText()
+                      : ListView.builder(
+                          itemCount: state.carList.length,
+                          itemBuilder: (context, index) => ListTile(
+                            onTap: () {
+                              showDialog(
+                                context: context,
+                                builder: (ctx) => BlocProvider.value(
+                                  value: context.read<CarCubit>(),
+                                  child: CarDialogue(
+                                    car: state.carList[index],
+                                  ),
+                                ),
+                              );
+                            },
+                            title: Text(
+                              state.carList[index].carName,
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                            subtitle: Text(state.carList[index].carModel),
+                            leading: CircleAvatar(
+                              backgroundColor: Theme.of(context).primaryColor,
+                              child: Text(
+                                state.carList[index].carCompany
+                                    .substring(0, 1)
+                                    .toUpperCase(),
+                                style: TextStyle(color: Colors.white),
+                              ),
+                            ),
+                            trailing: IconButton(
+                              onPressed: () async {
+                                final bool isDeletedSuccessfully = await context
+                                    .read<CarCubit>()
+                                    .deleteCar(state.carList[index].id);
+
+                                generalAlert(
+                                  context: context,
+                                  isSuccessful: isDeletedSuccessfully,
+                                  tile: "Car",
+                                  type: AlertType.deleted,
+                                );
+                              },
+                              icon:
+                                  Icon(Icons.delete_forever, color: Colors.red),
+                            ),
+                          ),
+                        );
+                } else {
+                  return NoDataAvaliableText();
+                }
+              },
             ),
           ),
         ],
