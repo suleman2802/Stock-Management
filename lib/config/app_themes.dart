@@ -72,7 +72,7 @@ class AppThemes {
 
     cardTheme: const CardTheme(
       elevation: 2,
-      margin: EdgeInsets.symmetric(horizontal: 3, vertical: 3),
+      margin: EdgeInsets.symmetric(horizontal: 3, vertical: 4),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.all(Radius.circular(15)),
       ),

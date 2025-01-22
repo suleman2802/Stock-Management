@@ -41,7 +41,7 @@ class _CarDialogueState extends State<CarDialogue> {
   submitCarForm() async {
     if (formKey.currentState?.validate() ?? false) {
       if (widget.car == null) {
-        //? save fin here
+        //? save car here
         final isAddedSuccessfully = await context.read<CarCubit>().addNewCar(
             Car(
                 carCompany: carCompanyController.text.trim(),
@@ -57,7 +57,7 @@ class _CarDialogueState extends State<CarDialogue> {
           );
         }
       } else {
-        //? edit fin
+        //? edit car
         final isUpdatedSuccessfully = await context.read<CarCubit>().updateCar(
             Car(
                 id: widget.car!.id,

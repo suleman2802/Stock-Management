@@ -1,17 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../config/dimensions.dart';
 import '../../../domain/models/rows.dart';
 import '../../../utilities/app_routes/app_router.dart';
+import '../../screen/rows/cubit/rows_cubit.dart';
 import '../../screen/rows/widgets/rows_dialogue.dart';
 import '../spaces/space.dart';
+import '../state_indicators/error_text/error_text.dart';
+import '../state_indicators/loading_indicator/loading_indicator.dart';
+import '../state_indicators/no_data_avaliable_text/no_data_avaliable_text.dart';
 import '../styling/bordered_container.dart';
 import '../styling/bottom_sheet_header.dart';
 import '../styling/round_icon_button.dart';
 
 class RowSelectionTileDialogue extends StatefulWidget {
-  const RowSelectionTileDialogue({super.key, this.rows});
-  final Rows? rows;
+  RowSelectionTileDialogue({super.key, this.selectedRows,required this.assignSelectedRowsFunciton});
+  Rows? selectedRows;
+  final Function assignSelectedRowsFunciton;
 
   @override
   State<RowSelectionTileDialogue> createState() =>
@@ -19,43 +25,70 @@ class RowSelectionTileDialogue extends StatefulWidget {
 }
 
 class _RowSelectionTileDialogueState extends State<RowSelectionTileDialogue> {
+  void selectRow(Rows selectedRow) {
+    setState(() {
+      widget.selectedRows = selectedRow;
+    });
+    widget.assignSelectedRowsFunciton(selectedRow);
+  }
+
   @override
   Widget build(BuildContext context) {
-    return widget.rows != null
-        ? ListTile(
-            onTap: () {
-              showModalBottomSheet(
-                context: context,
-                isScrollControlled: true,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+    return widget.selectedRows != null
+        ? Card(
+            child: ListTile(
+              onTap: () {
+                showModalBottomSheet(
+                  context: context,
+                  isScrollControlled: true,
+                  shape: RoundedRectangleBorder(
+                    borderRadius:
+                        BorderRadius.vertical(top: Radius.circular(16)),
+                  ),
+                  builder: (ctx) => BlocProvider.value(
+                    value: context.read<RowsCubit>(),
+                    child: RowListBottomSheet(
+                      selectRowsFunction: selectRow,
+                    ),
+                  ),
+                );
+              },
+              leading: CircleAvatar(
+                backgroundColor: Theme.of(context).primaryColor,
+                child: Text(
+                  widget.selectedRows!.noOfRows.toString(),
+                  style: TextStyle(
+                    color: Colors.white,
+                  ),
                 ),
-                builder: (context) => RowListBottomSheet(),
-              );
-            },
-            leading: CircleAvatar(
-              backgroundColor: Theme.of(context).primaryColor,
-              child: Text(
-                widget.rows!.noOfRows.toString(),
+              ),
+              title: Text(
+                "${widget.selectedRows!.noOfRows} mm",
               ),
             ),
-            title: Text(widget.rows!.noOfRows.toString()),
           )
-        : BorderedContainer(
-            child: Center(
-              child: TextButton(
-                onPressed: () {
-                  showModalBottomSheet(
-                    context: context,
-                    isScrollControlled: true,
-                    shape: RoundedRectangleBorder(
-                      borderRadius:
-                          BorderRadius.vertical(top: Radius.circular(16)),
-                    ),
-                    builder: (context) => RowListBottomSheet(),
-                  );
-                },
-                child: Text("Select Rows"),
+        : Container(
+            margin: EdgeInsets.only(bottom: 3),
+            child: BorderedContainer(
+              child: Center(
+                child: TextButton(
+                  onPressed: () {
+                    showModalBottomSheet(
+                      context: context,
+                      isScrollControlled: true,
+                      shape: RoundedRectangleBorder(
+                        borderRadius:
+                            BorderRadius.vertical(top: Radius.circular(16)),
+                      ),
+                      builder: (ctx) => BlocProvider.value(
+                          value: context.read<RowsCubit>(),
+                          child: RowListBottomSheet(
+                            selectRowsFunction: selectRow,
+                          )),
+                    );
+                  },
+                  child: Text("Select Rows"),
+                ),
               ),
             ),
           );
@@ -63,13 +96,13 @@ class _RowSelectionTileDialogueState extends State<RowSelectionTileDialogue> {
 }
 
 class RowListBottomSheet extends StatelessWidget {
-  const RowListBottomSheet({super.key});
-
+  const RowListBottomSheet({super.key, required this.selectRowsFunction});
+  final Function selectRowsFunction;
   @override
   Widget build(BuildContext context) {
     final dimensions = Dimensions(context);
     return SizedBox(
-      height: dimensions.height80,
+      height: dimensions.height50,
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -91,7 +124,10 @@ class RowListBottomSheet extends StatelessWidget {
                         iconData: Icons.add,
                         onPress: () => showDialog(
                           context: context,
-                          builder: (context) => RowsDialogue(),
+                          builder: (ctx) => BlocProvider.value(
+                            value: context.read<RowsCubit>(),
+                            child: RowsDialogue(),
+                          ),
                         ),
                       ),
                       smallWidthSpace(),
@@ -106,24 +142,34 @@ class RowListBottomSheet extends StatelessWidget {
             ),
           ),
           Expanded(
-            child: ListView.builder(
-              itemCount: 4, // Replace with the actual number of cars
-              itemBuilder: (context, index) => ListTile(
-                title: Text(
-                  "rows $index",
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                ),
-                leading: CircleAvatar(
-                  backgroundColor: Theme.of(context).primaryColor,
-                  child: Text(
-                    "3",
-                    style: TextStyle(color: Colors.white),
-                  ),
-                ),
-                onTap: () {
-                  AppRouter.pop();
-                },
-              ),
+            child: BlocBuilder<RowsCubit, RowsState>(
+              builder: (context, state) {
+                if (state is RowsLoadingState) {
+                  return LoadingIndicator();
+                } else if (state is RowsErrorState) {
+                  return ErrorText(
+                    errorMessage: state.errorMessage,
+                  );
+                } else if (state is RowsLoadedState) {
+                  return state.rowsList.isEmpty
+                      ? NoDataAvaliableText()
+                      : ListView.builder(
+                          itemCount: state.rowsList.length,
+                          itemBuilder: (context, index) => Card(
+                            child: ListTile(
+                              onTap: () {
+                                selectRowsFunction(state.rowsList[index]);
+                                AppRouter.pop();
+                              },
+                              title:
+                                  Text("${state.rowsList[index].noOfRows} mm"),
+                            ),
+                          ),
+                        );
+                } else {
+                  return NoDataAvaliableText();
+                }
+              },
             ),
           ),
         ],

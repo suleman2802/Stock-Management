@@ -1,5 +1,15 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:stock_management_application/utilities/app_alerts/app_alerts.dart';
+import '../../../../domain/models/car.dart';
+import '../../../../domain/models/fin.dart';
 import '../../../../domain/models/radiator.dart';
+import '../../../../domain/models/rows.dart';
+import '../../../../domain/repositories/car/abstract_car_repository/abstract_car_repository.dart';
+import '../../../../domain/repositories/fin/abstract_fin_repository/abstract_fin_repository.dart';
+import '../../../../domain/repositories/row/abstract_rows_repository/abstract_rows_repository.dart';
 import '../../../../utilities/app_routes/app_router.dart';
 import '../../../widgets/car_selection_tile_dialogue/car_selection_tile_dialogue.dart';
 import '../../../widgets/fin_selection_tile_dialogue/fin_selection_tile_dialogue.dart';
@@ -7,6 +17,11 @@ import '../../../widgets/input_feilds/number_input_field.dart';
 import '../../../widgets/input_feilds/text_input_field.dart';
 import '../../../widgets/row_selection_tile_dialogue/row_selection_tile_dialogue.dart';
 import '../../../widgets/spaces/space.dart';
+import '../../../widgets/state_indicators/general_alert/general_alert.dart';
+import '../../car/cubit/car_cubit.dart';
+import '../../fin/cubit/fin_cubit.dart';
+import '../../rows/cubit/rows_cubit.dart';
+import '../cubit/radiator_cubit.dart';
 
 class RadiatorDialogue extends StatefulWidget {
   const RadiatorDialogue({super.key, this.radiator});
@@ -24,9 +39,23 @@ class _RadiatorDialogueState extends State<RadiatorDialogue> {
   final TextEditingController sizeController = TextEditingController();
   final TextEditingController fromYearController = TextEditingController();
   final TextEditingController toYearController = TextEditingController();
+  Rows? _selectedRows;
+  Fin? _selectedFin;
+  Car? _selectedCar;
+
   @override
   void initState() {
     super.initState();
+    if (widget.radiator != null) {
+      sizeController.text = widget.radiator!.size;
+      fromYearController.text = widget.radiator!.fromYear.toString();
+      toYearController.text = widget.radiator!.toYear.toString();
+      _selectedFuelType = widget.radiator!.carFuelType;
+      _selectedCarAutomationType = widget.radiator!.carAutomation;
+      _selectedCar = widget.radiator!.car;
+      _selectedRows = widget.radiator!.rows;
+      _selectedFin = widget.radiator!.fin;
+    }
   }
 
   @override
@@ -35,6 +64,91 @@ class _RadiatorDialogueState extends State<RadiatorDialogue> {
     sizeController.dispose();
     fromYearController.dispose();
     toYearController.dispose();
+  }
+
+  assignSelectedCar(Car car) {
+    // setState(() {
+    _selectedCar = car;
+    // });
+  }
+
+  assignSelectedRows(Rows rows) {
+    // setState(() {
+    _selectedRows = rows;
+    // });
+  }
+
+  assignSelectedFin(Fin fin) {
+    // setState(() {
+    _selectedFin = fin;
+    // });
+  }
+
+  Future<void> submitRadiatorForm() async {
+    try {
+      if (formKey.currentState?.validate() ??
+          false ||
+              (_selectedCar != null &&
+                  _selectedRows != null &&
+                  _selectedFin != null)) {
+        // Save functionality here
+        if (widget.radiator == null) {
+          //? save car here
+          final isAddedSuccessfully =
+              await context.read<RadiatorCubit>().addNewRadiator(
+                    Radiator(
+                        size: sizeController.text.trim(),
+                        carFuelType: _selectedFuelType,
+                        carAutomation: _selectedCarAutomationType,
+                        fromYear: int.parse(fromYearController.text.trim()),
+                        toYear: int.parse(toYearController.text.trim()),
+                        rows: _selectedRows!,
+                        car: _selectedCar!,
+                        fin: _selectedFin!),
+                  );
+
+          if (mounted) {
+            generalAlert(
+              context: context,
+              isSuccessful: isAddedSuccessfully,
+              tile: "Radiator",
+              type: AlertType.added,
+            );
+          }
+        } else {
+          //? edit car
+          final isUpdatedSuccessfully =
+              await context.read<RadiatorCubit>().updateRadiator(
+                    Radiator(
+                        id: widget.radiator!.id,
+                        size: sizeController.text.trim(),
+                        carFuelType: _selectedFuelType,
+                        carAutomation: _selectedCarAutomationType,
+                        fromYear: int.parse(fromYearController.text.trim()),
+                        toYear: int.parse(toYearController.text.trim()),
+                        rows: _selectedRows!,
+                        car: _selectedCar!,
+                        fin: _selectedFin!),
+                  );
+          if (mounted) {
+            generalAlert(
+              context: context,
+              isSuccessful: isUpdatedSuccessfully,
+              tile: "Radiator",
+              type: AlertType.updated,
+            );
+          }
+        }
+        AppRouter.pop();
+      } else {
+        //? all feilds are not provided
+        AppAlertUtil.showError(context, "All Feilds are required");
+      }
+    } catch (error) {
+      log("Unable to add Radiator : $error");
+
+      AppAlertUtil.showError(context, "Error : $error");
+    }
   }
 
   @override
@@ -46,12 +160,7 @@ class _RadiatorDialogueState extends State<RadiatorDialogue> {
           child: Text("Cancel"),
         ),
         ElevatedButton(
-          onPressed: () {
-            if (formKey.currentState!.validate()) {
-              // Save functionality here
-              AppRouter.pop();
-            }
-          },
+          onPressed: submitRadiatorForm,
           child: Text(widget.radiator != null ? "Edit" : "Save"),
         ),
       ],
@@ -66,11 +175,32 @@ class _RadiatorDialogueState extends State<RadiatorDialogue> {
             key: formKey,
             child: Column(
               children: [
-                CarSelectionTileDialogue(),
-                smallestHeightSpace(),
-                RowSelectionTileDialogue(),
-                smallestHeightSpace(),
-                FinSelectionTileDialogue(),
+                BlocProvider(
+                  create: (context) => CarCubit(
+                    carRepository: context.read<CarRepository>(),
+                  ),
+                  child: CarSelectionTileDialogue(
+                    selectedCar: _selectedCar,
+                    assignSelectedCarFunction: assignSelectedCar,
+                  ),
+                ),
+                BlocProvider(
+                  create: (context) => RowsCubit(
+                    rowsRepository: context.read<RowsRepository>(),
+                  ),
+                  child: RowSelectionTileDialogue(
+                    selectedRows: _selectedRows,
+                    assignSelectedRowsFunciton: assignSelectedRows,
+                  ),
+                ),
+                BlocProvider(
+                  create: (context) =>
+                      FinCubit(finRepository: context.read<FinRepository>()),
+                  child: FinSelectionTileDialogue(
+                    selectedFin: _selectedFin,
+                    assignSelectedFinFunction: assignSelectedFin,
+                  ),
+                ),
                 smallestHeightSpace(),
                 TextInputField(
                   validator: (value) {

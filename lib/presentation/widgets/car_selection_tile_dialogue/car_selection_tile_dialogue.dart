@@ -1,17 +1,23 @@
 import 'package:flutter/material.dart';
-
+import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../config/dimensions.dart';
 import '../../../domain/models/car.dart';
 import '../../../utilities/app_routes/app_router.dart';
+import '../../screen/car/cubit/car_cubit.dart';
 import '../../screen/car/widgets/car_dialogue.dart';
 import '../spaces/space.dart';
+import '../state_indicators/error_text/error_text.dart';
+import '../state_indicators/loading_indicator/loading_indicator.dart';
+import '../state_indicators/no_data_avaliable_text/no_data_avaliable_text.dart';
 import '../styling/bordered_container.dart';
 import '../styling/bottom_sheet_header.dart';
 import '../styling/round_icon_button.dart';
 
 class CarSelectionTileDialogue extends StatefulWidget {
-  const CarSelectionTileDialogue({super.key, this.car});
-  final Car? car;
+  CarSelectionTileDialogue(
+      {super.key, this.selectedCar, required this.assignSelectedCarFunction});
+  Car? selectedCar;
+  final Function assignSelectedCarFunction;
 
   @override
   State<CarSelectionTileDialogue> createState() =>
@@ -19,44 +25,70 @@ class CarSelectionTileDialogue extends StatefulWidget {
 }
 
 class _CarSelectionTileDialogueState extends State<CarSelectionTileDialogue> {
+  void selectCar(Car selectedCar) {
+    setState(() {
+      widget.selectedCar = selectedCar;
+    });
+    widget.assignSelectedCarFunction(selectedCar);
+  }
+
   @override
   Widget build(BuildContext context) {
-    return widget.car != null
-        ? ListTile(
-            onTap: () {
-              showModalBottomSheet(
-                context: context,
-                isScrollControlled: true,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
-                ),
-                builder: (context) => CarListBottomSheet(),
-              );
-            },
-            leading: CircleAvatar(
-              backgroundColor: Theme.of(context).primaryColor,
-              child: Text(
-                widget.car!.carCompany[0].toUpperCase(),
-              ),
-            ),
-            title: Text(widget.car!.carName),
-            subtitle: Text(widget.car!.carModel),
-          )
-        : BorderedContainer(
-            child: Center(
-              child: TextButton(
-                onPressed: () {
-                  showModalBottomSheet(
-                    context: context,
-                    isScrollControlled: true,
-                    shape: RoundedRectangleBorder(
-                      borderRadius:
-                          BorderRadius.vertical(top: Radius.circular(16)),
+    return widget.selectedCar != null
+        ? Card(
+            child: ListTile(
+              onTap: () {
+                showModalBottomSheet(
+                  context: context,
+                  isScrollControlled: true,
+                  shape: RoundedRectangleBorder(
+                    borderRadius:
+                        BorderRadius.vertical(top: Radius.circular(16)),
+                  ),
+                  builder: (ctx) => BlocProvider.value(
+                    value: context.read<CarCubit>(),
+                    child: CarListBottomSheet(
+                      selectCarFunction: selectCar,
                     ),
-                    builder: (context) => CarListBottomSheet(),
-                  );
-                },
-                child: Text("Select Car"),
+                  ),
+                );
+              },
+              leading: CircleAvatar(
+                backgroundColor: Theme.of(context).primaryColor,
+                child: Text(
+                  widget.selectedCar!.carCompany[0].toUpperCase(),
+                  style: TextStyle(
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+              title: Text(widget.selectedCar!.carName),
+              subtitle: Text(widget.selectedCar!.carModel),
+            ),
+          )
+        : Container(
+            margin: EdgeInsets.only(bottom: 3),
+            child: BorderedContainer(
+              child: Center(
+                child: TextButton(
+                  onPressed: () {
+                    showModalBottomSheet(
+                      context: context,
+                      isScrollControlled: true,
+                      shape: RoundedRectangleBorder(
+                        borderRadius:
+                            BorderRadius.vertical(top: Radius.circular(16)),
+                      ),
+                      builder: (ctx) => BlocProvider.value(
+                        value: context.read<CarCubit>(),
+                        child: CarListBottomSheet(
+                          selectCarFunction: selectCar,
+                        ),
+                      ),
+                    );
+                  },
+                  child: Text("Select Car"),
+                ),
               ),
             ),
           );
@@ -64,7 +96,8 @@ class _CarSelectionTileDialogueState extends State<CarSelectionTileDialogue> {
 }
 
 class CarListBottomSheet extends StatelessWidget {
-  const CarListBottomSheet({super.key});
+  const CarListBottomSheet({super.key, required this.selectCarFunction});
+  final Function selectCarFunction;
 
   @override
   Widget build(BuildContext context) {
@@ -86,13 +119,16 @@ class CarListBottomSheet extends StatelessWidget {
                           color: Colors.white,
                         ),
                   ),
-                 Row(
+                  Row(
                     children: [
                       RoundIconButton(
                         iconData: Icons.add,
                         onPress: () => showDialog(
                           context: context,
-                          builder: (context) => CarDialogue(),
+                          builder: (ctx) => BlocProvider.value(
+                            value: context.read<CarCubit>(),
+                            child: CarDialogue(),
+                          ),
                         ),
                       ),
                       smallWidthSpace(),
@@ -107,25 +143,46 @@ class CarListBottomSheet extends StatelessWidget {
             ),
           ),
           Expanded(
-            child: ListView.builder(
-              itemCount: 4, // Replace with the actual number of cars
-              itemBuilder: (context, index) => ListTile(
-                title: Text(
-                  "Tesla",
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                ),
-                subtitle: Text("Model $index"),
-                leading: CircleAvatar(
-                  backgroundColor: Theme.of(context).primaryColor,
-                  child: Text(
-                    "A",
-                    style: TextStyle(color: Colors.white),
-                  ),
-                ),
-                onTap: () {
-                  AppRouter.pop();
-                },
-              ),
+            child: BlocBuilder<CarCubit, CarState>(
+              builder: (context, state) {
+                if (state is CarLoadingState) {
+                  return LoadingIndicator();
+                } else if (state is CarErrorState) {
+                  return ErrorText(
+                    errorMessage: state.errorMessage,
+                  );
+                } else if (state is CarLoadedState) {
+                  return state.carList.isEmpty
+                      ? NoDataAvaliableText()
+                      : ListView.builder(
+                          itemCount: state.carList.length,
+                          itemBuilder: (context, index) => Card(
+                            child: ListTile(
+                              onTap: () {
+                                selectCarFunction(state.carList[index]);
+                                AppRouter.pop();
+                              },
+                              title: Text(
+                                state.carList[index].carName,
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              ),
+                              subtitle: Text(state.carList[index].carModel),
+                              leading: CircleAvatar(
+                                backgroundColor: Theme.of(context).primaryColor,
+                                child: Text(
+                                  state.carList[index].carCompany
+                                      .substring(0, 1)
+                                      .toUpperCase(),
+                                  style: TextStyle(color: Colors.white),
+                                ),
+                              ),
+                            ),
+                          ),
+                        );
+                } else {
+                  return NoDataAvaliableText();
+                }
+              },
             ),
           ),
         ],

@@ -62,7 +62,6 @@ class _StockFormScreenState extends State<StockFormScreen> {
           //? validate form
 
           //? navigate to car screen
-      
         },
       ),
       body: Padding(
@@ -114,15 +113,19 @@ class _StockFormScreenState extends State<StockFormScreen> {
             ),
             Row(
               children: [
-                Expanded(child: CarSelectionTileDialogue()),
+                Expanded(
+                    child: CarSelectionTileDialogue(
+                  assignSelectedCarFunction: () {},
+                )),
                 smallWidthSpace(),
                 IconButton.filledTonal(
+                  color: Theme.of(context).primaryColor,
+                  onPressed: () {},
+                  icon: Icon(
+                    Icons.add,
                     color: Theme.of(context).primaryColor,
-                    onPressed: () {},
-                    icon: Icon(
-                      Icons.add,
-                      color: Theme.of(context).primaryColor,
-                    ),),
+                  ),
+                ),
               ],
             ),
             smallWidthSpace(),

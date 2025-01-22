@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../widgets/layouts/page_scaffolds/list_page_scaffold.dart';
-import '../../widgets/spaces/space.dart';
 import '../../widgets/state_indicators/error_text/error_text.dart';
 import '../../widgets/state_indicators/general_alert/general_alert.dart';
 import '../../widgets/state_indicators/loading_indicator/loading_indicator.dart';

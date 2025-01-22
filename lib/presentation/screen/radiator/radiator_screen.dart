@@ -1,8 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../domain/repositories/car/abstract_car_repository/abstract_car_repository.dart';
+import '../../../domain/repositories/fin/abstract_fin_repository/abstract_fin_repository.dart';
+import '../../../domain/repositories/radiator/abstract_radiator_repository/abstract_radiator_repository.dart';
+import '../../../domain/repositories/row/abstract_rows_repository/abstract_rows_repository.dart';
 import '../../widgets/layouts/page_scaffolds/list_page_scaffold.dart';
-import '../../widgets/spaces/space.dart';
+import '../../widgets/state_indicators/error_text/error_text.dart';
+import '../../widgets/state_indicators/general_alert/general_alert.dart';
+import '../../widgets/state_indicators/loading_indicator/loading_indicator.dart';
+import '../../widgets/state_indicators/no_data_avaliable_text/no_data_avaliable_text.dart';
 import '../../widgets/styling/round_icon_button.dart';
+import 'cubit/radiator_cubit.dart';
 import 'widgets/radiator_dialogue.dart';
 
 class RadiatorScreen extends StatelessWidget {
@@ -20,7 +29,26 @@ class RadiatorScreen extends StatelessWidget {
           // add new radiator
           showDialog(
             context: context,
-            builder: (context) => RadiatorDialogue(),
+            builder: (ctx) => MultiRepositoryProvider(
+              providers: [
+                RepositoryProvider.value(
+                  value: context.read<RadiatorRepository>(),
+                ),
+                RepositoryProvider.value(
+                  value: context.read<CarRepository>(),
+                ),
+                RepositoryProvider.value(
+                  value: context.read<FinRepository>(),
+                ),
+                RepositoryProvider.value(
+                  value: context.read<RowsRepository>(),
+                ),
+              ],
+              child: BlocProvider.value(
+                value: context.read<RadiatorCubit>(),
+                child: RadiatorDialogue(),
+              ),
+            ),
           );
         },
       ),
@@ -42,32 +70,89 @@ class RadiatorScreen extends StatelessWidget {
               ),
             ),
           ),
-          mediumHeightSpace(),
           Expanded(
-            child: ListView.builder(
-              itemCount: 15,
-              itemBuilder: (context, index) => ListTile(
-                onTap: () {
-                  // view & edit radiator
-                  showDialog(
-                    context: context,
-                    builder: (context) => RadiatorDialogue(),
+            child: BlocBuilder<RadiatorCubit, RadiatorState>(
+              builder: (context, state) {
+                if (state is RadiatorLoadingState) {
+                  return LoadingIndicator();
+                } else if (state is RadiatorErrorState) {
+                  return ErrorText(
+                    errorMessage: state.errorMessage,
                   );
-                },
-                title: Text("Car.name"),
-                subtitle: Text("size $index"),
-                leading: CircleAvatar(
-                  backgroundColor: Theme.of(context).primaryColor,
-                  child: Text(
-                    "A",
-                    style: TextStyle(color: Colors.white),
-                  ),
-                ),
-                trailing: Icon(
-                  Icons.delete_forever,
-                  color: Colors.red,
-                ),
-              ),
+                } else if (state is RadiatorLoadedState) {
+                  return state.radiatorList.isEmpty
+                      ? NoDataAvaliableText()
+                      : ListView.builder(
+                          itemCount: state.radiatorList.length,
+                          itemBuilder: (context, index) => Card(
+                            child: ListTile(
+                              onTap: () {
+                                showDialog(
+                                  context: context,
+                                  builder: (ctx) => MultiRepositoryProvider(
+                                    providers: [
+                                      RepositoryProvider.value(
+                                        value:
+                                            context.read<RadiatorRepository>(),
+                                      ),
+                                      RepositoryProvider.value(
+                                        value: context.read<CarRepository>(),
+                                      ),
+                                      RepositoryProvider.value(
+                                        value: context.read<FinRepository>(),
+                                      ),
+                                      RepositoryProvider.value(
+                                        value: context.read<RowsRepository>(),
+                                      ),
+                                    ],
+                                    child: BlocProvider.value(
+                                      value: context.read<RadiatorCubit>(),
+                                      child: RadiatorDialogue(
+                                        radiator: state.radiatorList[index],
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              },
+                              title: Text(
+                                state.radiatorList[index].car.carName,
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              ),
+                              subtitle: Text(state.radiatorList[index].size),
+                              leading: CircleAvatar(
+                                backgroundColor: Theme.of(context).primaryColor,
+                                child: Text(
+                                  state.radiatorList[index].carAutomation.name
+                                      .substring(0, 1)
+                                      .toUpperCase(),
+                                  style: TextStyle(color: Colors.white),
+                                ),
+                              ),
+                              trailing: IconButton(
+                                onPressed: () async {
+                                  final bool isDeletedSuccessfully =
+                                      await context
+                                          .read<RadiatorCubit>()
+                                          .deleteRadiator(
+                                              state.radiatorList[index].id);
+
+                                  generalAlert(
+                                    context: context,
+                                    isSuccessful: isDeletedSuccessfully,
+                                    tile: "Radiator",
+                                    type: AlertType.deleted,
+                                  );
+                                },
+                                icon: Icon(Icons.delete_forever,
+                                    color: Colors.red),
+                              ),
+                            ),
+                          ),
+                        );
+                } else {
+                  return NoDataAvaliableText();
+                }
+              },
             ),
           ),
         ],

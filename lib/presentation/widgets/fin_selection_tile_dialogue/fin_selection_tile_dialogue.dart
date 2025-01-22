@@ -1,17 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../config/dimensions.dart';
 import '../../../domain/models/fin.dart';
 import '../../../utilities/app_routes/app_router.dart';
+import '../../screen/fin/cubit/fin_cubit.dart';
 import '../../screen/fin/widgets/fin_dialogue.dart';
 import '../spaces/space.dart';
+import '../state_indicators/error_text/error_text.dart';
+import '../state_indicators/loading_indicator/loading_indicator.dart';
+import '../state_indicators/no_data_avaliable_text/no_data_avaliable_text.dart';
 import '../styling/bordered_container.dart';
 import '../styling/bottom_sheet_header.dart';
 import '../styling/round_icon_button.dart';
 
 class FinSelectionTileDialogue extends StatefulWidget {
-  const FinSelectionTileDialogue({super.key, this.fin});
-  final Fin? fin;
+  FinSelectionTileDialogue(
+      {super.key, this.selectedFin, required this.assignSelectedFinFunction});
+  Fin? selectedFin;
+  final Function assignSelectedFinFunction;
 
   @override
   State<FinSelectionTileDialogue> createState() =>
@@ -19,43 +26,69 @@ class FinSelectionTileDialogue extends StatefulWidget {
 }
 
 class _FinSelectionTileDialogueState extends State<FinSelectionTileDialogue> {
+  void selectFin(Fin selectedFin) {
+    setState(() {
+      widget.selectedFin = selectedFin;
+    });
+    widget.assignSelectedFinFunction(selectedFin);
+  }
+
   @override
   Widget build(BuildContext context) {
-    return widget.fin != null
-        ? ListTile(
-            onTap: () {
-              showModalBottomSheet(
-                context: context,
-                isScrollControlled: true,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
-                ),
-                builder: (context) => FinListBottomSheet(),
-              );
-            },
-            leading: CircleAvatar(
-              backgroundColor: Theme.of(context).primaryColor,
-              child: Text(
-                widget.fin!.finSize.toString(),
-              ),
-            ),
-            title: Text(widget.fin!.finSize.toString()),
-          )
-        : BorderedContainer(
-            child: Center(
-              child: TextButton(
-                onPressed: () {
-                  showModalBottomSheet(
-                    context: context,
-                    isScrollControlled: true,
-                    shape: RoundedRectangleBorder(
-                      borderRadius:
-                          BorderRadius.vertical(top: Radius.circular(16)),
+    return widget.selectedFin != null
+        ? Card(
+            child: ListTile(
+              onTap: () {
+                showModalBottomSheet(
+                  context: context,
+                  isScrollControlled: true,
+                  shape: RoundedRectangleBorder(
+                    borderRadius:
+                        BorderRadius.vertical(top: Radius.circular(16)),
+                  ),
+                  builder: (ctx) => BlocProvider.value(
+                    value: context.read<FinCubit>(),
+                    child: FinListBottomSheet(
+                      selectFinFunction: selectFin,
                     ),
-                    builder: (context) => FinListBottomSheet(),
-                  );
-                },
-                child: Text("Select Fin"),
+                  ),
+                );
+              },
+              leading: CircleAvatar(
+                backgroundColor: Theme.of(context).primaryColor,
+                child: Text(
+                  widget.selectedFin!.finSize.toString(),
+                  style: TextStyle(
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+              title: Text("${widget.selectedFin!.finSize} mm"),
+            ),
+          )
+        : Container(
+            margin: EdgeInsets.only(bottom: 3),
+            child: BorderedContainer(
+              child: Center(
+                child: TextButton(
+                  onPressed: () {
+                    showModalBottomSheet(
+                      context: context,
+                      isScrollControlled: true,
+                      shape: RoundedRectangleBorder(
+                        borderRadius:
+                            BorderRadius.vertical(top: Radius.circular(16)),
+                      ),
+                      builder: (ctx) => BlocProvider.value(
+                        value: context.read<FinCubit>(),
+                        child: FinListBottomSheet(
+                          selectFinFunction: selectFin,
+                        ),
+                      ),
+                    );
+                  },
+                  child: Text("Select Fin"),
+                ),
               ),
             ),
           );
@@ -63,13 +96,14 @@ class _FinSelectionTileDialogueState extends State<FinSelectionTileDialogue> {
 }
 
 class FinListBottomSheet extends StatelessWidget {
-  const FinListBottomSheet({super.key});
+  const FinListBottomSheet({super.key, required this.selectFinFunction});
+  final Function selectFinFunction;
 
   @override
   Widget build(BuildContext context) {
     final dimensions = Dimensions(context);
     return SizedBox(
-      height: dimensions.height80,
+      height: dimensions.height50,
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -91,7 +125,10 @@ class FinListBottomSheet extends StatelessWidget {
                         iconData: Icons.add,
                         onPress: () => showDialog(
                           context: context,
-                          builder: (context) => FinDialogue(),
+                          builder: (ctx) => BlocProvider.value(
+                            value: context.read<FinCubit>(),
+                            child: FinDialogue(),
+                          ),
                         ),
                       ),
                       smallWidthSpace(),
@@ -106,24 +143,33 @@ class FinListBottomSheet extends StatelessWidget {
             ),
           ),
           Expanded(
-            child: ListView.builder(
-              itemCount: 4, // Replace with the actual number of cars
-              itemBuilder: (context, index) => ListTile(
-                title: Text(
-                  "fin $index",
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                ),
-                leading: CircleAvatar(
-                  backgroundColor: Theme.of(context).primaryColor,
-                  child: Text(
-                    "8",
-                    style: TextStyle(color: Colors.white),
-                  ),
-                ),
-                onTap: () {
-                  AppRouter.pop();
-                },
-              ),
+            child: BlocBuilder<FinCubit, FinState>(
+              builder: (context, state) {
+                if (state is FinLoadingState) {
+                  return LoadingIndicator();
+                } else if (state is FinErrorState) {
+                  return ErrorText(
+                    errorMessage: state.errorMessage,
+                  );
+                } else if (state is FinLoadedState) {
+                  return state.finList.isEmpty
+                      ? NoDataAvaliableText()
+                      : ListView.builder(
+                          itemCount: state.finList.length,
+                          itemBuilder: (context, index) => Card(
+                            child: ListTile(
+                              onTap: () {
+                                selectFinFunction(state.finList[index]);
+                                AppRouter.pop();
+                              },
+                              title: Text("${state.finList[index].finSize} mm"),
+                            ),
+                          ),
+                        );
+                } else {
+                  return NoDataAvaliableText();
+                }
+              },
             ),
           ),
         ],
