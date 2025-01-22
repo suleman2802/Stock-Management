@@ -1,16 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:stock_management_application/presentation/widgets/input_feilds/number_input_field.dart';
 import '../../../../domain/models/rows.dart';
 import '../../../../utilities/app_routes/app_router.dart';
+import '../../../widgets/state_indicators/general_alert/general_alert.dart';
+import '../cubit/rows_cubit.dart';
 
-class RowDialogue extends StatefulWidget {
-  const RowDialogue({super.key, this.rows});
+class RowsDialogue extends StatefulWidget {
+  const RowsDialogue({super.key, this.rows});
   final Rows? rows;
 
   @override
-  State<RowDialogue> createState() => _RowDialogueState();
+  State<RowsDialogue> createState() => _RowsDialogueState();
 }
 
-class _RowDialogueState extends State<RowDialogue> {
+class _RowsDialogueState extends State<RowsDialogue> {
   final TextEditingController rowsController = TextEditingController();
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   @override
@@ -27,6 +31,42 @@ class _RowDialogueState extends State<RowDialogue> {
     rowsController.dispose();
   }
 
+  Future<void> submitRowForm() async {
+    if (formKey.currentState?.validate() ?? false) {
+      if (widget.rows == null) {
+        //? save fin here
+        final bool isAddedSuccessfully = await context
+            .read<RowsCubit>()
+            .addNewRows(Rows(noOfRows: int.parse(rowsController.text.trim())));
+
+        if (mounted) {
+          generalAlert(
+            context: context,
+            isSuccessful: isAddedSuccessfully,
+            tile: "Row",
+            type: AlertType.added,
+          );
+        }
+      } else {
+        //? edit fin
+        final isUpdatedSuccessfully = await context
+            .read<RowsCubit>()
+            .updateRows(Rows(
+                id: widget.rows!.id,
+                noOfRows: int.parse(rowsController.text.trim())));
+        if (mounted) {
+          generalAlert(
+            context: context,
+            isSuccessful: isUpdatedSuccessfully,
+            tile: "Row",
+            type: AlertType.updated,
+          );
+        }
+      }
+      AppRouter.pop();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
@@ -36,13 +76,8 @@ class _RowDialogueState extends State<RowDialogue> {
           child: Text("Concel"),
         ),
         ElevatedButton(
-          onPressed: () {
-            if (formKey.currentState!.validate()) {
-              //? save rows here
-              AppRouter.pop();
-            }
-          },
-          child: Text("Save"),
+          onPressed: submitRowForm,
+          child: Text(widget.rows == null ? "Save" : "Edit"),
         ),
       ],
       title: Text(
@@ -53,10 +88,8 @@ class _RowDialogueState extends State<RowDialogue> {
         padding: EdgeInsets.all(16),
         child: Form(
           key: formKey,
-          child: TextFormField(
-            decoration: InputDecoration(
-              labelText: "Enter Rows in mm",
-            ),
+          child: NumberInputField(
+            label: "Enter Rows in mm",
             validator: (value) {
               if (value == null || value.isEmpty) {
                 return "Number of Rows is required";
@@ -66,7 +99,6 @@ class _RowDialogueState extends State<RowDialogue> {
               }
               return null;
             },
-            keyboardType: TextInputType.number,
             controller: rowsController,
           ),
         ),

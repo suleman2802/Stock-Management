@@ -52,6 +52,7 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> {
         RepositoryProvider<RowsRepository>(
           create: (context) => RowsRepositoryImplementation(firestoreInstance),
         ),
+        
       ], child: HomeScreen()),
     );
     // } else {

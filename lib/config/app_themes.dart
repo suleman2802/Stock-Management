@@ -71,15 +71,15 @@ class AppThemes {
     ),
 
     cardTheme: const CardTheme(
-      elevation: 10,
+      elevation: 2,
+      margin: EdgeInsets.symmetric(horizontal: 3, vertical: 3),
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.all(Radius.circular(30)),
+        borderRadius: BorderRadius.all(Radius.circular(15)),
       ),
     ),
     iconTheme: const IconThemeData(
       color: Color(0xFF0B56C4),
     ),
-
     // iconButtonTheme: IconButtonThemeData(
     //   style: ButtonStyle(
     //     iconColor: WidgetStateProperty.all(Color(0xFF0B56C4)),

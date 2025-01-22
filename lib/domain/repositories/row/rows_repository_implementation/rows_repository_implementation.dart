@@ -54,7 +54,7 @@ class RowsRepositoryImplementation implements RowsRepository {
   Future<bool> updateRow(Rows rows) async {
     try {
       await firestoreInstance
-          .collection('Rows')
+          .collection('rows')
           .doc(rows.id)
           .update(rows.toMap());
 

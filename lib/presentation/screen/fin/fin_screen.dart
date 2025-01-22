@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../widgets/state_indicators/error_text/error_text.dart';
@@ -44,31 +42,33 @@ class FinScreen extends StatelessWidget {
                 ? NoDataAvaliableText()
                 : ListView.builder(
                     itemCount: state.finList.length,
-                    itemBuilder: (context, index) => ListTile(
-                      onTap: () => showDialog(
-                        context: context,
-                        builder: (ctx) => BlocProvider.value(
-                          value: context.read<FinCubit>(),
-                          child: FinDialogue(
-                            fin: state.finList[index],
+                    itemBuilder: (context, index) => Card(
+                      child: ListTile(
+                        onTap: () => showDialog(
+                          context: context,
+                          builder: (ctx) => BlocProvider.value(
+                            value: context.read<FinCubit>(),
+                            child: FinDialogue(
+                              fin: state.finList[index],
+                            ),
                           ),
                         ),
-                      ),
-                      title: Text("${state.finList[index].finSize} mm"),
-                      trailing: IconButton(
-                        onPressed: () async {
-                          final bool isDeletedSuccessfully = await context
-                              .read<FinCubit>()
-                              .deleteFinSize(state.finList[index].id);
-
-                          generalAlert(
-                            context: context,
-                            isSuccessful: isDeletedSuccessfully,
-                            tile: "Fin Size",
-                            type: AlertType.deleted,
-                          );
-                        },
-                        icon: Icon(Icons.delete_forever, color: Colors.red),
+                        title: Text("${state.finList[index].finSize} mm"),
+                        trailing: IconButton(
+                          onPressed: () async {
+                            final bool isDeletedSuccessfully = await context
+                                .read<FinCubit>()
+                                .deleteFinSize(state.finList[index].id);
+                      
+                            generalAlert(
+                              context: context,
+                              isSuccessful: isDeletedSuccessfully,
+                              tile: "Fin Size",
+                              type: AlertType.deleted,
+                            );
+                          },
+                          icon: Icon(Icons.delete_forever, color: Colors.red),
+                        ),
                       ),
                     ),
                   );

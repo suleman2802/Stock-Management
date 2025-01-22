@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:stock_management_application/presentation/screen/rows/rows_screen.dart';
 import '../../../domain/repositories/car/abstract_car_repository/abstract_car_repository.dart';
 import '../../../domain/repositories/fin/abstract_fin_repository/abstract_fin_repository.dart';
+import '../../../domain/repositories/row/abstract_rows_repository/abstract_rows_repository.dart';
 import '../../../utilities/app_routes/app_router.dart';
 import '../../widgets/layouts/page_scaffolds/list_page_scaffold.dart';
 import '../car/car_screen.dart';
 import '../car/cubit/car_cubit.dart';
 import '../fin/cubit/fin_cubit.dart';
 import '../fin/fin_screen.dart';
+import '../rows/cubit/rows_cubit.dart';
 import 'widgets/dashboard_tile_grid.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -76,7 +79,17 @@ class HomeScreen extends StatelessWidget {
             DashboardTileGrid(
               title: "Row",
               icon: Icons.view_column_rounded,
-              onTap: () {},
+              onTap: () => AppRouter.push(
+                RepositoryProvider.value(
+                  value: context.read<RowsRepository>(),
+                  child: BlocProvider(
+                    create: (context) => RowsCubit(
+                      rowsRepository: context.read<RowsRepository>(),
+                    ),
+                    child: RowsScreen(),
+                  ),
+                ),
+              ),
             ),
             DashboardTileGrid(
               title: "Reports",

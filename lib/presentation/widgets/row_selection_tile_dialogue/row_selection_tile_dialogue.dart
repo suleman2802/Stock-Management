@@ -91,7 +91,7 @@ class RowListBottomSheet extends StatelessWidget {
                         iconData: Icons.add,
                         onPress: () => showDialog(
                           context: context,
-                          builder: (context) => RowDialogue(),
+                          builder: (context) => RowsDialogue(),
                         ),
                       ),
                       smallWidthSpace(),

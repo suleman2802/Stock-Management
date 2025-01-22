@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -52,7 +50,6 @@ class CarScreen extends StatelessWidget {
               ),
             ),
           ),
-          mediumHeightSpace(),
           Expanded(
             child: BlocBuilder<CarCubit, CarState>(
               builder: (context, state) {
@@ -67,47 +64,50 @@ class CarScreen extends StatelessWidget {
                       ? NoDataAvaliableText()
                       : ListView.builder(
                           itemCount: state.carList.length,
-                          itemBuilder: (context, index) => ListTile(
-                            onTap: () {
-                              showDialog(
-                                context: context,
-                                builder: (ctx) => BlocProvider.value(
-                                  value: context.read<CarCubit>(),
-                                  child: CarDialogue(
-                                    car: state.carList[index],
-                                  ),
-                                ),
-                              );
-                            },
-                            title: Text(
-                              state.carList[index].carName,
-                              style: TextStyle(fontWeight: FontWeight.bold),
-                            ),
-                            subtitle: Text(state.carList[index].carModel),
-                            leading: CircleAvatar(
-                              backgroundColor: Theme.of(context).primaryColor,
-                              child: Text(
-                                state.carList[index].carCompany
-                                    .substring(0, 1)
-                                    .toUpperCase(),
-                                style: TextStyle(color: Colors.white),
-                              ),
-                            ),
-                            trailing: IconButton(
-                              onPressed: () async {
-                                final bool isDeletedSuccessfully = await context
-                                    .read<CarCubit>()
-                                    .deleteCar(state.carList[index].id);
-
-                                generalAlert(
+                          itemBuilder: (context, index) => Card(
+                            child: ListTile(
+                              onTap: () {
+                                showDialog(
                                   context: context,
-                                  isSuccessful: isDeletedSuccessfully,
-                                  tile: "Car",
-                                  type: AlertType.deleted,
+                                  builder: (ctx) => BlocProvider.value(
+                                    value: context.read<CarCubit>(),
+                                    child: CarDialogue(
+                                      car: state.carList[index],
+                                    ),
+                                  ),
                                 );
                               },
-                              icon:
-                                  Icon(Icons.delete_forever, color: Colors.red),
+                              title: Text(
+                                state.carList[index].carName,
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              ),
+                              subtitle: Text(state.carList[index].carModel),
+                              leading: CircleAvatar(
+                                backgroundColor: Theme.of(context).primaryColor,
+                                child: Text(
+                                  state.carList[index].carCompany
+                                      .substring(0, 1)
+                                      .toUpperCase(),
+                                  style: TextStyle(color: Colors.white),
+                                ),
+                              ),
+                              trailing: IconButton(
+                                onPressed: () async {
+                                  final bool isDeletedSuccessfully =
+                                      await context
+                                          .read<CarCubit>()
+                                          .deleteCar(state.carList[index].id);
+
+                                  generalAlert(
+                                    context: context,
+                                    isSuccessful: isDeletedSuccessfully,
+                                    tile: "Car",
+                                    type: AlertType.deleted,
+                                  );
+                                },
+                                icon: Icon(Icons.delete_forever,
+                                    color: Colors.red),
+                              ),
                             ),
                           ),
                         );
