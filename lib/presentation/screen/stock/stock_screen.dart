@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:stock_management_application/presentation/screen/stock/stock_form_screen.dart';
+import 'package:stock_management_application/utilities/app_routes/app_router.dart';
 
 import '../../widgets/layouts/page_scaffolds/list_page_scaffold.dart';
 import '../../widgets/spaces/space.dart';
@@ -27,7 +29,7 @@ class _StockScreenState extends State<StockScreen> {
       action: RoundIconButton(
         iconData: Icons.add,
         onPress: () {
-          
+          AppRouter.push(StockFormScreen());
         },
       ),
       body: Column(

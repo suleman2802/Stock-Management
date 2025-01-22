@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../domain/repositories/car/abstract_car_repository/abstract_car_repository.dart';
 import '../../../domain/repositories/fin/abstract_fin_repository/abstract_fin_repository.dart';
 import '../../../domain/repositories/radiator/abstract_radiator_repository/abstract_radiator_repository.dart';
-import '../../../domain/repositories/row/abstract_rows_repository/abstract_rows_repository.dart';
+import '../../../domain/repositories/rows/abstract_rows_repository/abstract_rows_repository.dart';
 import '../../widgets/layouts/page_scaffolds/list_page_scaffold.dart';
 import '../../widgets/state_indicators/error_text/error_text.dart';
 import '../../widgets/state_indicators/general_alert/general_alert.dart';

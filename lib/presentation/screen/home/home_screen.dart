@@ -2,21 +2,25 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:stock_management_application/domain/repositories/company/abstract_company_repository/abstract_company_repository.dart';
+import 'package:stock_management_application/presentation/screen/company/company_screen.dart';
 
 import '../../../domain/repositories/car/abstract_car_repository/abstract_car_repository.dart';
 import '../../../domain/repositories/fin/abstract_fin_repository/abstract_fin_repository.dart';
 import '../../../domain/repositories/radiator/abstract_radiator_repository/abstract_radiator_repository.dart';
-import '../../../domain/repositories/row/abstract_rows_repository/abstract_rows_repository.dart';
+import '../../../domain/repositories/rows/abstract_rows_repository/abstract_rows_repository.dart';
 import '../../../utilities/app_routes/app_router.dart';
 import '../../widgets/layouts/page_scaffolds/list_page_scaffold.dart';
 import '../car/car_screen.dart';
 import '../car/cubit/car_cubit.dart';
+import '../company/cubit/company_cubit.dart';
 import '../fin/cubit/fin_cubit.dart';
 import '../fin/fin_screen.dart';
 import '../radiator/cubit/radiator_cubit.dart';
 import '../radiator/radiator_screen.dart';
 import '../rows/cubit/rows_cubit.dart';
 import '../rows/rows_screen.dart';
+import '../stock/stock_screen.dart';
 import 'widgets/dashboard_tile_grid.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -40,12 +44,34 @@ class HomeScreen extends StatelessWidget {
             DashboardTileGrid(
               title: "Stock",
               icon: Icons.inventory,
-              onTap: () {},
+              onTap: () {
+                AppRouter.push(StockScreen());
+              },
             ),
             DashboardTileGrid(
               title: "Sale",
               icon: Icons.arrow_outward_rounded,
               onTap: () {},
+            ),
+            DashboardTileGrid(
+              title: "Reports",
+              icon: Icons.query_stats_sharp,
+              onTap: () {},
+            ),
+            DashboardTileGrid(
+              title: "Companies",
+              icon: Icons.home_work_outlined,
+              onTap: () =>AppRouter.push(
+                RepositoryProvider.value(
+                  value: context.read<CompanyRepository>(),
+                  child: BlocProvider(
+                    create: (context) => CompanyCubit(
+                      companyRepository: context.read<CompanyRepository>(),
+                    ),
+                    child: CompanyScreen(),
+                  ),
+                ),
+              ),
             ),
             DashboardTileGrid(
               title: "Radiators",
@@ -124,29 +150,6 @@ class HomeScreen extends StatelessWidget {
                   ),
                 ),
               ),
-            ),
-            DashboardTileGrid(
-              title: "Reports",
-              icon: Icons.query_stats_sharp,
-              onTap: () async => log(await context
-                  .read<RadiatorRepository>()
-                  .getAllRadiators()
-                  .toString()),
-              // .addNewRadiator(
-              //       Radiator(
-              //         size: "37x5x60",
-              //         carFuelType: CarFuelType.petrol,
-              //         carAutomation: CarAutomation.manual,
-              //         fromYear: 2023,
-              //         toYear: 2024,
-              //         rows: Rows(noOfRows: 5),
-              //         car: Car(
-              //             carCompany: "Honda",
-              //             carModel: "MOD956",
-              //             carName: "Civic"),
-              //         fin: Fin(finSize: 9),
-              //       ),
-              //     ),
             ),
           ],
         ),

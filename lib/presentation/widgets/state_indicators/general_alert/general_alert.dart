@@ -14,7 +14,7 @@ void generalAlert(
     required String tile,
     required AlertType type}) {
   if (isSuccessful) {
-    AppAlertUtil.showSuccess(context, "$tile ${type.name} record Successfully");
+    AppAlertUtil.showSuccess(context, "$tile record ${type.name} Successfully");
   } else {
     AppAlertUtil.showError(context, "Unable to ${type.name} $tile record!...");
   }

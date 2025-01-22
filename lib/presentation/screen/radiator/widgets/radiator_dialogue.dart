@@ -8,7 +8,7 @@ import '../../../../domain/models/radiator.dart';
 import '../../../../domain/models/rows.dart';
 import '../../../../domain/repositories/car/abstract_car_repository/abstract_car_repository.dart';
 import '../../../../domain/repositories/fin/abstract_fin_repository/abstract_fin_repository.dart';
-import '../../../../domain/repositories/row/abstract_rows_repository/abstract_rows_repository.dart';
+import '../../../../domain/repositories/rows/abstract_rows_repository/abstract_rows_repository.dart';
 import '../../../../utilities/app_alerts/app_alerts.dart';
 import '../../../../utilities/app_routes/app_router.dart';
 import '../../../widgets/car_selection_tile_dialogue/car_selection_tile_dialogue.dart';

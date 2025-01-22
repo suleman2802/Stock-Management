@@ -1,15 +1,17 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:stock_management_application/domain/repositories/radiator/abstract_radiator_repository/abstract_radiator_repository.dart';
 
 import '../../../domain/repositories/car/abstract_car_repository/abstract_car_repository.dart';
 import '../../../domain/repositories/car/car_repository_implementation/car_respository_implementation.dart';
+import '../../../domain/repositories/company/abstract_company_repository/abstract_company_repository.dart';
+import '../../../domain/repositories/company/company_repository_implementation/company_repository_implementation.dart';
 import '../../../domain/repositories/fin/abstract_fin_repository/abstract_fin_repository.dart';
 import '../../../domain/repositories/fin/fin_repository_implementation/fin_repository_implementation.dart';
+import '../../../domain/repositories/radiator/abstract_radiator_repository/abstract_radiator_repository.dart';
 import '../../../domain/repositories/radiator/radiator_repository_implementation/radiator_repository_implementation.dart';
-import '../../../domain/repositories/row/abstract_rows_repository/abstract_rows_repository.dart';
-import '../../../domain/repositories/row/rows_repository_implementation/rows_repository_implementation.dart';
+import '../../../domain/repositories/rows/abstract_rows_repository/abstract_rows_repository.dart';
+import '../../../domain/repositories/rows/rows_repository_implementation/rows_repository_implementation.dart';
 import '../../../utilities/app_routes/app_router.dart';
 import '../../widgets/spaces/space.dart';
 import '../home/home_screen.dart';
@@ -57,6 +59,10 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> {
         RepositoryProvider<RadiatorRepository>(
           create: (context) =>
               RadiatorRepositoryImplementation(firestoreInstance),
+        ),
+        RepositoryProvider<CompanyRepository>(
+          create: (context) =>
+              CompanyRepositoryImplementation(firestoreInstance),
         ),
       ], child: HomeScreen()),
     );

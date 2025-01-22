@@ -4,7 +4,7 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 
 import '../../../../domain/models/rows.dart';
-import '../../../../domain/repositories/row/abstract_rows_repository/abstract_rows_repository.dart';
+import '../../../../domain/repositories/rows/abstract_rows_repository/abstract_rows_repository.dart';
 
 part 'rows_state.dart';
 
