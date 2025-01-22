@@ -2,7 +2,6 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:stock_management_application/utilities/app_alerts/app_alerts.dart';
 import '../../../../domain/models/car.dart';
 import '../../../../domain/models/fin.dart';
 import '../../../../domain/models/radiator.dart';
@@ -10,6 +9,7 @@ import '../../../../domain/models/rows.dart';
 import '../../../../domain/repositories/car/abstract_car_repository/abstract_car_repository.dart';
 import '../../../../domain/repositories/fin/abstract_fin_repository/abstract_fin_repository.dart';
 import '../../../../domain/repositories/row/abstract_rows_repository/abstract_rows_repository.dart';
+import '../../../../utilities/app_alerts/app_alerts.dart';
 import '../../../../utilities/app_routes/app_router.dart';
 import '../../../widgets/car_selection_tile_dialogue/car_selection_tile_dialogue.dart';
 import '../../../widgets/fin_selection_tile_dialogue/fin_selection_tile_dialogue.dart';
