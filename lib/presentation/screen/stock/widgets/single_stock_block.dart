@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../domain/repositories/company/abstract_company_repository/abstract_company_repository.dart';
 import '../../../widgets/company_selection_tile_dialogue/company_selection_tile_dialogue.dart';
 import '../../../widgets/input_feilds/number_input_field.dart';
 import '../../../widgets/radiator_selection_tile_dialogue/radiator_selection_tile_dialogue.dart';
 import '../../../widgets/spaces/space.dart';
 import '../../../widgets/styling/bordered_container.dart';
+import '../../company/cubit/company_cubit.dart';
 
 class SingleStockBlock extends StatefulWidget {
   const SingleStockBlock({super.key});
@@ -51,8 +54,12 @@ class _SingleStockBlockState extends State<SingleStockBlock> {
           child: Column(
             children: [
               RadiatorSelectionTileDialogue(),
-              CompanySelectionTileDialogue(
-                assignSelectedCompanyFunciton: () {},
+              BlocProvider(
+                create: (context) => CompanyCubit(
+                    companyRepository: context.read<CompanyRepository>()),
+                child: CompanySelectionTileDialogue(
+                  assignSelectedCompanyFunciton: () {},
+                ),
               ),
               smallHeightSpace(),
               NumberInputField(
