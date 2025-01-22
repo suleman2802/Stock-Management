@@ -51,24 +51,27 @@ class _RadiatorSelectionTileDialogueState
               ],
             ),
           )
-        : BorderedContainer(
-            child: Center(
-              child: TextButton(
-                onPressed: () {
-                  showModalBottomSheet(
-                    context: context,
-                    isScrollControlled: true,
-                    shape: RoundedRectangleBorder(
-                      borderRadius:
-                          BorderRadius.vertical(top: Radius.circular(16)),
-                    ),
-                    builder: (context) => RadiatorListBottomSheet(),
-                  );
-                },
-                child: Text("Select Radiator"),
+        : Container(
+          margin: EdgeInsets.only(bottom: 3),
+          child: BorderedContainer(
+              child: Center(
+                child: TextButton(
+                  onPressed: () {
+                    showModalBottomSheet(
+                      context: context,
+                      isScrollControlled: true,
+                      shape: RoundedRectangleBorder(
+                        borderRadius:
+                            BorderRadius.vertical(top: Radius.circular(16)),
+                      ),
+                      builder: (context) => RadiatorListBottomSheet(),
+                    );
+                  },
+                  child: Text("Select Radiator"),
+                ),
               ),
             ),
-          );
+        );
   }
 }
 

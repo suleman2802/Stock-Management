@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../widgets/company_selection_tile_dialogue/company_selection_tile_dialogue.dart';
 import '../../../widgets/input_feilds/number_input_field.dart';
 import '../../../widgets/radiator_selection_tile_dialogue/radiator_selection_tile_dialogue.dart';
 import '../../../widgets/spaces/space.dart';
@@ -50,6 +51,9 @@ class _SingleStockBlockState extends State<SingleStockBlock> {
           child: Column(
             children: [
               RadiatorSelectionTileDialogue(),
+              CompanySelectionTileDialogue(
+                assignSelectedCompanyFunciton: () {},
+              ),
               smallHeightSpace(),
               NumberInputField(
                 controller: quantityController,
