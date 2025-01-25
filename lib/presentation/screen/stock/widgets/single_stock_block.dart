@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../domain/models/company.dart';
+import '../../../../domain/models/radiator.dart';
+import '../../../../domain/models/radiator_stock.dart';
 import '../../../../domain/repositories/company/abstract_company_repository/abstract_company_repository.dart';
 import '../../../widgets/company_selection_tile_dialogue/company_selection_tile_dialogue.dart';
 import '../../../widgets/input_feilds/number_input_field.dart';
@@ -10,7 +13,12 @@ import '../../../widgets/styling/bordered_container.dart';
 import '../../company/cubit/company_cubit.dart';
 
 class SingleStockBlock extends StatefulWidget {
-  const SingleStockBlock({super.key});
+  SingleStockBlock(
+      {super.key,
+      required this.radiatorStock,
+      required this.updateRadiatorListItemFunction});
+  RadiatorStock radiatorStock;
+  final Function updateRadiatorListItemFunction;
 
   @override
   State<SingleStockBlock> createState() => _SingleStockBlockState();
@@ -31,6 +39,9 @@ class _SingleStockBlockState extends State<SingleStockBlock> {
   final TextEditingController unitCostController = TextEditingController();
   final TextEditingController quantityController = TextEditingController();
 
+  Company? selectedCompany;
+  Radiator? selectedRadiator;
+
   @override
   void dispose() {
     super.dispose();
@@ -42,6 +53,27 @@ class _SingleStockBlockState extends State<SingleStockBlock> {
     wholesaleProfitMarginController.dispose();
     unitCostController.dispose();
     quantityController.dispose();
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    profitInWholesalePriceController.text =
+        widget.radiatorStock.profitInWholesalePrice.toString();
+    profitInRetailPriceController.text =
+        widget.radiatorStock.profitInRetailPrice.toString();
+    retailPriceController.text = widget.radiatorStock.retailPrice.toString();
+    reatilProfitMarginController.text =
+        widget.radiatorStock.retailProfitMargin.toString();
+    wholesaleRateController.text =
+        widget.radiatorStock.wholesaleRate.toString();
+    wholesaleProfitMarginController.text =
+        widget.radiatorStock.wholesaleProfitMargin.toString();
+    unitCostController.text = widget.radiatorStock.unitCost.toString();
+    quantityController.text = widget.radiatorStock.quantity.toString();
+    selectedCompany = widget.radiatorStock.company;
+    selectedRadiator = widget.radiatorStock.radiator;
   }
 
   @override

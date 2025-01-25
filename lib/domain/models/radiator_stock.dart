@@ -28,7 +28,6 @@
 //   });
 // }
 
-
 import 'company.dart';
 import 'radiator.dart';
 
@@ -42,11 +41,11 @@ class RadiatorStock {
   final double wholesaleRate;
   final double wholesaleProfitMargin;
   final double unitCost;
-  final Company company;
-  final Radiator radiator;
+  final Company? company;
+  final Radiator? radiator;
 
   RadiatorStock({
-    required this.id,
+    String? id,
     required this.quantity,
     required this.profitInWholesalePrice,
     required this.profitInRetailPrice,
@@ -57,7 +56,7 @@ class RadiatorStock {
     required this.unitCost,
     required this.company,
     required this.radiator,
-  });
+  }) : id = id ?? DateTime.now().millisecondsSinceEpoch.toString();
 
   RadiatorStock copyWith({
     String? id,
@@ -75,12 +74,14 @@ class RadiatorStock {
     return RadiatorStock(
       id: id ?? this.id,
       quantity: quantity ?? this.quantity,
-      profitInWholesalePrice: profitInWholesalePrice ?? this.profitInWholesalePrice,
+      profitInWholesalePrice:
+          profitInWholesalePrice ?? this.profitInWholesalePrice,
       profitInRetailPrice: profitInRetailPrice ?? this.profitInRetailPrice,
       retailPrice: retailPrice ?? this.retailPrice,
       retailProfitMargin: retailProfitMargin ?? this.retailProfitMargin,
       wholesaleRate: wholesaleRate ?? this.wholesaleRate,
-      wholesaleProfitMargin: wholesaleProfitMargin ?? this.wholesaleProfitMargin,
+      wholesaleProfitMargin:
+          wholesaleProfitMargin ?? this.wholesaleProfitMargin,
       unitCost: unitCost ?? this.unitCost,
       company: company ?? this.company,
       radiator: radiator ?? this.radiator,
@@ -98,8 +99,8 @@ class RadiatorStock {
       'wholesaleRate': wholesaleRate,
       'wholesaleProfitMargin': wholesaleProfitMargin,
       'unitCost': unitCost,
-      'company': company.toMap(),
-      'radiator': radiator.toMap(),
+      'company': company!.toMap(),
+      'radiator': radiator!.toMap(),
     };
   }
 

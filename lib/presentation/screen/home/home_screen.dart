@@ -46,25 +46,33 @@ class HomeScreen extends StatelessWidget {
             DashboardTileGrid(
               title: "Stock",
               icon: Icons.inventory,
-              onTap: () => MultiBlocProvider(
-                providers: [
-                  BlocProvider(
-                    create: (context) => RadiatorCubit(
-                      radiatorRepository: context.read<RadiatorRepository>(),
+              onTap: () => AppRouter.push(
+                MultiBlocProvider(
+                  providers: [
+                    BlocProvider(
+                      create: (context) => RadiatorCubit(
+                        radiatorRepository: context.read<RadiatorRepository>(),
+                      ),
                     ),
+                    RepositoryProvider.value(
+                      value: context.read<RadiatorRepository>(),
+                    ),
+                    RepositoryProvider.value(
+                      value: context.read<CompanyRepository>(),
+                    ),
+                    RepositoryProvider.value(
+                      value: context.read<StockRepository>(),
+                    ),
+                    RepositoryProvider.value(
+                      value: context.read<CarRepository>(),
+                    ),
+                  ],
+                  child: BlocProvider(
+                    create: (context) => StockCubit(
+                      stockRepository: context.read<StockRepository>(),
+                    ),
+                    child: StockScreen(),
                   ),
-                  RepositoryProvider.value(
-                    value: context.read<RadiatorRepository>(),
-                  ),
-                  RepositoryProvider.value(
-                    value: context.read<CompanyRepository>(),
-                  ),
-                ],
-                child: BlocProvider(
-                  create: (context) => StockCubit(
-                    stockRepository: context.read<StockRepository>(),
-                  ),
-                  child: StockScreen(),
                 ),
               ),
             ),

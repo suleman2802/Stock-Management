@@ -12,6 +12,8 @@ import '../../../domain/repositories/radiator/abstract_radiator_repository/abstr
 import '../../../domain/repositories/radiator/radiator_repository_implementation/radiator_repository_implementation.dart';
 import '../../../domain/repositories/rows/abstract_rows_repository/abstract_rows_repository.dart';
 import '../../../domain/repositories/rows/rows_repository_implementation/rows_repository_implementation.dart';
+import '../../../domain/repositories/stock/abstract_stock_repository/abstract_stock_repository.dart';
+import '../../../domain/repositories/stock/stock_repository_implementation/stock_repository_implementation.dart';
 import '../../../utilities/app_routes/app_router.dart';
 import '../../widgets/spaces/space.dart';
 import '../home/home_screen.dart';
@@ -63,6 +65,9 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> {
         RepositoryProvider<CompanyRepository>(
           create: (context) =>
               CompanyRepositoryImplementation(firestoreInstance),
+        ),
+        RepositoryProvider<StockRepository>(
+          create: (context) => StockRepositoryImplementation(firestoreInstance),
         ),
       ], child: HomeScreen()),
     );

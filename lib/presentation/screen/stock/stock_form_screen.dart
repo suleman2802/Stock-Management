@@ -1,13 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:stock_management_application/presentation/widgets/spaces/space.dart';
+import '../../../domain/models/car.dart';
+import '../../../domain/models/radiator_stock.dart';
+import '../../../domain/models/stock.dart';
 import '../../widgets/car_selection_tile_dialogue/car_selection_tile_dialogue.dart';
 import '../../widgets/layouts/page_scaffolds/list_page_scaffold.dart';
 import '../../widgets/styling/round_icon_button.dart';
 import 'widgets/single_stock_block.dart';
 
 class StockFormScreen extends StatefulWidget {
-  const StockFormScreen({super.key});
+  StockFormScreen({super.key, this.stock});
+  Stock? stock;
 
   @override
   State<StockFormScreen> createState() => _StockFormScreenState();
@@ -17,6 +21,8 @@ class _StockFormScreenState extends State<StockFormScreen> {
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   DateTime? _selectedDate = DateTime.now();
   String? _selectedTime;
+  Car? selectedCar;
+  List<RadiatorStock> radiatorStockList = [];
   Future<void> _startDatePicker() async {
     final DateTime? picked = await showDatePicker(
       context: context,
@@ -49,6 +55,23 @@ class _StockFormScreenState extends State<StockFormScreen> {
         });
       }
     });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.stock != null) {
+      _selectedDate = widget.stock!.date;
+      _selectedTime = widget.stock!.time.toString();
+      selectedCar = widget.stock!.car;
+      radiatorStockList = widget.stock!.radiatorStock;
+    }
+  }
+
+  updateRadiatorListItem(RadiatorStock updatedRadiatorStock) {
+    final int index = radiatorStockList.indexOf(updatedRadiatorStock);
+    radiatorStockList.removeAt(index);
+    radiatorStockList.insert(index, updatedRadiatorStock);
   }
 
   @override
@@ -120,7 +143,22 @@ class _StockFormScreenState extends State<StockFormScreen> {
                 smallWidthSpace(),
                 IconButton.filledTonal(
                   color: Theme.of(context).primaryColor,
-                  onPressed: () {},
+                  onPressed: () {
+                    radiatorStockList.add(
+                      RadiatorStock(
+                          quantity: 0,
+                          profitInWholesalePrice: 0,
+                          profitInRetailPrice: 0,
+                          retailPrice: 0,
+                          retailProfitMargin: 0,
+                          wholesaleRate: 0,
+                          wholesaleProfitMargin: 0,
+                          unitCost: 0,
+                          company: null,
+                          radiator: null),
+                    );
+                    setState(() {});
+                  },
                   icon: Icon(
                     Icons.add,
                     color: Theme.of(context).primaryColor,
@@ -131,7 +169,7 @@ class _StockFormScreenState extends State<StockFormScreen> {
             smallWidthSpace(),
             Expanded(
               child: ListView.builder(
-                itemCount: 2,
+                itemCount: radiatorStockList.length,
                 itemBuilder: (context, index) => Column(
                   children: [
                     Row(
@@ -140,7 +178,10 @@ class _StockFormScreenState extends State<StockFormScreen> {
                       children: [
                         Text("----------------------("),
                         IconButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            radiatorStockList.removeAt(index);
+                            setState(() {});
+                          },
                           icon: Icon(
                             Icons.close,
                             color: Colors.red,
@@ -149,7 +190,11 @@ class _StockFormScreenState extends State<StockFormScreen> {
                         Text(")----------------------"),
                       ],
                     ),
-                    SingleStockBlock(),
+                    SingleStockBlock(
+                      key: ValueKey(radiatorStockList[index].id),
+                      radiatorStock: radiatorStockList[index],
+                      updateRadiatorListItemFunction:updateRadiatorListItem,
+                    ),
                   ],
                 ),
               ),
