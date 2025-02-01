@@ -11,14 +11,16 @@ import '../../../widgets/radiator_selection_tile_dialogue/radiator_selection_til
 import '../../../widgets/spaces/space.dart';
 import '../../../widgets/styling/bordered_container.dart';
 import '../../company/cubit/company_cubit.dart';
+import '../cubit/radiator_stock_list_cubit.dart';
 
 class SingleStockBlock extends StatefulWidget {
-  SingleStockBlock(
-      {super.key,
-      required this.radiatorStock,
-      required this.updateRadiatorListItemFunction});
+  SingleStockBlock({
+    super.key,
+    required this.radiatorStock,
+    required this.index,
+  });
   RadiatorStock radiatorStock;
-  final Function updateRadiatorListItemFunction;
+  int index;
 
   @override
   State<SingleStockBlock> createState() => _SingleStockBlockState();
@@ -99,13 +101,14 @@ class _SingleStockBlockState extends State<SingleStockBlock> {
                 label: "Quantity",
                 onChange: (value) {
                   if (value.isNotEmpty) {
-                    widget.updateRadiatorListItemFunction(
-                        widget.radiatorStock.copyWith(
-                      quantity: int.tryParse(
-                            value.trim(),
-                          ) ??
-                          0,
-                    ));
+                    context
+                        .read<RadiatorStockCubit>()
+                        .updateStock(widget.index,widget.radiatorStock.copyWith(
+                          quantity: int.tryParse(
+                                value.trim(),
+                              ) ??
+                              0,
+                        ));
                   }
                 },
                 validator: (value) {
@@ -122,13 +125,14 @@ class _SingleStockBlockState extends State<SingleStockBlock> {
                 label: "Unit Cost",
                 onChange: (value) {
                   if (value.isNotEmpty) {
-                    widget.updateRadiatorListItemFunction(
-                        widget.radiatorStock.copyWith(
-                      unitCost: double.tryParse(
-                            value.trim(),
-                          ) ??
-                          0.9,
-                    ));
+                    context
+                        .read<RadiatorStockCubit>()
+                        .updateStock(widget.index,widget.radiatorStock.copyWith(
+                          unitCost: double.tryParse(
+                                value.trim(),
+                              ) ??
+                              0.9,
+                        ));
                   }
                 },
                 validator: (value) {
@@ -145,13 +149,14 @@ class _SingleStockBlockState extends State<SingleStockBlock> {
                 label: "Profit in Wholesale Price",
                 onChange: (value) {
                   if (value.isNotEmpty) {
-                    widget.updateRadiatorListItemFunction(
-                        widget.radiatorStock.copyWith(
-                      profitInWholesalePrice: double.tryParse(
-                            value.trim(),
-                          ) ??
-                          0.9,
-                    ));
+                    context
+                        .read<RadiatorStockCubit>()
+                        .updateStock(widget.index,widget.radiatorStock.copyWith(
+                          profitInWholesalePrice: double.tryParse(
+                                value.trim(),
+                              ) ??
+                              0.9,
+                        ));
                   }
                 },
                 validator: (value) {
@@ -166,13 +171,14 @@ class _SingleStockBlockState extends State<SingleStockBlock> {
                 label: "Profit in Retail Price",
                 onChange: (value) {
                   if (value.isNotEmpty) {
-                    widget.updateRadiatorListItemFunction(
-                        widget.radiatorStock.copyWith(
-                      profitInRetailPrice: double.tryParse(
-                            value.trim(),
-                          ) ??
-                          0.9,
-                    ));
+                    context
+                        .read<RadiatorStockCubit>()
+                        .updateStock(widget.index,widget.radiatorStock.copyWith(
+                          profitInRetailPrice: double.tryParse(
+                                value.trim(),
+                              ) ??
+                              0.9,
+                        ));
                   }
                 },
                 validator: (value) {
@@ -187,13 +193,14 @@ class _SingleStockBlockState extends State<SingleStockBlock> {
                 label: "Retail Price",
                 onChange: (value) {
                   if (value.isNotEmpty) {
-                    widget.updateRadiatorListItemFunction(
-                        widget.radiatorStock.copyWith(
-                      retailPrice: double.tryParse(
-                            value.trim(),
-                          ) ??
-                          0.9,
-                    ));
+                    context
+                        .read<RadiatorStockCubit>()
+                        .updateStock(widget.index,widget.radiatorStock.copyWith(
+                          retailPrice: double.tryParse(
+                                value.trim(),
+                              ) ??
+                              0.9,
+                        ));
                   }
                 },
                 validator: (value) {
@@ -210,13 +217,14 @@ class _SingleStockBlockState extends State<SingleStockBlock> {
                 label: "Retail Profit Margin",
                 onChange: (value) {
                   if (value.isNotEmpty) {
-                    widget.updateRadiatorListItemFunction(
-                        widget.radiatorStock.copyWith(
-                      retailProfitMargin: double.tryParse(
-                            value.trim(),
-                          ) ??
-                          0.9,
-                    ));
+                    context
+                        .read<RadiatorStockCubit>()
+                        .updateStock(widget.index,widget.radiatorStock.copyWith(
+                          retailProfitMargin: double.tryParse(
+                                value.trim(),
+                              ) ??
+                              0.9,
+                        ));
                   }
                 },
                 validator: (value) {
@@ -231,13 +239,14 @@ class _SingleStockBlockState extends State<SingleStockBlock> {
                 label: "Wholesale Rate",
                 onChange: (value) {
                   if (value.isNotEmpty) {
-                    widget.updateRadiatorListItemFunction(
-                        widget.radiatorStock.copyWith(
-                      wholesaleRate: double.tryParse(
-                            value.trim(),
-                          ) ??
-                          0.9,
-                    ));
+                    context
+                        .read<RadiatorStockCubit>()
+                        .updateStock(widget.index,widget.radiatorStock.copyWith(
+                          wholesaleRate: double.tryParse(
+                                value.trim(),
+                              ) ??
+                              0.9,
+                        ));
                   }
                 },
                 validator: (value) {
@@ -254,13 +263,14 @@ class _SingleStockBlockState extends State<SingleStockBlock> {
                 label: "Wholesale Profit Margin",
                 onChange: (value) {
                   if (value.isNotEmpty) {
-                    widget.updateRadiatorListItemFunction(
-                        widget.radiatorStock.copyWith(
-                      wholesaleProfitMargin: double.tryParse(
-                            value.trim(),
-                          ) ??
-                          0.9,
-                    ));
+                    context
+                        .read<RadiatorStockCubit>()
+                        .updateStock(widget.index,widget.radiatorStock.copyWith(
+                          wholesaleProfitMargin: double.tryParse(
+                                value.trim(),
+                              ) ??
+                              0.9,
+                        ));
                   }
                 },
                 validator: (value) {

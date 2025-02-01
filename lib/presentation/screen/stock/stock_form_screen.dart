@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:stock_management_application/presentation/widgets/spaces/space.dart';
 import '../../../domain/models/car.dart';
@@ -8,7 +9,11 @@ import '../../../domain/models/radiator_stock.dart';
 import '../../../domain/models/stock.dart';
 import '../../widgets/car_selection_tile_dialogue/car_selection_tile_dialogue.dart';
 import '../../widgets/layouts/page_scaffolds/list_page_scaffold.dart';
+import '../../widgets/state_indicators/error_text/error_text.dart';
+import '../../widgets/state_indicators/loading_indicator/loading_indicator.dart';
+import '../../widgets/state_indicators/no_data_avaliable_text/no_data_avaliable_text.dart';
 import '../../widgets/styling/round_icon_button.dart';
+import 'cubit/radiator_stock_list_cubit.dart';
 import 'widgets/single_stock_block.dart';
 
 class StockFormScreen extends StatefulWidget {
@@ -24,7 +29,7 @@ class _StockFormScreenState extends State<StockFormScreen> {
   DateTime? _selectedDate = DateTime.now();
   String? _selectedTime;
   Car? selectedCar;
-  List<RadiatorStock> radiatorStockList = [];
+
   Future<void> _startDatePicker() async {
     final DateTime? picked = await showDatePicker(
       context: context,
@@ -66,21 +71,7 @@ class _StockFormScreenState extends State<StockFormScreen> {
       _selectedDate = widget.stock!.date;
       _selectedTime = widget.stock!.time.toString();
       selectedCar = widget.stock!.car;
-      radiatorStockList = widget.stock!.radiatorStock;
     }
-  }
-
-  updateRadiatorListItemFunction(RadiatorStock updatedRadiatorStock) {
-    log("update function called  ");
-    log(updatedRadiatorStock.toString());
-    final int index = radiatorStockList.indexWhere(
-      (element) => element.id == updatedRadiatorStock.id,
-    );
-    log("index" + index.toString());
-    radiatorStockList.removeAt(index);
-    radiatorStockList.insert(index, updatedRadiatorStock);
-    log("afer udating list >");
-    print(radiatorStockList);
   }
 
   @override
@@ -143,71 +134,60 @@ class _StockFormScreenState extends State<StockFormScreen> {
                 ),
               ],
             ),
-            Row(
-              children: [
-                Expanded(
-                    child: CarSelectionTileDialogue(
-                  assignSelectedCarFunction: () {},
-                )),
-                smallWidthSpace(),
-                IconButton.filledTonal(
-                  color: Theme.of(context).primaryColor,
-                  onPressed: () {
-                    radiatorStockList.add(
+            Row(children: [
+              Expanded(
+                  child: CarSelectionTileDialogue(
+                assignSelectedCarFunction: () {},
+              )),
+              smallWidthSpace(),
+              IconButton.filledTonal(
+                onPressed: () => context.read<RadiatorStockCubit>().addStock(
                       RadiatorStock(
-                          quantity: 0,
-                          profitInWholesalePrice: 0,
-                          profitInRetailPrice: 0,
-                          retailPrice: 0,
-                          retailProfitMargin: 0,
-                          wholesaleRate: 0,
-                          wholesaleProfitMargin: 0,
-                          unitCost: 0,
-                          company: null,
-                          radiator: null),
-                    );
-                    setState(() {});
-                  },
-                  icon: Icon(
-                    Icons.add,
-                    color: Theme.of(context).primaryColor,
-                  ),
-                ),
-              ],
-            ),
-            smallWidthSpace(),
-            Expanded(
-              child: ListView.builder(
-                itemCount: radiatorStockList.length,
-                itemBuilder: (context, index) => Column(
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
+                        quantity: 0,
+                        profitInWholesalePrice: 0,
+                        profitInRetailPrice: 0,
+                        retailPrice: 0,
+                        retailProfitMargin: 0,
+                        wholesaleRate: 0,
+                        wholesaleProfitMargin: 0,
+                        unitCost: 0,
+                        company: null,
+                        radiator: null,
+                      ),
+                    ),
+                icon: Icon(Icons.add),
+              ),
+            ]),
+            BlocBuilder<RadiatorStockCubit, List<RadiatorStock>>(
+              builder: (context, stocks) {
+                return Expanded(
+                  child: ListView.builder(
+                    itemCount: stocks.length,
+                    itemBuilder: (context, index) => Column(
                       children: [
-                        Text("----------------------("),
-                        IconButton(
-                          onPressed: () {
-                            radiatorStockList.removeAt(index);
-                            setState(() {});
-                          },
-                          icon: Icon(
-                            Icons.close,
-                            color: Colors.red,
-                          ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text("----------------------("),
+                            IconButton(
+                              onPressed: () => context
+                                  .read<RadiatorStockCubit>()
+                                  .removeStock(index),
+                              icon: Icon(Icons.close, color: Colors.red),
+                            ),
+                            Text(")----------------------"),
+                          ],
                         ),
-                        Text(")----------------------"),
+                        SingleStockBlock(
+                          key: ValueKey(stocks[index].id),
+                          radiatorStock: stocks[index],
+                          index: index,
+                        ),
                       ],
                     ),
-                    SingleStockBlock(
-                      key: ValueKey(radiatorStockList[index].id),
-                      radiatorStock: radiatorStockList[index],
-                      updateRadiatorListItemFunction:
-                          updateRadiatorListItemFunction,
-                    ),
-                  ],
-                ),
-              ),
+                  ),
+                );
+              },
             ),
           ]),
         ),

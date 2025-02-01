@@ -12,6 +12,7 @@ import '../../widgets/state_indicators/loading_indicator/loading_indicator.dart'
 import '../../widgets/state_indicators/no_data_avaliable_text/no_data_avaliable_text.dart';
 import '../../widgets/styling/round_icon_button.dart';
 import 'cubit/stock_cubit.dart';
+import 'cubit/radiator_stock_list_cubit.dart';
 import 'stock_form_screen.dart';
 
 class StockScreen extends StatefulWidget {
@@ -49,8 +50,16 @@ class _StockScreenState extends State<StockScreen> {
                 value: context.read<CompanyRepository>(),
               ),
             ],
-            child: BlocProvider.value(
-              value: context.read<StockCubit>(),
+            child: MultiBlocProvider(
+              providers: [
+                BlocProvider.value(
+                  value: context.read<StockCubit>(),
+                ),
+                BlocProvider(
+                  create: (context) => RadiatorStockCubit(
+                  ),
+                ),
+              ],
               child: StockFormScreen(),
             ),
           ),
