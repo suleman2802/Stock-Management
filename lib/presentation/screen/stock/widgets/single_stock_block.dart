@@ -97,6 +97,17 @@ class _SingleStockBlockState extends State<SingleStockBlock> {
               NumberInputField(
                 controller: quantityController,
                 label: "Quantity",
+                onChange: (value) {
+                  if (value.isNotEmpty) {
+                    widget.updateRadiatorListItemFunction(
+                        widget.radiatorStock.copyWith(
+                      quantity: int.tryParse(
+                            value.trim(),
+                          ) ??
+                          0,
+                    ));
+                  }
+                },
                 validator: (value) {
                   if (value!.isEmpty) {
                     return "Please enter quantity";
@@ -109,6 +120,17 @@ class _SingleStockBlockState extends State<SingleStockBlock> {
               NumberInputField(
                 controller: unitCostController,
                 label: "Unit Cost",
+                onChange: (value) {
+                  if (value.isNotEmpty) {
+                    widget.updateRadiatorListItemFunction(
+                        widget.radiatorStock.copyWith(
+                      unitCost: double.tryParse(
+                            value.trim(),
+                          ) ??
+                          0.9,
+                    ));
+                  }
+                },
                 validator: (value) {
                   if (value!.isEmpty) {
                     return "Please enter unit cost";
@@ -121,6 +143,17 @@ class _SingleStockBlockState extends State<SingleStockBlock> {
               NumberInputField(
                 controller: profitInWholesalePriceController,
                 label: "Profit in Wholesale Price",
+                onChange: (value) {
+                  if (value.isNotEmpty) {
+                    widget.updateRadiatorListItemFunction(
+                        widget.radiatorStock.copyWith(
+                      profitInWholesalePrice: double.tryParse(
+                            value.trim(),
+                          ) ??
+                          0.9,
+                    ));
+                  }
+                },
                 validator: (value) {
                   if (value!.isEmpty) {
                     return "Please enter profit in wholesale price";
@@ -131,6 +164,17 @@ class _SingleStockBlockState extends State<SingleStockBlock> {
               NumberInputField(
                 controller: profitInRetailPriceController,
                 label: "Profit in Retail Price",
+                onChange: (value) {
+                  if (value.isNotEmpty) {
+                    widget.updateRadiatorListItemFunction(
+                        widget.radiatorStock.copyWith(
+                      profitInRetailPrice: double.tryParse(
+                            value.trim(),
+                          ) ??
+                          0.9,
+                    ));
+                  }
+                },
                 validator: (value) {
                   if (value!.isEmpty) {
                     return "Please enter profit in retail price";
@@ -141,6 +185,17 @@ class _SingleStockBlockState extends State<SingleStockBlock> {
               NumberInputField(
                 controller: retailPriceController,
                 label: "Retail Price",
+                onChange: (value) {
+                  if (value.isNotEmpty) {
+                    widget.updateRadiatorListItemFunction(
+                        widget.radiatorStock.copyWith(
+                      retailPrice: double.tryParse(
+                            value.trim(),
+                          ) ??
+                          0.9,
+                    ));
+                  }
+                },
                 validator: (value) {
                   if (value!.isEmpty) {
                     return "Please enter retail price";
@@ -153,6 +208,17 @@ class _SingleStockBlockState extends State<SingleStockBlock> {
               NumberInputField(
                 controller: reatilProfitMarginController,
                 label: "Retail Profit Margin",
+                onChange: (value) {
+                  if (value.isNotEmpty) {
+                    widget.updateRadiatorListItemFunction(
+                        widget.radiatorStock.copyWith(
+                      retailProfitMargin: double.tryParse(
+                            value.trim(),
+                          ) ??
+                          0.9,
+                    ));
+                  }
+                },
                 validator: (value) {
                   if (value!.isEmpty) {
                     return "Please enter retail profit margin";
@@ -163,6 +229,17 @@ class _SingleStockBlockState extends State<SingleStockBlock> {
               NumberInputField(
                 controller: wholesaleRateController,
                 label: "Wholesale Rate",
+                onChange: (value) {
+                  if (value.isNotEmpty) {
+                    widget.updateRadiatorListItemFunction(
+                        widget.radiatorStock.copyWith(
+                      wholesaleRate: double.tryParse(
+                            value.trim(),
+                          ) ??
+                          0.9,
+                    ));
+                  }
+                },
                 validator: (value) {
                   if (value!.isEmpty) {
                     return "Please enter wholesale rate";
@@ -175,6 +252,17 @@ class _SingleStockBlockState extends State<SingleStockBlock> {
               NumberInputField(
                 controller: wholesaleProfitMarginController,
                 label: "Wholesale Profit Margin",
+                onChange: (value) {
+                  if (value.isNotEmpty) {
+                    widget.updateRadiatorListItemFunction(
+                        widget.radiatorStock.copyWith(
+                      wholesaleProfitMargin: double.tryParse(
+                            value.trim(),
+                          ) ??
+                          0.9,
+                    ));
+                  }
+                },
                 validator: (value) {
                   if (value!.isEmpty) {
                     return "Please enter wholesale profit margin";

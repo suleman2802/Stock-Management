@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:stock_management_application/presentation/widgets/spaces/space.dart';
@@ -68,10 +70,17 @@ class _StockFormScreenState extends State<StockFormScreen> {
     }
   }
 
-  updateRadiatorListItem(RadiatorStock updatedRadiatorStock) {
-    final int index = radiatorStockList.indexOf(updatedRadiatorStock);
+  updateRadiatorListItemFunction(RadiatorStock updatedRadiatorStock) {
+    log("update function called  ");
+    log(updatedRadiatorStock.toString());
+    final int index = radiatorStockList.indexWhere(
+      (element) => element.id == updatedRadiatorStock.id,
+    );
+    log("index" + index.toString());
     radiatorStockList.removeAt(index);
     radiatorStockList.insert(index, updatedRadiatorStock);
+    log("afer udating list >");
+    print(radiatorStockList);
   }
 
   @override
@@ -193,7 +202,8 @@ class _StockFormScreenState extends State<StockFormScreen> {
                     SingleStockBlock(
                       key: ValueKey(radiatorStockList[index].id),
                       radiatorStock: radiatorStockList[index],
-                      updateRadiatorListItemFunction:updateRadiatorListItem,
+                      updateRadiatorListItemFunction:
+                          updateRadiatorListItemFunction,
                     ),
                   ],
                 ),

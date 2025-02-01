@@ -6,11 +6,13 @@ class NumberInputField extends StatelessWidget {
       required this.label,
       required this.controller,
       this.validator,
-      this.onChange});
+      this.onChange,
+      });
   final String label;
   final TextEditingController controller;
   final String? Function(String?)? validator;
   final Function(String)? onChange;
+
 
   @override
   Widget build(BuildContext context) {
