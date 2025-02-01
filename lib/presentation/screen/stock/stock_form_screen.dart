@@ -79,6 +79,26 @@ class _StockFormScreenState extends State<StockFormScreen> {
     return ListPageScaffold(
       curentIndex: 1,
       label: "Add Stock",
+      floatingActionButton: FloatingActionButton.small(
+        backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
+          child: Icon(
+            Icons.add,
+            color: Colors.white,
+          ),
+          onPressed: () => context.read<RadiatorStockCubit>().addStock(
+                RadiatorStock(
+                  quantity: 0,
+                  profitInWholesalePrice: 0,
+                  profitInRetailPrice: 0,
+                  retailPrice: 0,
+                  retailProfitMargin: 0,
+                  wholesaleRate: 0,
+                  wholesaleProfitMargin: 0,
+                  unitCost: 0,
+                  company: null,
+                  radiator: null,
+                ),
+              )),
       action: RoundIconButton(
         iconData: Icons.save,
         onPress: () {
@@ -134,30 +154,9 @@ class _StockFormScreenState extends State<StockFormScreen> {
                 ),
               ],
             ),
-            Row(children: [
-              Expanded(
-                  child: CarSelectionTileDialogue(
-                assignSelectedCarFunction: () {},
-              )),
-              smallWidthSpace(),
-              IconButton.filledTonal(
-                onPressed: () => context.read<RadiatorStockCubit>().addStock(
-                      RadiatorStock(
-                        quantity: 0,
-                        profitInWholesalePrice: 0,
-                        profitInRetailPrice: 0,
-                        retailPrice: 0,
-                        retailProfitMargin: 0,
-                        wholesaleRate: 0,
-                        wholesaleProfitMargin: 0,
-                        unitCost: 0,
-                        company: null,
-                        radiator: null,
-                      ),
-                    ),
-                icon: Icon(Icons.add),
-              ),
-            ]),
+            CarSelectionTileDialogue(
+              assignSelectedCarFunction: () {},
+            ),
             BlocBuilder<RadiatorStockCubit, List<RadiatorStock>>(
               builder: (context, stocks) {
                 return Expanded(

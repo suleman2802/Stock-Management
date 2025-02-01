@@ -56,8 +56,7 @@ class _StockScreenState extends State<StockScreen> {
                   value: context.read<StockCubit>(),
                 ),
                 BlocProvider(
-                  create: (context) => RadiatorStockCubit(
-                  ),
+                  create: (context) => RadiatorStockCubit(),
                 ),
               ],
               child: StockFormScreen(),

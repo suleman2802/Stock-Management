@@ -34,7 +34,7 @@ class _SingleSaleBlockState extends State<SingleSaleBlock> {
           padding: const EdgeInsets.all(8.0),
           child: Column(
             children: [
-              RadiatorSelectionTileDialogue(),
+              RadiatorSelectionTileDialogue(assignSelectedRadiatorFunciton: (){},),
               smallHeightSpace(),
               NumberInputField(
                 controller: quantityController,

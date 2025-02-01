@@ -51,7 +51,7 @@ class _CompanySelectionTileDialogueState
                   ),
                   builder: (ctx) => BlocProvider.value(
                     value: context.read<CompanyCubit>(),
-                    child: RowListBottomSheet(
+                    child: CompanyListBottomSheet(
                       selectcompanyFunction: selectCompany,
                     ),
                   ),
@@ -86,7 +86,7 @@ class _CompanySelectionTileDialogueState
                       ),
                       builder: (ctx) => BlocProvider.value(
                           value: context.read<CompanyCubit>(),
-                          child: RowListBottomSheet(
+                          child: CompanyListBottomSheet(
                             selectcompanyFunction: selectCompany,
                           )),
                     );
@@ -99,8 +99,8 @@ class _CompanySelectionTileDialogueState
   }
 }
 
-class RowListBottomSheet extends StatelessWidget {
-  const RowListBottomSheet({super.key, required this.selectcompanyFunction});
+class CompanyListBottomSheet extends StatelessWidget {
+  const CompanyListBottomSheet({super.key, required this.selectcompanyFunction});
   final Function selectcompanyFunction;
   @override
   Widget build(BuildContext context) {
@@ -161,6 +161,15 @@ class RowListBottomSheet extends StatelessWidget {
                           itemCount: state.companyList.length,
                           itemBuilder: (context, index) => Card(
                             child: ListTile(
+                              leading: CircleAvatar(
+                                backgroundColor: Theme.of(context).primaryColor,
+                                child: Text(
+                                  state.companyList[index].name
+                                      .substring(0, 1)
+                                      .toUpperCase(),
+                                  style: TextStyle(color: Colors.white),
+                                ),
+                              ),
                               onTap: () {
                                 selectcompanyFunction(state.companyList[index]);
                                 AppRouter.pop();

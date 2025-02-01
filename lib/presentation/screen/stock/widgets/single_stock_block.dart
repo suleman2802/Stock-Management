@@ -5,12 +5,14 @@ import '../../../../domain/models/company.dart';
 import '../../../../domain/models/radiator.dart';
 import '../../../../domain/models/radiator_stock.dart';
 import '../../../../domain/repositories/company/abstract_company_repository/abstract_company_repository.dart';
+import '../../../../domain/repositories/radiator/abstract_radiator_repository/abstract_radiator_repository.dart';
 import '../../../widgets/company_selection_tile_dialogue/company_selection_tile_dialogue.dart';
 import '../../../widgets/input_feilds/number_input_field.dart';
 import '../../../widgets/radiator_selection_tile_dialogue/radiator_selection_tile_dialogue.dart';
 import '../../../widgets/spaces/space.dart';
 import '../../../widgets/styling/bordered_container.dart';
 import '../../company/cubit/company_cubit.dart';
+import '../../radiator/cubit/radiator_cubit.dart';
 import '../cubit/radiator_stock_list_cubit.dart';
 
 class SingleStockBlock extends StatefulWidget {
@@ -87,12 +89,34 @@ class _SingleStockBlockState extends State<SingleStockBlock> {
           padding: const EdgeInsets.all(8.0),
           child: Column(
             children: [
-              RadiatorSelectionTileDialogue(),
+              BlocProvider(
+                create: (context) => RadiatorCubit(
+                    radiatorRepository: context.read<RadiatorRepository>()),
+                child: RadiatorSelectionTileDialogue(
+                  selectedRadiator: widget.radiatorStock.radiator,
+                  assignSelectedRadiatorFunciton: (Radiator selectedRadiator) {
+                    context.read<RadiatorStockCubit>().updateStock(
+                          widget.index,
+                          widget.radiatorStock.copyWith(
+                            radiator: selectedRadiator,
+                          ),
+                        );
+                  },
+                ),
+              ),
               BlocProvider(
                 create: (context) => CompanyCubit(
                     companyRepository: context.read<CompanyRepository>()),
                 child: CompanySelectionTileDialogue(
-                  assignSelectedCompanyFunciton: () {},
+                  selectedCompany: widget.radiatorStock.company,
+                  assignSelectedCompanyFunciton: (Company selectedCompany) {
+                    context.read<RadiatorStockCubit>().updateStock(
+                          widget.index,
+                          widget.radiatorStock.copyWith(
+                            company: selectedCompany,
+                          ),
+                        );
+                  },
                 ),
               ),
               smallHeightSpace(),
@@ -101,9 +125,9 @@ class _SingleStockBlockState extends State<SingleStockBlock> {
                 label: "Quantity",
                 onChange: (value) {
                   if (value.isNotEmpty) {
-                    context
-                        .read<RadiatorStockCubit>()
-                        .updateStock(widget.index,widget.radiatorStock.copyWith(
+                    context.read<RadiatorStockCubit>().updateStock(
+                        widget.index,
+                        widget.radiatorStock.copyWith(
                           quantity: int.tryParse(
                                 value.trim(),
                               ) ??
@@ -125,9 +149,9 @@ class _SingleStockBlockState extends State<SingleStockBlock> {
                 label: "Unit Cost",
                 onChange: (value) {
                   if (value.isNotEmpty) {
-                    context
-                        .read<RadiatorStockCubit>()
-                        .updateStock(widget.index,widget.radiatorStock.copyWith(
+                    context.read<RadiatorStockCubit>().updateStock(
+                        widget.index,
+                        widget.radiatorStock.copyWith(
                           unitCost: double.tryParse(
                                 value.trim(),
                               ) ??
@@ -149,9 +173,9 @@ class _SingleStockBlockState extends State<SingleStockBlock> {
                 label: "Profit in Wholesale Price",
                 onChange: (value) {
                   if (value.isNotEmpty) {
-                    context
-                        .read<RadiatorStockCubit>()
-                        .updateStock(widget.index,widget.radiatorStock.copyWith(
+                    context.read<RadiatorStockCubit>().updateStock(
+                        widget.index,
+                        widget.radiatorStock.copyWith(
                           profitInWholesalePrice: double.tryParse(
                                 value.trim(),
                               ) ??
@@ -171,9 +195,9 @@ class _SingleStockBlockState extends State<SingleStockBlock> {
                 label: "Profit in Retail Price",
                 onChange: (value) {
                   if (value.isNotEmpty) {
-                    context
-                        .read<RadiatorStockCubit>()
-                        .updateStock(widget.index,widget.radiatorStock.copyWith(
+                    context.read<RadiatorStockCubit>().updateStock(
+                        widget.index,
+                        widget.radiatorStock.copyWith(
                           profitInRetailPrice: double.tryParse(
                                 value.trim(),
                               ) ??
@@ -193,9 +217,9 @@ class _SingleStockBlockState extends State<SingleStockBlock> {
                 label: "Retail Price",
                 onChange: (value) {
                   if (value.isNotEmpty) {
-                    context
-                        .read<RadiatorStockCubit>()
-                        .updateStock(widget.index,widget.radiatorStock.copyWith(
+                    context.read<RadiatorStockCubit>().updateStock(
+                        widget.index,
+                        widget.radiatorStock.copyWith(
                           retailPrice: double.tryParse(
                                 value.trim(),
                               ) ??
@@ -217,9 +241,9 @@ class _SingleStockBlockState extends State<SingleStockBlock> {
                 label: "Retail Profit Margin",
                 onChange: (value) {
                   if (value.isNotEmpty) {
-                    context
-                        .read<RadiatorStockCubit>()
-                        .updateStock(widget.index,widget.radiatorStock.copyWith(
+                    context.read<RadiatorStockCubit>().updateStock(
+                        widget.index,
+                        widget.radiatorStock.copyWith(
                           retailProfitMargin: double.tryParse(
                                 value.trim(),
                               ) ??
@@ -239,9 +263,9 @@ class _SingleStockBlockState extends State<SingleStockBlock> {
                 label: "Wholesale Rate",
                 onChange: (value) {
                   if (value.isNotEmpty) {
-                    context
-                        .read<RadiatorStockCubit>()
-                        .updateStock(widget.index,widget.radiatorStock.copyWith(
+                    context.read<RadiatorStockCubit>().updateStock(
+                        widget.index,
+                        widget.radiatorStock.copyWith(
                           wholesaleRate: double.tryParse(
                                 value.trim(),
                               ) ??
@@ -263,9 +287,9 @@ class _SingleStockBlockState extends State<SingleStockBlock> {
                 label: "Wholesale Profit Margin",
                 onChange: (value) {
                   if (value.isNotEmpty) {
-                    context
-                        .read<RadiatorStockCubit>()
-                        .updateStock(widget.index,widget.radiatorStock.copyWith(
+                    context.read<RadiatorStockCubit>().updateStock(
+                        widget.index,
+                        widget.radiatorStock.copyWith(
                           wholesaleProfitMargin: double.tryParse(
                                 value.trim(),
                               ) ??

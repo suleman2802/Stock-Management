@@ -1,17 +1,30 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:stock_management_application/domain/repositories/radiator/abstract_radiator_repository/abstract_radiator_repository.dart';
+import 'package:stock_management_application/presentation/screen/radiator/cubit/radiator_cubit.dart';
 
 import '../../../config/dimensions.dart';
 import '../../../domain/models/radiator.dart';
+import '../../../domain/repositories/car/abstract_car_repository/abstract_car_repository.dart';
+import '../../../domain/repositories/fin/abstract_fin_repository/abstract_fin_repository.dart';
+import '../../../domain/repositories/rows/abstract_rows_repository/abstract_rows_repository.dart';
 import '../../../utilities/app_routes/app_router.dart';
 import '../../screen/radiator/widgets/radiator_dialogue.dart';
 import '../spaces/space.dart';
+import '../state_indicators/error_text/error_text.dart';
+import '../state_indicators/loading_indicator/loading_indicator.dart';
+import '../state_indicators/no_data_avaliable_text/no_data_avaliable_text.dart';
 import '../styling/bordered_container.dart';
 import '../styling/bottom_sheet_header.dart';
 import '../styling/round_icon_button.dart';
 
 class RadiatorSelectionTileDialogue extends StatefulWidget {
-  const RadiatorSelectionTileDialogue({super.key, this.radiator});
-  final Radiator? radiator;
+  RadiatorSelectionTileDialogue(
+      {super.key,
+      this.selectedRadiator,
+      required this.assignSelectedRadiatorFunciton});
+  Radiator? selectedRadiator;
+  final Function assignSelectedRadiatorFunciton;
 
   @override
   State<RadiatorSelectionTileDialogue> createState() =>
@@ -20,40 +33,60 @@ class RadiatorSelectionTileDialogue extends StatefulWidget {
 
 class _RadiatorSelectionTileDialogueState
     extends State<RadiatorSelectionTileDialogue> {
+  void selectRadiator(Radiator selectedRadiator) {
+    setState(() {
+      widget.selectedRadiator = selectedRadiator;
+    });
+    widget.assignSelectedRadiatorFunciton(selectedRadiator);
+  }
+
   @override
   Widget build(BuildContext context) {
-    return widget.radiator != null
-        ? ListTile(
-            onTap: () {
-              showModalBottomSheet(
-                context: context,
-                isScrollControlled: true,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+    return widget.selectedRadiator != null
+        ? Card(
+            child: ListTile(
+              onTap: () {
+                showModalBottomSheet(
+                  context: context,
+                  isScrollControlled: true,
+                  shape: RoundedRectangleBorder(
+                    borderRadius:
+                        BorderRadius.vertical(top: Radius.circular(16)),
+                  ),
+                  builder: (ctx) => BlocProvider.value(
+                    value: context.read<RadiatorCubit>(),
+                    child: RadiatorListBottomSheet(
+                      selectRadiatorFunction: selectRadiator,
+                    ),
+                  ),
+                );
+              },
+              leading: CircleAvatar(
+                backgroundColor: Theme.of(context).primaryColor,
+                child: Text(
+                  widget.selectedRadiator!.car.carCompany
+                      .substring(0, 1)
+                      .toUpperCase(),
+                  style: TextStyle(
+                    color: Colors.white,
+                  ),
                 ),
-                builder: (context) => RadiatorListBottomSheet(),
-              );
-            },
-            leading: CircleAvatar(
-              backgroundColor: Theme.of(context).primaryColor,
-              child: Text(
-                widget.radiator!.car.carCompany.substring(1).toUpperCase(),
               ),
-            ),
-            title: Text(widget.radiator!.car.carName),
-            subtitle: Text(widget.radiator!.size),
-            trailing: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Text("Rows : 5"),
-                Text("Fin : 8 mm"),
-              ],
+              title: Text(widget.selectedRadiator!.car.carName),
+              subtitle: Text(widget.selectedRadiator!.size),
+              trailing: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text("Rows : ${widget.selectedRadiator!.rows.noOfRows}"),
+                  Text("Fin : ${widget.selectedRadiator!.fin.finSize}"),
+                ],
+              ),
             ),
           )
         : Container(
-          margin: EdgeInsets.only(bottom: 3),
-          child: BorderedContainer(
+            margin: EdgeInsets.only(bottom: 3),
+            child: BorderedContainer(
               child: Center(
                 child: TextButton(
                   onPressed: () {
@@ -64,20 +97,26 @@ class _RadiatorSelectionTileDialogueState
                         borderRadius:
                             BorderRadius.vertical(top: Radius.circular(16)),
                       ),
-                      builder: (context) => RadiatorListBottomSheet(),
+                      builder: (ctx) => BlocProvider.value(
+                        value: context.read<RadiatorCubit>(),
+                        child: RadiatorListBottomSheet(
+                          selectRadiatorFunction: selectRadiator,
+                        ),
+                      ),
                     );
                   },
                   child: Text("Select Radiator"),
                 ),
               ),
             ),
-        );
+          );
   }
 }
 
 class RadiatorListBottomSheet extends StatelessWidget {
-  const RadiatorListBottomSheet({super.key});
-
+  const RadiatorListBottomSheet(
+      {super.key, required this.selectRadiatorFunction});
+  final Function selectRadiatorFunction;
   @override
   Widget build(BuildContext context) {
     final dimensions = Dimensions(context);
@@ -104,7 +143,26 @@ class RadiatorListBottomSheet extends StatelessWidget {
                         iconData: Icons.add,
                         onPress: () => showDialog(
                           context: context,
-                          builder: (context) => RadiatorDialogue(),
+                          builder: (ctx) => MultiRepositoryProvider(
+                            providers: [
+                              RepositoryProvider.value(
+                                value: context.read<RadiatorRepository>(),
+                              ),
+                              RepositoryProvider.value(
+                                value: context.read<CarRepository>(),
+                              ),
+                              RepositoryProvider.value(
+                                value: context.read<FinRepository>(),
+                              ),
+                              RepositoryProvider.value(
+                                value: context.read<RowsRepository>(),
+                              ),
+                            ],
+                            child: BlocProvider.value(
+                              value: context.read<RadiatorCubit>(),
+                              child: RadiatorDialogue(),
+                            ),
+                          ),
                         ),
                       ),
                       smallWidthSpace(),
@@ -119,33 +177,47 @@ class RadiatorListBottomSheet extends StatelessWidget {
             ),
           ),
           Expanded(
-            child: ListView.builder(
-              itemCount: 4, // Replace with the actual number of cars
-              itemBuilder: (context, index) => ListTile(
-                leading: CircleAvatar(
-                  backgroundColor: Theme.of(context).primaryColor,
-                  child: Text(
-                    "H",
-                    style: TextStyle(color: Colors.white),
-                  ),
-                ),
-                title: Text(
-                  "car name",
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                ),
-                subtitle: Text("37 x 8 x 9"),
-                trailing: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Text("Rows : 5"),
-                    Text("Fin : 8 mm"),
-                  ],
-                ),
-                onTap: () {
-                  AppRouter.pop();
-                },
-              ),
+            child: BlocBuilder<RadiatorCubit, RadiatorState>(
+              builder: (context, state) {
+                if (state is RadiatorLoadingState) {
+                  return LoadingIndicator();
+                } else if (state is RadiatorErrorState) {
+                  return ErrorText(
+                    errorMessage: state.errorMessage,
+                  );
+                } else if (state is RadiatorLoadedState) {
+                  return state.radiatorList.isEmpty
+                      ? NoDataAvaliableText()
+                      : ListView.builder(
+                          itemCount: state.radiatorList.length,
+                          itemBuilder: (context, index) => Card(
+                            child: ListTile(
+                              onTap: () {
+                                selectRadiatorFunction(
+                                    state.radiatorList[index]);
+                                AppRouter.pop();
+                              },
+                              title: Text(
+                                state.radiatorList[index].car.carName,
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              ),
+                              subtitle: Text(state.radiatorList[index].size),
+                              leading: CircleAvatar(
+                                backgroundColor: Theme.of(context).primaryColor,
+                                child: Text(
+                                  state.radiatorList[index].carAutomation.name
+                                      .substring(0, 1)
+                                      .toUpperCase(),
+                                  style: TextStyle(color: Colors.white),
+                                ),
+                              ),
+                            ),
+                          ),
+                        );
+                } else {
+                  return NoDataAvaliableText();
+                }
+              },
             ),
           ),
         ],
