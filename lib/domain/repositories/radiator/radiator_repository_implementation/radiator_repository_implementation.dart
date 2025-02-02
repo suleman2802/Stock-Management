@@ -70,4 +70,26 @@ class RadiatorRepositoryImplementation implements RadiatorRepository {
       return false;
     }
   }
+
+  @override
+  Future<List<Radiator>> getAllRadiatorsByCarId(String carId) async {
+    try {
+      // Query Firestore to get documents where 'car.id' matches the given carId
+      QuerySnapshot snapshot = await firestoreInstance
+          .collection('radiators')
+          .where('car.id', isEqualTo: carId)
+          .get();
+
+      // Map the documents to Radiator objects
+      List<Radiator> radiators = snapshot.docs.map((doc) {
+        return Radiator.fromMap(doc.data() as Map<String, dynamic>);
+      }).toList();
+
+      log('Retrieved radiators for carId $carId: $radiators');
+      return radiators;
+    } catch (e) {
+      log('Failed to retrieve radiators for carId $carId: $e');
+      return [];
+    }
+  }
 }

@@ -24,8 +24,9 @@ import '../../rows/cubit/rows_cubit.dart';
 import '../cubit/radiator_cubit.dart';
 
 class RadiatorDialogue extends StatefulWidget {
-  const RadiatorDialogue({super.key, this.radiator});
+  const RadiatorDialogue({super.key, this.radiator, this.canEdit = true});
   final Radiator? radiator;
+  final bool canEdit;
 
   @override
   State<RadiatorDialogue> createState() => _RadiatorDialogueState();
@@ -180,6 +181,7 @@ class _RadiatorDialogueState extends State<RadiatorDialogue> {
                     carRepository: context.read<CarRepository>(),
                   ),
                   child: CarSelectionTileDialogue(
+                    canEdit: widget.canEdit,
                     selectedCar: _selectedCar,
                     assignSelectedCarFunction: assignSelectedCar,
                   ),

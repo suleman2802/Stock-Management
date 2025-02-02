@@ -6,6 +6,7 @@ import 'package:intl/intl.dart';
 import 'package:stock_management_application/domain/repositories/car/abstract_car_repository/abstract_car_repository.dart';
 import 'package:stock_management_application/presentation/screen/car/cubit/car_cubit.dart';
 import 'package:stock_management_application/presentation/widgets/spaces/space.dart';
+import 'package:stock_management_application/utilities/app_alerts/app_alerts.dart';
 import '../../../domain/models/car.dart';
 import '../../../domain/models/radiator_stock.dart';
 import '../../../domain/models/stock.dart';
@@ -82,25 +83,28 @@ class _StockFormScreenState extends State<StockFormScreen> {
       curentIndex: 1,
       label: "Add Stock",
       floatingActionButton: FloatingActionButton.small(
-          backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
-          child: Icon(
-            Icons.add,
-            color: Colors.white,
-          ),
-          onPressed: () => context.read<RadiatorStockCubit>().addStock(
-                RadiatorStock(
-                  quantity: 0,
-                  profitInWholesalePrice: 0,
-                  profitInRetailPrice: 0,
-                  retailPrice: 0,
-                  retailProfitMargin: 0,
-                  wholesaleRate: 0,
-                  wholesaleProfitMargin: 0,
-                  unitCost: 0,
-                  company: null,
-                  radiator: null,
-                ),
-              )),
+        backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
+        child: Icon(
+          Icons.add,
+          color: Colors.white,
+        ),
+        onPressed: () => selectedCar != null
+            ? context.read<RadiatorStockCubit>().addStock(
+                  RadiatorStock(
+                    quantity: 0,
+                    profitInWholesalePrice: 0,
+                    profitInRetailPrice: 0,
+                    retailPrice: 0,
+                    retailProfitMargin: 0,
+                    wholesaleRate: 0,
+                    wholesaleProfitMargin: 0,
+                    unitCost: 0,
+                    company: null,
+                    radiator: null,
+                  ),
+                )
+            : AppAlertUtil.showError(context, "Select car first"),
+      ),
       action: RoundIconButton(
         iconData: Icons.save,
         onPress: () {
@@ -164,10 +168,9 @@ class _StockFormScreenState extends State<StockFormScreen> {
                 selectedCar: selectedCar,
                 assignSelectedCarFunction: (Car carSelected) {
                   setState(() {
-                       selectedCar = carSelected;
+                      selectedCar = carSelected;
                   });
-               
-                  log(" car selected : $selectedCar");
+                
                 },
               ),
             ),

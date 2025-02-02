@@ -10,9 +10,10 @@ part 'radiator_state.dart';
 
 class RadiatorCubit extends Cubit<RadiatorState> {
   final RadiatorRepository radiatorRepository;
+
   RadiatorCubit({required this.radiatorRepository})
       : super(RadiatorInitialState()) {
-    fetchAllRadiators();
+ fetchAllRadiators();
   }
 
   Future<void> fetchAllRadiators() async {
@@ -20,6 +21,21 @@ class RadiatorCubit extends Cubit<RadiatorState> {
       emit(RadiatorLoadingState());
       final List<Radiator> radiatorList =
           await radiatorRepository.getAllRadiators();
+      emit(
+        RadiatorLoadedState(
+          radiatorList: radiatorList,
+        ),
+      );
+    } catch (error) {
+      emit(RadiatorErrorState(errorMessage: error.toString()));
+    }
+  }
+
+  Future<void> fetchAllRadiatorsByCarId(String carId) async {
+    try {
+      emit(RadiatorLoadingState());
+      final List<Radiator> radiatorList =
+          await radiatorRepository.getAllRadiatorsByCarId(carId);
       emit(
         RadiatorLoadedState(
           radiatorList: radiatorList,

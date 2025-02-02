@@ -196,6 +196,7 @@ class RadiatorListBottomSheet extends StatelessWidget {
                             child: BlocProvider.value(
                               value: context.read<RadiatorCubit>(),
                               child: RadiatorDialogue(
+                                canEdit: selectedCar == null,
                                 radiator: Radiator(
                                     size: "",
                                     carFuelType: CarFuelType.petrol,

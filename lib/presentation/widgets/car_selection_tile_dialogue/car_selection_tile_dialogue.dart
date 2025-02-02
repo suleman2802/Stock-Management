@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:stock_management_application/utilities/app_alerts/app_alerts.dart';
 import '../../../config/dimensions.dart';
 import '../../../domain/models/car.dart';
 import '../../../utilities/app_routes/app_router.dart';
@@ -15,10 +16,13 @@ import '../styling/round_icon_button.dart';
 
 class CarSelectionTileDialogue extends StatefulWidget {
   CarSelectionTileDialogue(
-      {super.key, this.selectedCar, required this.assignSelectedCarFunction});
+      {super.key,
+      this.selectedCar,
+      required this.assignSelectedCarFunction,
+      this.canEdit = true});
   Car? selectedCar;
   final Function assignSelectedCarFunction;
-
+  final bool canEdit;
   @override
   State<CarSelectionTileDialogue> createState() =>
       _CarSelectionTileDialogueState();
@@ -26,9 +30,7 @@ class CarSelectionTileDialogue extends StatefulWidget {
 
 class _CarSelectionTileDialogueState extends State<CarSelectionTileDialogue> {
   void selectCar(Car selectedCar) {
-    setState(() {
       widget.selectedCar = selectedCar;
-    });
     widget.assignSelectedCarFunction(selectedCar);
   }
 
@@ -38,20 +40,22 @@ class _CarSelectionTileDialogueState extends State<CarSelectionTileDialogue> {
         ? Card(
             child: ListTile(
               onTap: () {
-                showModalBottomSheet(
-                  context: context,
-                  isScrollControlled: true,
-                  shape: RoundedRectangleBorder(
-                    borderRadius:
-                        BorderRadius.vertical(top: Radius.circular(16)),
-                  ),
-                  builder: (ctx) => BlocProvider.value(
-                    value: context.read<CarCubit>(),
-                    child: CarListBottomSheet(
-                      selectCarFunction: selectCar,
-                    ),
-                  ),
-                );
+                widget.canEdit
+                    ? showModalBottomSheet(
+                        context: context,
+                        isScrollControlled: true,
+                        shape: RoundedRectangleBorder(
+                          borderRadius:
+                              BorderRadius.vertical(top: Radius.circular(16)),
+                        ),
+                        builder: (ctx) => BlocProvider.value(
+                          value: context.read<CarCubit>(),
+                          child: CarListBottomSheet(
+                            selectCarFunction: selectCar,
+                          ),
+                        ),
+                      )
+                    : AppAlertUtil.showError(context, "Unable to change car");
               },
               leading: CircleAvatar(
                 backgroundColor: Theme.of(context).primaryColor,
