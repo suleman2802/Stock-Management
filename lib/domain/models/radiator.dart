@@ -43,8 +43,8 @@ class Radiator {
   final CarAutomation carAutomation;
   final int fromYear;
   final int toYear;
-  final Rows rows;
-  final Fin fin;
+  final Rows? rows;
+  final Fin? fin;
   final Car car;
 
   Radiator({
@@ -91,8 +91,8 @@ class Radiator {
       'carAutomation': carAutomation.toString().split('.').last,
       'fromYear': fromYear,
       'toYear': toYear,
-      'rows': rows.toMap(),
-      'fin': fin.toMap(),
+      'rows': rows!.toMap(),
+      'fin': fin!.toMap(),
       'car': car.toMap(),
     };
   }

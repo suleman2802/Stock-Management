@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../domain/repositories/car/abstract_car_repository/abstract_car_repository.dart';
 import '../../../domain/repositories/company/abstract_company_repository/abstract_company_repository.dart';
+import '../../../domain/repositories/fin/abstract_fin_repository/abstract_fin_repository.dart';
 import '../../../domain/repositories/radiator/abstract_radiator_repository/abstract_radiator_repository.dart';
+import '../../../domain/repositories/rows/abstract_rows_repository/abstract_rows_repository.dart';
 import '../../../utilities/app_routes/app_router.dart';
 import '../../widgets/layouts/page_scaffolds/list_page_scaffold.dart';
 import '../../widgets/spaces/space.dart';
@@ -48,6 +50,12 @@ class _StockScreenState extends State<StockScreen> {
               ),
               RepositoryProvider.value(
                 value: context.read<CompanyRepository>(),
+              ),
+              RepositoryProvider.value(
+                value: context.read<FinRepository>(),
+              ),
+              RepositoryProvider.value(
+                value: context.read<RowsRepository>(),
               ),
             ],
             child: MultiBlocProvider(
@@ -110,6 +118,12 @@ class _StockScreenState extends State<StockScreen> {
                                     ),
                                     RepositoryProvider.value(
                                       value: context.read<CompanyRepository>(),
+                                    ),
+                                    RepositoryProvider.value(
+                                      value: context.read<FinRepository>(),
+                                    ),
+                                    RepositoryProvider.value(
+                                      value: context.read<RowsRepository>(),
                                     ),
                                   ],
                                   child: BlocProvider.value(

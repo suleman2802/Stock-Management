@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../domain/models/car.dart';
 import '../../../../domain/models/company.dart';
 import '../../../../domain/models/radiator.dart';
 import '../../../../domain/models/radiator_stock.dart';
+import '../../../../domain/repositories/car/abstract_car_repository/abstract_car_repository.dart';
 import '../../../../domain/repositories/company/abstract_company_repository/abstract_company_repository.dart';
+import '../../../../domain/repositories/fin/abstract_fin_repository/abstract_fin_repository.dart';
 import '../../../../domain/repositories/radiator/abstract_radiator_repository/abstract_radiator_repository.dart';
+import '../../../../domain/repositories/rows/abstract_rows_repository/abstract_rows_repository.dart';
 import '../../../widgets/company_selection_tile_dialogue/company_selection_tile_dialogue.dart';
 import '../../../widgets/input_feilds/number_input_field.dart';
 import '../../../widgets/radiator_selection_tile_dialogue/radiator_selection_tile_dialogue.dart';
@@ -16,13 +20,14 @@ import '../../radiator/cubit/radiator_cubit.dart';
 import '../cubit/radiator_stock_list_cubit.dart';
 
 class SingleStockBlock extends StatefulWidget {
-  SingleStockBlock({
-    super.key,
-    required this.radiatorStock,
-    required this.index,
-  });
+  SingleStockBlock(
+      {super.key,
+      required this.radiatorStock,
+      required this.index,
+      this.selectedCar});
   RadiatorStock radiatorStock;
   int index;
+  Car? selectedCar;
 
   @override
   State<SingleStockBlock> createState() => _SingleStockBlockState();
@@ -89,19 +94,38 @@ class _SingleStockBlockState extends State<SingleStockBlock> {
           padding: const EdgeInsets.all(8.0),
           child: Column(
             children: [
-              BlocProvider(
-                create: (context) => RadiatorCubit(
-                    radiatorRepository: context.read<RadiatorRepository>()),
-                child: RadiatorSelectionTileDialogue(
-                  selectedRadiator: widget.radiatorStock.radiator,
-                  assignSelectedRadiatorFunciton: (Radiator selectedRadiator) {
-                    context.read<RadiatorStockCubit>().updateStock(
-                          widget.index,
-                          widget.radiatorStock.copyWith(
-                            radiator: selectedRadiator,
-                          ),
-                        );
-                  },
+              MultiRepositoryProvider(
+                providers: [
+                  RepositoryProvider.value(
+                    value: context.read<RadiatorRepository>(),
+                  ),
+                  RepositoryProvider.value(
+                    value: context.read<CarRepository>(),
+                  ),
+                  RepositoryProvider.value(
+                    value: context.read<FinRepository>(),
+                  ),
+                  RepositoryProvider.value(
+                    value: context.read<RowsRepository>(),
+                  ),
+                ],
+                child: BlocProvider(
+                  create: (context) => RadiatorCubit(
+                    radiatorRepository: context.read<RadiatorRepository>(),
+                  ),
+                  child: RadiatorSelectionTileDialogue(
+                    selectedRadiator: widget.radiatorStock.radiator,
+                    selectedCar: widget.selectedCar,
+                    assignSelectedRadiatorFunciton:
+                        (Radiator selectedRadiator) {
+                      context.read<RadiatorStockCubit>().updateStock(
+                            widget.index,
+                            widget.radiatorStock.copyWith(
+                              radiator: selectedRadiator,
+                            ),
+                          );
+                    },
+                  ),
                 ),
               ),
               BlocProvider(

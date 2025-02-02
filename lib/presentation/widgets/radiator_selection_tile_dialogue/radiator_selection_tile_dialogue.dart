@@ -4,6 +4,7 @@ import 'package:stock_management_application/domain/repositories/radiator/abstra
 import 'package:stock_management_application/presentation/screen/radiator/cubit/radiator_cubit.dart';
 
 import '../../../config/dimensions.dart';
+import '../../../domain/models/car.dart';
 import '../../../domain/models/radiator.dart';
 import '../../../domain/repositories/car/abstract_car_repository/abstract_car_repository.dart';
 import '../../../domain/repositories/fin/abstract_fin_repository/abstract_fin_repository.dart';
@@ -22,8 +23,10 @@ class RadiatorSelectionTileDialogue extends StatefulWidget {
   RadiatorSelectionTileDialogue(
       {super.key,
       this.selectedRadiator,
-      required this.assignSelectedRadiatorFunciton});
+      required this.assignSelectedRadiatorFunciton,
+      this.selectedCar});
   Radiator? selectedRadiator;
+  Car? selectedCar;
   final Function assignSelectedRadiatorFunciton;
 
   @override
@@ -34,9 +37,6 @@ class RadiatorSelectionTileDialogue extends StatefulWidget {
 class _RadiatorSelectionTileDialogueState
     extends State<RadiatorSelectionTileDialogue> {
   void selectRadiator(Radiator selectedRadiator) {
-    setState(() {
-      widget.selectedRadiator = selectedRadiator;
-    });
     widget.assignSelectedRadiatorFunciton(selectedRadiator);
   }
 
@@ -53,10 +53,27 @@ class _RadiatorSelectionTileDialogueState
                     borderRadius:
                         BorderRadius.vertical(top: Radius.circular(16)),
                   ),
-                  builder: (ctx) => BlocProvider.value(
-                    value: context.read<RadiatorCubit>(),
-                    child: RadiatorListBottomSheet(
-                      selectRadiatorFunction: selectRadiator,
+                  builder: (ctx) => MultiRepositoryProvider(
+                    providers: [
+                      RepositoryProvider.value(
+                        value: context.read<RadiatorRepository>(),
+                      ),
+                      RepositoryProvider.value(
+                        value: context.read<CarRepository>(),
+                      ),
+                      RepositoryProvider.value(
+                        value: context.read<FinRepository>(),
+                      ),
+                      RepositoryProvider.value(
+                        value: context.read<RowsRepository>(),
+                      ),
+                    ],
+                    child: BlocProvider.value(
+                      value: context.read<RadiatorCubit>(),
+                      child: RadiatorListBottomSheet(
+                        selectedCar: widget.selectedCar,
+                        selectRadiatorFunction: selectRadiator,
+                      ),
                     ),
                   ),
                 );
@@ -78,8 +95,8 @@ class _RadiatorSelectionTileDialogueState
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Text("Rows : ${widget.selectedRadiator!.rows.noOfRows}"),
-                  Text("Fin : ${widget.selectedRadiator!.fin.finSize}"),
+                  Text("Rows : ${widget.selectedRadiator!.rows!.noOfRows}"),
+                  Text("Fin : ${widget.selectedRadiator!.fin!.finSize}"),
                 ],
               ),
             ),
@@ -97,10 +114,27 @@ class _RadiatorSelectionTileDialogueState
                         borderRadius:
                             BorderRadius.vertical(top: Radius.circular(16)),
                       ),
-                      builder: (ctx) => BlocProvider.value(
-                        value: context.read<RadiatorCubit>(),
-                        child: RadiatorListBottomSheet(
-                          selectRadiatorFunction: selectRadiator,
+                      builder: (ctx) => MultiRepositoryProvider(
+                        providers: [
+                          RepositoryProvider.value(
+                            value: context.read<RadiatorRepository>(),
+                          ),
+                          RepositoryProvider.value(
+                            value: context.read<CarRepository>(),
+                          ),
+                          RepositoryProvider.value(
+                            value: context.read<FinRepository>(),
+                          ),
+                          RepositoryProvider.value(
+                            value: context.read<RowsRepository>(),
+                          ),
+                        ],
+                        child: BlocProvider.value(
+                          value: context.read<RadiatorCubit>(),
+                          child: RadiatorListBottomSheet(
+                            selectRadiatorFunction: selectRadiator,
+                            selectedCar: widget.selectedCar,
+                          ),
                         ),
                       ),
                     );
@@ -114,9 +148,10 @@ class _RadiatorSelectionTileDialogueState
 }
 
 class RadiatorListBottomSheet extends StatelessWidget {
-  const RadiatorListBottomSheet(
-      {super.key, required this.selectRadiatorFunction});
+  RadiatorListBottomSheet(
+      {super.key, required this.selectRadiatorFunction, this.selectedCar});
   final Function selectRadiatorFunction;
+  Car? selectedCar;
   @override
   Widget build(BuildContext context) {
     final dimensions = Dimensions(context);
@@ -160,7 +195,17 @@ class RadiatorListBottomSheet extends StatelessWidget {
                             ],
                             child: BlocProvider.value(
                               value: context.read<RadiatorCubit>(),
-                              child: RadiatorDialogue(),
+                              child: RadiatorDialogue(
+                                radiator: Radiator(
+                                    size: "",
+                                    carFuelType: CarFuelType.petrol,
+                                    carAutomation: CarAutomation.manual,
+                                    fromYear: DateTime.now().year,
+                                    toYear: DateTime.now().year,
+                                    rows: null,
+                                    car: selectedCar!,
+                                    fin: null),
+                              ),
                             ),
                           ),
                         ),

@@ -3,6 +3,8 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:stock_management_application/domain/repositories/car/abstract_car_repository/abstract_car_repository.dart';
+import 'package:stock_management_application/presentation/screen/car/cubit/car_cubit.dart';
 import 'package:stock_management_application/presentation/widgets/spaces/space.dart';
 import '../../../domain/models/car.dart';
 import '../../../domain/models/radiator_stock.dart';
@@ -80,7 +82,7 @@ class _StockFormScreenState extends State<StockFormScreen> {
       curentIndex: 1,
       label: "Add Stock",
       floatingActionButton: FloatingActionButton.small(
-        backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
+          backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
           child: Icon(
             Icons.add,
             color: Colors.white,
@@ -154,8 +156,20 @@ class _StockFormScreenState extends State<StockFormScreen> {
                 ),
               ],
             ),
-            CarSelectionTileDialogue(
-              assignSelectedCarFunction: () {},
+            BlocProvider(
+              create: (context) => CarCubit(
+                carRepository: context.read<CarRepository>(),
+              ),
+              child: CarSelectionTileDialogue(
+                selectedCar: selectedCar,
+                assignSelectedCarFunction: (Car carSelected) {
+                  setState(() {
+                       selectedCar = carSelected;
+                  });
+               
+                  log(" car selected : $selectedCar");
+                },
+              ),
             ),
             BlocBuilder<RadiatorStockCubit, List<RadiatorStock>>(
               builder: (context, stocks) {
@@ -181,6 +195,7 @@ class _StockFormScreenState extends State<StockFormScreen> {
                           key: ValueKey(stocks[index].id),
                           radiatorStock: stocks[index],
                           index: index,
+                          selectedCar: selectedCar,
                         ),
                       ],
                     ),

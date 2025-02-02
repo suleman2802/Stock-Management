@@ -63,8 +63,14 @@ class HomeScreen extends StatelessWidget {
                     RepositoryProvider.value(
                       value: context.read<StockRepository>(),
                     ),
-                    RepositoryProvider.value(
+                     RepositoryProvider.value(
                       value: context.read<CarRepository>(),
+                    ),
+                    RepositoryProvider.value(
+                      value: context.read<FinRepository>(),
+                    ),
+                    RepositoryProvider.value(
+                      value: context.read<RowsRepository>(),
                     ),
                   ],
                   child: BlocProvider(
