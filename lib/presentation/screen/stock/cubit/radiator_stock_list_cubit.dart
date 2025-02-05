@@ -1,7 +1,8 @@
 import 'dart:developer';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:stock_management_application/domain/models/radiator_stock.dart';
+
+import '../../../../domain/models/radiator_stock.dart';
 
 class RadiatorStockCubit extends Cubit<List<RadiatorStock>> {
   RadiatorStockCubit({List<RadiatorStock>? initialStocks})

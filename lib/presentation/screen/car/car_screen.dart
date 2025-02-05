@@ -17,7 +17,7 @@ class CarScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListPageScaffold(
-      curentIndex: 0,
+      // curentIndex: 0,
       label: "Car",
       action: RoundIconButton(
         iconData: Icons.add,

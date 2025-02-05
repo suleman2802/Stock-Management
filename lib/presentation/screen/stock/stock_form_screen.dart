@@ -97,9 +97,9 @@ class _StockFormScreenState extends State<StockFormScreen> {
   @override
   Widget build(BuildContext context) {
     return ListPageScaffold(
-      curentIndex: 1,
+      // curentIndex: 1,
       label: "Add Stock",
-      floatingActionButton: FloatingActionButton.small(
+      floatingActionButton: FloatingActionButton(
         backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
         child: Icon(
           Icons.add,
@@ -164,7 +164,7 @@ class _StockFormScreenState extends State<StockFormScreen> {
                 }
               } else {
                 //edit
-                bool isAddedSuccessfully =
+                bool isUpdatedSuccessfully =
                     await context.read<StockCubit>().updateStock(
                           Stock(
                             id: widget.stock!.id,
@@ -179,7 +179,7 @@ class _StockFormScreenState extends State<StockFormScreen> {
                 if (context.mounted) {
                   generalAlert(
                     context: context,
-                    isSuccessful: isAddedSuccessfully,
+                    isSuccessful: isUpdatedSuccessfully,
                     tile: "Stock",
                     type: AlertType.updated,
                   );

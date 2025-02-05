@@ -16,7 +16,7 @@ class FinScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListPageScaffold(
       label: "Fin Screen",
-      curentIndex: 0,
+      // curentIndex: 0,
       action: RoundIconButton(
         iconData: Icons.add,
         onPress: () {

@@ -104,6 +104,13 @@ class _SingleStockBlockState extends State<SingleStockBlock> {
 
     profitInRetailPriceController.text = retailProfit.toString();
     reatilProfitMarginController.text = retailProfitMargin.toString();
+
+    context.read<RadiatorStockCubit>().updateStock(
+        widget.index,
+        widget.radiatorStock.copyWith(
+            retailPrice: retailPrice,
+            retailProfitMargin: retailProfitMargin,
+            profitInRetailPrice: retailProfit));
   }
 
   void calculateProfitAndProfitMarginOnBaseOfRetailProfit() {
@@ -119,6 +126,14 @@ class _SingleStockBlockState extends State<SingleStockBlock> {
 
     retailPriceController.text = retailPrice.toString();
     reatilProfitMarginController.text = retailProfitMargin.toString();
+
+    context.read<RadiatorStockCubit>().updateStock(
+        widget.index,
+        widget.radiatorStock.copyWith(
+          profitInRetailPrice: retailProfit,
+          retailPrice: retailPrice,
+          retailProfitMargin: retailProfitMargin,
+        ));
   }
 
   void calculateProfitAndProfitMarginOnBaseOfUnitCost() {
@@ -134,6 +149,15 @@ class _SingleStockBlockState extends State<SingleStockBlock> {
 
     profitInRetailPriceController.text = retailProfit.toString();
     reatilProfitMarginController.text = retailProfitMargin.toString();
+
+    context.read<RadiatorStockCubit>().updateStock(
+          widget.index,
+          widget.radiatorStock.copyWith(
+            unitCost: unitCost,
+            profitInRetailPrice: retailProfit,
+            retailProfitMargin: retailProfitMargin,
+          ),
+        );
   }
 
   void calculateProfitAndProfitMarginOnBaseOfRetailProfitMargin() {
@@ -149,6 +173,14 @@ class _SingleStockBlockState extends State<SingleStockBlock> {
 
     retailPriceController.text = retailPrice.toString();
     profitInRetailPriceController.text = retailProfit.toString();
+
+    context.read<RadiatorStockCubit>().updateStock(
+        widget.index,
+        widget.radiatorStock.copyWith(
+          retailProfitMargin: retailProfitMargin,
+          retailPrice: retailPrice,
+          profitInRetailPrice: retailProfit,
+        ));
   }
 
 //Wholesale
@@ -166,6 +198,13 @@ class _SingleStockBlockState extends State<SingleStockBlock> {
 
     profitInWholesalePriceController.text = wholesaleProfit.toString();
     wholesaleProfitMarginController.text = wholesaleProfitMargin.toString();
+    context.read<RadiatorStockCubit>().updateStock(
+        widget.index,
+        widget.radiatorStock.copyWith(
+          wholesaleRate: wholesalePrice,
+          wholesaleProfitMargin: wholesaleProfitMargin,
+          profitInWholesalePrice: wholesaleProfit,
+        ));
   }
 
   void calculateProfitAndProfitMarginOnBaseOfWholesaleProfit() {
@@ -181,6 +220,14 @@ class _SingleStockBlockState extends State<SingleStockBlock> {
 
     wholesaleRateController.text = wholesalePrice.toString();
     wholesaleProfitMarginController.text = wholesaleProfitMargin.toString();
+
+    context.read<RadiatorStockCubit>().updateStock(
+        widget.index,
+        widget.radiatorStock.copyWith(
+          profitInWholesalePrice: wholesalePrice,
+          wholesaleRate: wholesalePrice,
+          wholesaleProfitMargin: wholesaleProfitMargin,
+        ));
   }
 
   void calculateProfitAndProfitMarginOnBaseOfUnitCostInWholesale() {
@@ -196,6 +243,15 @@ class _SingleStockBlockState extends State<SingleStockBlock> {
 
     profitInWholesalePriceController.text = wholesaleProfit.toString();
     wholesaleProfitMarginController.text = wholesaleProfitMargin.toString();
+
+    context.read<RadiatorStockCubit>().updateStock(
+          widget.index,
+          widget.radiatorStock.copyWith(
+            unitCost: unitCost,
+            profitInWholesalePrice: wholesaleProfit,
+            wholesaleProfitMargin: wholesaleProfitMargin,
+          ),
+        );
   }
 
   void calculateProfitAndProfitMarginOnBaseOfWholesaleProfitMargin() {
@@ -211,6 +267,14 @@ class _SingleStockBlockState extends State<SingleStockBlock> {
 
     wholesaleRateController.text = wholesalePrice.toString();
     profitInWholesalePriceController.text = wholesaleProfit.toString();
+
+    context.read<RadiatorStockCubit>().updateStock(
+        widget.index,
+        widget.radiatorStock.copyWith(
+          wholesaleProfitMargin: wholesaleProfitMargin,
+          wholesaleRate: wholesalePrice,
+          profitInWholesalePrice: wholesaleProfit,
+        ));
   }
 
   @override
@@ -303,14 +367,6 @@ class _SingleStockBlockState extends State<SingleStockBlock> {
                   label: "Unit Cost",
                   onChange: (value) {
                     if (value.isNotEmpty) {
-                      context.read<RadiatorStockCubit>().updateStock(
-                          widget.index,
-                          widget.radiatorStock.copyWith(
-                            unitCost: double.tryParse(
-                                  value.trim(),
-                                ) ??
-                                0.9,
-                          ));
                       calculateProfitAndProfitMarginOnBaseOfUnitCost();
                       calculateProfitAndProfitMarginOnBaseOfUnitCostInWholesale();
                     }
@@ -329,14 +385,6 @@ class _SingleStockBlockState extends State<SingleStockBlock> {
                   label: "Retail Price",
                   onChange: (value) {
                     if (value.isNotEmpty) {
-                      context.read<RadiatorStockCubit>().updateStock(
-                          widget.index,
-                          widget.radiatorStock.copyWith(
-                            retailPrice: double.tryParse(
-                                  value.trim(),
-                                ) ??
-                                0.9,
-                          ));
                       calculateProfitAndProfitMarginOnBaseOfRetailPrice();
                     }
                   },
@@ -354,14 +402,6 @@ class _SingleStockBlockState extends State<SingleStockBlock> {
                   label: "Wholesale Rate",
                   onChange: (value) {
                     if (value.isNotEmpty) {
-                      context.read<RadiatorStockCubit>().updateStock(
-                          widget.index,
-                          widget.radiatorStock.copyWith(
-                            wholesaleRate: double.tryParse(
-                                  value.trim(),
-                                ) ??
-                                0.9,
-                          ));
                       calculateProfitAndProfitMarginOnBaseOfWholesalePrice();
                     }
                   },
@@ -379,14 +419,6 @@ class _SingleStockBlockState extends State<SingleStockBlock> {
                   label: "Profit in Retail Price",
                   onChange: (value) {
                     if (value.isNotEmpty) {
-                      context.read<RadiatorStockCubit>().updateStock(
-                          widget.index,
-                          widget.radiatorStock.copyWith(
-                            profitInRetailPrice: double.tryParse(
-                                  value.trim(),
-                                ) ??
-                                0.9,
-                          ));
                       calculateProfitAndProfitMarginOnBaseOfRetailProfit();
                     }
                   },
@@ -402,14 +434,6 @@ class _SingleStockBlockState extends State<SingleStockBlock> {
                   label: "Profit in Wholesale Price",
                   onChange: (value) {
                     if (value.isNotEmpty) {
-                      context.read<RadiatorStockCubit>().updateStock(
-                          widget.index,
-                          widget.radiatorStock.copyWith(
-                            profitInWholesalePrice: double.tryParse(
-                                  value.trim(),
-                                ) ??
-                                0.9,
-                          ));
                       calculateProfitAndProfitMarginOnBaseOfWholesaleProfit();
                     }
                   },
@@ -425,14 +449,6 @@ class _SingleStockBlockState extends State<SingleStockBlock> {
                   label: "Retail Profit Margin",
                   onChange: (value) {
                     if (value.isNotEmpty) {
-                      context.read<RadiatorStockCubit>().updateStock(
-                          widget.index,
-                          widget.radiatorStock.copyWith(
-                            retailProfitMargin: double.tryParse(
-                                  value.trim(),
-                                ) ??
-                                0.9,
-                          ));
                       calculateProfitAndProfitMarginOnBaseOfRetailProfitMargin();
                     }
                   },
@@ -448,14 +464,6 @@ class _SingleStockBlockState extends State<SingleStockBlock> {
                   label: "Wholesale Profit Margin",
                   onChange: (value) {
                     if (value.isNotEmpty) {
-                      context.read<RadiatorStockCubit>().updateStock(
-                          widget.index,
-                          widget.radiatorStock.copyWith(
-                            wholesaleProfitMargin: double.tryParse(
-                                  value.trim(),
-                                ) ??
-                                0.9,
-                          ));
                       calculateProfitAndProfitMarginOnBaseOfWholesaleProfitMargin();
                     }
                   },

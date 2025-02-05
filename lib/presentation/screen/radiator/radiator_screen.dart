@@ -34,7 +34,7 @@ class _RadiatorScreenState extends State<RadiatorScreen> {
   @override
   Widget build(BuildContext context) {
     return ListPageScaffold(
-      curentIndex: 0,
+      // curentIndex: 0,
       label: "Radiators",
       action: RoundIconButton(
         iconData: Icons.add,

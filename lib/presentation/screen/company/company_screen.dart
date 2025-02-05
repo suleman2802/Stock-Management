@@ -16,7 +16,7 @@ class CompanyScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListPageScaffold(
       label: "Companies",
-      curentIndex: 0,
+      // curentIndex: 0,
       action: RoundIconButton(
         iconData: Icons.add,
         onPress: () {

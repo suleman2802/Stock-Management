@@ -16,7 +16,7 @@ class RowsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListPageScaffold(
       label: "Row",
-      curentIndex: 0,
+      // curentIndex: 0,
       action: RoundIconButton(
         iconData: Icons.add,
         onPress: () {

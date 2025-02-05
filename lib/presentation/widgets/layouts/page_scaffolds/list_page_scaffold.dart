@@ -11,7 +11,7 @@ class ListPageScaffold extends StatelessWidget {
     super.key,
     required this.label,
     required this.body,
-    required this.curentIndex,
+    // required this.curentIndex,
     this.action,
     this.floatingActionButton,
   });
@@ -20,12 +20,13 @@ class ListPageScaffold extends StatelessWidget {
   final Widget? action;
   final Widget body;
   final Widget? floatingActionButton;
-  final int curentIndex;
+  // final int curentIndex;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+
         actions: [
           Padding(
             padding: const EdgeInsets.only(right: 10.0),
@@ -36,35 +37,35 @@ class ListPageScaffold extends StatelessWidget {
           label,
         ),
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        onTap: (value) {
-          if (value == 0) {
-          AppRouter.push(HomeScreen());
-          } else if (value == 1) {
-      AppRouter.push(StockScreen());
-          } else if (value == 2) {
-      AppRouter.push(SaleScreen());
-          }
-        },
-        currentIndex: curentIndex,
-        items: [
-          BottomNavigationBarItem(
-              icon: Icon(
-                Icons.home,
-              ),
-              label: "Home"),
-          BottomNavigationBarItem(
-              icon: Icon(
-                Icons.inventory,
-              ),
-              label: "Stock"),
-          BottomNavigationBarItem(
-              icon: Icon(
-                Icons.arrow_outward,
-              ),
-              label: "Sale"),
-        ],
-      ),
+      // bottomNavigationBar: BottomNavigationBar(
+      //   onTap: (value) {
+      //     if (value == 0) {
+      //     AppRouter.push(HomeScreen());
+      //     } else if (value == 1) {
+      // AppRouter.push(StockScreen());
+      //     } else if (value == 2) {
+      // AppRouter.push(SaleScreen());
+      //     }
+      //   },
+      //   currentIndex: curentIndex,
+      //   items: [
+      //     BottomNavigationBarItem(
+      //         icon: Icon(
+      //           Icons.home,
+      //         ),
+      //         label: "Home"),
+      //     BottomNavigationBarItem(
+      //         icon: Icon(
+      //           Icons.inventory,
+      //         ),
+      //         label: "Stock"),
+      //     BottomNavigationBarItem(
+      //         icon: Icon(
+      //           Icons.arrow_outward,
+      //         ),
+      //         label: "Sale"),
+      //   ],
+      // ),
       body: body,
       floatingActionButton: floatingActionButton,
     );

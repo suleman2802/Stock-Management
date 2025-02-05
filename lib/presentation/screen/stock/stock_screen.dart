@@ -35,7 +35,7 @@ class _StockScreenState extends State<StockScreen> {
   @override
   Widget build(BuildContext context) {
     return ListPageScaffold(
-      curentIndex: 1,
+      // curentIndex: 1,
       label: "Stock",
       action: RoundIconButton(
         iconData: Icons.add,
