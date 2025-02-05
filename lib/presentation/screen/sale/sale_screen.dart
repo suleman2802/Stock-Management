@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 
+
+import '../../../utilities/app_routes/app_router.dart';
 import '../../widgets/layouts/page_scaffolds/list_page_scaffold.dart';
 import '../../widgets/spaces/space.dart';
 import '../../widgets/styling/round_icon_button.dart';
+import 'sale_form_screen.dart';
 
 class SaleScreen extends StatefulWidget {
   const SaleScreen({super.key});
@@ -27,7 +30,7 @@ class _SaleScreenState extends State<SaleScreen> {
       action: RoundIconButton(
         iconData: Icons.add,
         onPress: () {
-         
+          AppRouter.push(SaleFormScreen());
         },
       ),
       body: Column(
@@ -53,7 +56,7 @@ class _SaleScreenState extends State<SaleScreen> {
             child: ListView.builder(
               itemCount: 15,
               itemBuilder: (context, index) => ListTile(
-                onTap: (){},
+                onTap: () {},
                 title: Text("Customer Name"),
                 subtitle: Text("radiator size"),
                 leading: CircleAvatar(

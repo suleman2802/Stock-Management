@@ -62,7 +62,6 @@ class _SaleFormScreenState extends State<SaleFormScreen> {
           //? validate form
 
           //? navigate to car screen
-         
         },
       ),
       body: Padding(
@@ -116,19 +115,7 @@ class _SaleFormScreenState extends State<SaleFormScreen> {
               controller: customerNameController,
               label: "Enter Customer Name",
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                Text("Total Bill : 1000 /pkr"),
-                IconButton.filledTonal(
-                    color: Theme.of(context).primaryColor,
-                    onPressed: () {},
-                    icon: Icon(
-                      Icons.add,
-                      color: Theme.of(context).primaryColor,
-                    )),
-              ],
-            ),
+            Text("Total Bill : 1000 /pkr"),
             Expanded(
               child: ListView.builder(
                 itemCount: 2,

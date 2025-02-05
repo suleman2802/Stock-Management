@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../../utilities/app_routes/app_router.dart';
 import '../../../screen/home/home_screen.dart';
+import '../../../screen/sale/sale_screen.dart';
 import '../../../screen/stock/stock_screen.dart';
 
 
@@ -42,7 +43,7 @@ class ListPageScaffold extends StatelessWidget {
           } else if (value == 1) {
       AppRouter.push(StockScreen());
           } else if (value == 2) {
-      
+      AppRouter.push(SaleScreen());
           }
         },
         currentIndex: curentIndex,
@@ -61,7 +62,7 @@ class ListPageScaffold extends StatelessWidget {
               icon: Icon(
                 Icons.arrow_outward,
               ),
-              label: "Purchase"),
+              label: "Sale"),
         ],
       ),
       body: body,
