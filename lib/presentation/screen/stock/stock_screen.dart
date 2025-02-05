@@ -126,8 +126,15 @@ class _StockScreenState extends State<StockScreen> {
                                       value: context.read<RowsRepository>(),
                                     ),
                                   ],
-                                  child: BlocProvider.value(
-                                    value: context.read<StockCubit>(),
+                                  child: MultiBlocProvider(
+                                    providers: [
+                                      BlocProvider.value(
+                                        value: context.read<StockCubit>(),
+                                      ),
+                                      BlocProvider(
+                                        create: (context) => RadiatorStockCubit(),
+                                      ),
+                                    ],
                                     child: StockFormScreen(
                                       stock: state.stockList[index],
                                     ),

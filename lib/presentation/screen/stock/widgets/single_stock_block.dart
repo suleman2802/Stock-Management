@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -20,14 +22,17 @@ import '../../radiator/cubit/radiator_cubit.dart';
 import '../cubit/radiator_stock_list_cubit.dart';
 
 class SingleStockBlock extends StatefulWidget {
-  SingleStockBlock(
-      {super.key,
-      required this.radiatorStock,
-      required this.index,
-      this.selectedCar});
+  SingleStockBlock({
+    super.key,
+    required this.radiatorStock,
+    required this.index,
+    this.selectedCar,
+    required this.formKey,
+  });
   RadiatorStock radiatorStock;
   int index;
   Car? selectedCar;
+  final GlobalKey<FormState> formKey;
 
   @override
   State<SingleStockBlock> createState() => _SingleStockBlockState();
@@ -92,243 +97,257 @@ class _SingleStockBlockState extends State<SingleStockBlock> {
       child: BorderedContainer(
         child: Padding(
           padding: const EdgeInsets.all(8.0),
-          child: Column(
-            children: [
-              MultiRepositoryProvider(
-                providers: [
-                  RepositoryProvider.value(
-                    value: context.read<RadiatorRepository>(),
+          child: Form(
+            key: widget.formKey,
+            child: Column(
+              children: [
+                MultiRepositoryProvider(
+                  providers: [
+                    RepositoryProvider.value(
+                      value: context.read<RadiatorRepository>(),
+                    ),
+                    RepositoryProvider.value(
+                      value: context.read<CarRepository>(),
+                    ),
+                    RepositoryProvider.value(
+                      value: context.read<FinRepository>(),
+                    ),
+                    RepositoryProvider.value(
+                      value: context.read<RowsRepository>(),
+                    ),
+                  ],
+                  child: BlocProvider(
+                    create: (context) => RadiatorCubit(
+                      radiatorRepository: context.read<RadiatorRepository>(),
+                    ),
+                    child: RadiatorSelectionTileDialogue(
+                      selectedRadiator: widget.radiatorStock.radiator,
+                      selectedCar: widget.selectedCar,
+                      assignSelectedRadiatorFunciton:
+                          (Radiator selectedRadiator) {
+                        context.read<RadiatorStockCubit>().updateStock(
+                              widget.index,
+                              widget.radiatorStock.copyWith(
+                                radiator: selectedRadiator,
+                              ),
+                            );
+                      },
+                    ),
                   ),
-                  RepositoryProvider.value(
-                    value: context.read<CarRepository>(),
-                  ),
-                  RepositoryProvider.value(
-                    value: context.read<FinRepository>(),
-                  ),
-                  RepositoryProvider.value(
-                    value: context.read<RowsRepository>(),
-                  ),
-                ],
-                child: BlocProvider(
-                  create: (context) => RadiatorCubit(
-                    radiatorRepository: context.read<RadiatorRepository>(),
-                  ),
-                  child: RadiatorSelectionTileDialogue(
-                    selectedRadiator: widget.radiatorStock.radiator,
-                    selectedCar: widget.selectedCar,
-                    assignSelectedRadiatorFunciton:
-                        (Radiator selectedRadiator) {
+                ),
+                BlocProvider(
+                  create: (context) => CompanyCubit(
+                      companyRepository: context.read<CompanyRepository>()),
+                  child: CompanySelectionTileDialogue(
+                    selectedCompany: widget.radiatorStock.company,
+                    assignSelectedCompanyFunciton: (Company selectedCompany) {
                       context.read<RadiatorStockCubit>().updateStock(
                             widget.index,
                             widget.radiatorStock.copyWith(
-                              radiator: selectedRadiator,
+                              company: selectedCompany,
                             ),
                           );
                     },
                   ),
                 ),
-              ),
-              BlocProvider(
-                create: (context) => CompanyCubit(
-                    companyRepository: context.read<CompanyRepository>()),
-                child: CompanySelectionTileDialogue(
-                  selectedCompany: widget.radiatorStock.company,
-                  assignSelectedCompanyFunciton: (Company selectedCompany) {
-                    context.read<RadiatorStockCubit>().updateStock(
+                smallHeightSpace(),
+                NumberInputField(
+                  controller: quantityController,
+                  label: "Quantity",
+                  onChange: (value) {
+                    if (value.isNotEmpty) {
+                      context.read<RadiatorStockCubit>().updateStock(
                           widget.index,
                           widget.radiatorStock.copyWith(
-                            company: selectedCompany,
-                          ),
-                        );
+                            quantity: int.tryParse(
+                                  value.trim(),
+                                ) ??
+                                0,
+                          ));
+                    }
+                  },
+                  validator: (value) {
+                    log("validation called");
+                    if (value!.isEmpty) {
+                      return "Please enter quantity";
+                    } else if (int.parse(value) < 0) {
+                      return "Stock quantity can not be negative";
+                    }
+                    return null;
                   },
                 ),
-              ),
-              smallHeightSpace(),
-              NumberInputField(
-                controller: quantityController,
-                label: "Quantity",
-                onChange: (value) {
-                  if (value.isNotEmpty) {
-                    context.read<RadiatorStockCubit>().updateStock(
-                        widget.index,
-                        widget.radiatorStock.copyWith(
-                          quantity: int.tryParse(
-                                value.trim(),
-                              ) ??
-                              0,
-                        ));
-                  }
-                },
-                validator: (value) {
-                  if (value!.isEmpty) {
-                    return "Please enter quantity";
-                  } else if (int.parse(value) < 0) {
-                    return "Stock quantity can not be negative";
-                  }
-                  return null;
-                },
-              ),
-              NumberInputField(
-                controller: unitCostController,
-                label: "Unit Cost",
-                onChange: (value) {
-                  if (value.isNotEmpty) {
-                    context.read<RadiatorStockCubit>().updateStock(
-                        widget.index,
-                        widget.radiatorStock.copyWith(
-                          unitCost: double.tryParse(
-                                value.trim(),
-                              ) ??
-                              0.9,
-                        ));
-                  }
-                },
-                validator: (value) {
-                  if (value!.isEmpty) {
-                    return "Please enter unit cost";
-                  } else if (double.parse(value) < 0) {
-                    return "Unit cost can not be negative";
-                  }
-                  return null;
-                },
-              ),
-              NumberInputField(
-                controller: profitInWholesalePriceController,
-                label: "Profit in Wholesale Price",
-                onChange: (value) {
-                  if (value.isNotEmpty) {
-                    context.read<RadiatorStockCubit>().updateStock(
-                        widget.index,
-                        widget.radiatorStock.copyWith(
-                          profitInWholesalePrice: double.tryParse(
-                                value.trim(),
-                              ) ??
-                              0.9,
-                        ));
-                  }
-                },
-                validator: (value) {
-                  if (value!.isEmpty) {
-                    return "Please enter profit in wholesale price";
-                  }
-                  return null;
-                },
-              ),
-              NumberInputField(
-                controller: profitInRetailPriceController,
-                label: "Profit in Retail Price",
-                onChange: (value) {
-                  if (value.isNotEmpty) {
-                    context.read<RadiatorStockCubit>().updateStock(
-                        widget.index,
-                        widget.radiatorStock.copyWith(
-                          profitInRetailPrice: double.tryParse(
-                                value.trim(),
-                              ) ??
-                              0.9,
-                        ));
-                  }
-                },
-                validator: (value) {
-                  if (value!.isEmpty) {
-                    return "Please enter profit in retail price";
-                  }
-                  return null;
-                },
-              ),
-              NumberInputField(
-                controller: retailPriceController,
-                label: "Retail Price",
-                onChange: (value) {
-                  if (value.isNotEmpty) {
-                    context.read<RadiatorStockCubit>().updateStock(
-                        widget.index,
-                        widget.radiatorStock.copyWith(
-                          retailPrice: double.tryParse(
-                                value.trim(),
-                              ) ??
-                              0.9,
-                        ));
-                  }
-                },
-                validator: (value) {
-                  if (value!.isEmpty) {
-                    return "Please enter retail price";
-                  } else if (double.parse(value) < 0) {
-                    return "Retail price can not be negative";
-                  }
-                  return null;
-                },
-              ),
-              NumberInputField(
-                controller: reatilProfitMarginController,
-                label: "Retail Profit Margin",
-                onChange: (value) {
-                  if (value.isNotEmpty) {
-                    context.read<RadiatorStockCubit>().updateStock(
-                        widget.index,
-                        widget.radiatorStock.copyWith(
-                          retailProfitMargin: double.tryParse(
-                                value.trim(),
-                              ) ??
-                              0.9,
-                        ));
-                  }
-                },
-                validator: (value) {
-                  if (value!.isEmpty) {
-                    return "Please enter retail profit margin";
-                  }
-                  return null;
-                },
-              ),
-              NumberInputField(
-                controller: wholesaleRateController,
-                label: "Wholesale Rate",
-                onChange: (value) {
-                  if (value.isNotEmpty) {
-                    context.read<RadiatorStockCubit>().updateStock(
-                        widget.index,
-                        widget.radiatorStock.copyWith(
-                          wholesaleRate: double.tryParse(
-                                value.trim(),
-                              ) ??
-                              0.9,
-                        ));
-                  }
-                },
-                validator: (value) {
-                  if (value!.isEmpty) {
-                    return "Please enter wholesale rate";
-                  } else if (double.parse(value) < 0) {
-                    return "Wholesale rate can not be negative";
-                  }
-                  return null;
-                },
-              ),
-              NumberInputField(
-                controller: wholesaleProfitMarginController,
-                label: "Wholesale Profit Margin",
-                onChange: (value) {
-                  if (value.isNotEmpty) {
-                    context.read<RadiatorStockCubit>().updateStock(
-                        widget.index,
-                        widget.radiatorStock.copyWith(
-                          wholesaleProfitMargin: double.tryParse(
-                                value.trim(),
-                              ) ??
-                              0.9,
-                        ));
-                  }
-                },
-                validator: (value) {
-                  if (value!.isEmpty) {
-                    return "Please enter wholesale profit margin";
-                  }
-                  return null;
-                },
-              ),
-            ],
+                NumberInputField(
+                  controller: unitCostController,
+                  label: "Unit Cost",
+                  onChange: (value) {
+                    if (value.isNotEmpty) {
+                      context.read<RadiatorStockCubit>().updateStock(
+                          widget.index,
+                          widget.radiatorStock.copyWith(
+                            unitCost: double.tryParse(
+                                  value.trim(),
+                                ) ??
+                                0.9,
+                          ));
+
+                      context
+                          .read<RadiatorStockCubit>()
+                          .calculateProfitMargins(widget.index);
+                    }
+                  },
+                  validator: (value) {
+                    if (value!.isEmpty) {
+                      return "Please enter unit cost";
+                    } else if (double.parse(value) < 0) {
+                      return "Unit cost can not be negative";
+                    }
+                    return null;
+                  },
+                ),
+                NumberInputField(
+                  controller: retailPriceController,
+                  label: "Retail Price",
+                  onChange: (value) {
+                    if (value.isNotEmpty) {
+                      context.read<RadiatorStockCubit>().updateStock(
+                          widget.index,
+                          widget.radiatorStock.copyWith(
+                            retailPrice: double.tryParse(
+                                  value.trim(),
+                                ) ??
+                                0.9,
+                          ));
+                      context
+                          .read<RadiatorStockCubit>()
+                          .calculateProfitMargins(widget.index);
+                    }
+                  },
+                  validator: (value) {
+                    if (value!.isEmpty) {
+                      return "Please enter retail price";
+                    } else if (double.parse(value) < 0) {
+                      return "Retail price can not be negative";
+                    }
+                    return null;
+                  },
+                ),
+                NumberInputField(
+                  controller: wholesaleRateController,
+                  label: "Wholesale Rate",
+                  onChange: (value) {
+                    if (value.isNotEmpty) {
+                      context.read<RadiatorStockCubit>().updateStock(
+                          widget.index,
+                          widget.radiatorStock.copyWith(
+                            wholesaleRate: double.tryParse(
+                                  value.trim(),
+                                ) ??
+                                0.9,
+                          ));
+                    }
+                  },
+                  validator: (value) {
+                    if (value!.isEmpty) {
+                      return "Please enter wholesale rate";
+                    } else if (double.parse(value) < 0) {
+                      return "Wholesale rate can not be negative";
+                    }
+                    return null;
+                  },
+                ),
+                NumberInputField(
+                  controller: profitInRetailPriceController,
+                  label: "Profit in Retail Price",
+                  onChange: (value) {
+                    if (value.isNotEmpty) {
+                      context.read<RadiatorStockCubit>().updateStock(
+                          widget.index,
+                          widget.radiatorStock.copyWith(
+                            profitInRetailPrice: double.tryParse(
+                                  value.trim(),
+                                ) ??
+                                0.9,
+                          ));
+                      context
+                          .read<RadiatorStockCubit>()
+                          .calculateProfitMargins(widget.index);
+                    }
+                  },
+                  validator: (value) {
+                    if (value!.isEmpty) {
+                      return "Please enter profit in retail price";
+                    }
+                    return null;
+                  },
+                ),
+                NumberInputField(
+                  controller: profitInWholesalePriceController,
+                  label: "Profit in Wholesale Price",
+                  onChange: (value) {
+                    if (value.isNotEmpty) {
+                      context.read<RadiatorStockCubit>().updateStock(
+                          widget.index,
+                          widget.radiatorStock.copyWith(
+                            profitInWholesalePrice: double.tryParse(
+                                  value.trim(),
+                                ) ??
+                                0.9,
+                          ));
+                    }
+                  },
+                  validator: (value) {
+                    if (value!.isEmpty) {
+                      return "Please enter profit in wholesale price";
+                    }
+                    return null;
+                  },
+                ),
+                NumberInputField(
+                  controller: reatilProfitMarginController,
+                  label: "Retail Profit Margin",
+                  onChange: (value) {
+                    if (value.isNotEmpty) {
+                      context.read<RadiatorStockCubit>().updateStock(
+                          widget.index,
+                          widget.radiatorStock.copyWith(
+                            retailProfitMargin: double.tryParse(
+                                  value.trim(),
+                                ) ??
+                                0.9,
+                          ));
+                    }
+                  },
+                  validator: (value) {
+                    if (value!.isEmpty) {
+                      return "Please enter retail profit margin";
+                    }
+                    return null;
+                  },
+                ),
+                NumberInputField(
+                  controller: wholesaleProfitMarginController,
+                  label: "Wholesale Profit Margin",
+                  onChange: (value) {
+                    if (value.isNotEmpty) {
+                      context.read<RadiatorStockCubit>().updateStock(
+                          widget.index,
+                          widget.radiatorStock.copyWith(
+                            wholesaleProfitMargin: double.tryParse(
+                                  value.trim(),
+                                ) ??
+                                0.9,
+                          ));
+                    }
+                  },
+                  validator: (value) {
+                    if (value!.isEmpty) {
+                      return "Please enter wholesale profit margin";
+                    }
+                    return null;
+                  },
+                ),
+              ],
+            ),
           ),
         ),
       ),

@@ -1,22 +1,21 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
-import 'package:stock_management_application/domain/repositories/car/abstract_car_repository/abstract_car_repository.dart';
-import 'package:stock_management_application/presentation/screen/car/cubit/car_cubit.dart';
-import 'package:stock_management_application/presentation/widgets/spaces/space.dart';
-import 'package:stock_management_application/utilities/app_alerts/app_alerts.dart';
+
 import '../../../domain/models/car.dart';
 import '../../../domain/models/radiator_stock.dart';
 import '../../../domain/models/stock.dart';
+import '../../../domain/repositories/car/abstract_car_repository/abstract_car_repository.dart';
+import '../../../utilities/app_alerts/app_alerts.dart';
+import '../../../utilities/app_routes/app_router.dart';
 import '../../widgets/car_selection_tile_dialogue/car_selection_tile_dialogue.dart';
 import '../../widgets/layouts/page_scaffolds/list_page_scaffold.dart';
-import '../../widgets/state_indicators/error_text/error_text.dart';
-import '../../widgets/state_indicators/loading_indicator/loading_indicator.dart';
-import '../../widgets/state_indicators/no_data_avaliable_text/no_data_avaliable_text.dart';
+import '../../widgets/state_indicators/general_alert/general_alert.dart';
 import '../../widgets/styling/round_icon_button.dart';
+import '../car/cubit/car_cubit.dart';
 import 'cubit/radiator_stock_list_cubit.dart';
+import 'cubit/stock_cubit.dart';
+import 'stock_screen.dart';
 import 'widgets/single_stock_block.dart';
 
 class StockFormScreen extends StatefulWidget {
@@ -30,9 +29,9 @@ class StockFormScreen extends StatefulWidget {
 class _StockFormScreenState extends State<StockFormScreen> {
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   DateTime? _selectedDate = DateTime.now();
-  String? _selectedTime;
+  DateTime? _selectedTime = DateTime.now();
   Car? selectedCar;
-
+  List<GlobalKey<FormState>> singleBlockKeys = [];
   Future<void> _startDatePicker() async {
     final DateTime? picked = await showDatePicker(
       context: context,
@@ -52,6 +51,11 @@ class _StockFormScreenState extends State<StockFormScreen> {
     return formatter.format(date);
   }
 
+  String getFormattedTime(DateTime time) {
+    final DateFormat formatter = DateFormat('hh:mm a');
+    return formatter.format(time);
+  }
+
   void _timePicker() {
     showTimePicker(
       context: context,
@@ -61,7 +65,14 @@ class _StockFormScreenState extends State<StockFormScreen> {
         return;
       } else {
         setState(() {
-          _selectedTime = pickedTime.format(context).toString(); //pickedTime;
+          _selectedTime = DateTime(
+            _selectedDate?.year ?? DateTime.now().year,
+            _selectedDate?.month ?? DateTime.now().month,
+            _selectedDate?.day ?? DateTime.now().day,
+            pickedTime.hour,
+            pickedTime.minute,
+            pickedTime.hourOfPeriod,
+          ); //pickedTime;
         });
       }
     });
@@ -72,8 +83,14 @@ class _StockFormScreenState extends State<StockFormScreen> {
     super.initState();
     if (widget.stock != null) {
       _selectedDate = widget.stock!.date;
-      _selectedTime = widget.stock!.time.toString();
+      _selectedTime = widget.stock!.time;
       selectedCar = widget.stock!.car;
+      context
+          .read<RadiatorStockCubit>()
+          .intilizeStockList(widget.stock!.radiatorStock);
+      for (var i = 0; i < widget.stock!.radiatorStock.length; i++) {
+        singleBlockKeys.add(GlobalKey<FormState>());
+      }
     }
   }
 
@@ -88,8 +105,10 @@ class _StockFormScreenState extends State<StockFormScreen> {
           Icons.add,
           color: Colors.white,
         ),
-        onPressed: () => selectedCar != null
-            ? context.read<RadiatorStockCubit>().addStock(
+        onPressed: () {
+          if (selectedCar != null) {
+            singleBlockKeys.add(GlobalKey<FormState>());
+            context.read<RadiatorStockCubit>().addStock(
                   RadiatorStock(
                     quantity: 0,
                     profitInWholesalePrice: 0,
@@ -102,17 +121,75 @@ class _StockFormScreenState extends State<StockFormScreen> {
                     company: null,
                     radiator: null,
                   ),
-                )
-            : AppAlertUtil.showError(context, "Select car first"),
-      ),
-      action: RoundIconButton(
-        iconData: Icons.save,
-        onPress: () {
-          //? validate form
-
-          //? navigate to car screen
+                );
+          } else {
+            AppAlertUtil.showError(context, "Select car first");
+          }
         },
       ),
+      action: RoundIconButton(
+          iconData: Icons.save,
+          onPress: () async {
+            bool isValidated =
+                context.read<RadiatorStockCubit>().valiadatRadiatorStockList();
+            if (isValidated) {
+              for (GlobalKey<FormState> singleBlockkey in singleBlockKeys) {
+                if (singleBlockkey.currentState?.validate() ?? false) {
+                } else {
+                  AppAlertUtil.showError(
+                      context, "Provide all necessary details");
+                  break;
+                }
+              }
+              if (widget.stock == null) {
+                //add
+                bool isAddedSuccessfully =
+                    await context.read<StockCubit>().addNewStock(
+                          Stock(
+                            time: _selectedTime!,
+                            car: selectedCar!,
+                            date: _selectedDate!,
+                            radiatorStock: context
+                                .read<RadiatorStockCubit>()
+                                .getAllListRecord(),
+                          ),
+                        );
+                if (context.mounted) {
+                  generalAlert(
+                    context: context,
+                    isSuccessful: isAddedSuccessfully,
+                    tile: "Stock",
+                    type: AlertType.added,
+                  );
+                }
+              } else {
+                //edit
+                bool isAddedSuccessfully =
+                    await context.read<StockCubit>().updateStock(
+                          Stock(
+                            id: widget.stock!.id,
+                            time: _selectedTime!,
+                            car: selectedCar!,
+                            date: _selectedDate!,
+                            radiatorStock: context
+                                .read<RadiatorStockCubit>()
+                                .getAllListRecord(),
+                          ),
+                        );
+                if (context.mounted) {
+                  generalAlert(
+                    context: context,
+                    isSuccessful: isAddedSuccessfully,
+                    tile: "Stock",
+                    type: AlertType.updated,
+                  );
+                }
+              }
+              AppRouter.pop();
+            } else {
+              AppAlertUtil.showError(context, "Provide all necessary details");
+            }
+          }),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Form(
@@ -144,7 +221,9 @@ class _StockFormScreenState extends State<StockFormScreen> {
                   //mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: <Widget>[
                     Text(
-                      _selectedTime == null ? 'Pick up Time' : _selectedTime!,
+                      _selectedTime == null
+                          ? 'Pick up Time'
+                          : getFormattedTime(_selectedTime!),
                       //!.format(context).toString(),
                       style: const TextStyle(
                           fontSize: 20, fontWeight: FontWeight.w500),
@@ -168,9 +247,8 @@ class _StockFormScreenState extends State<StockFormScreen> {
                 selectedCar: selectedCar,
                 assignSelectedCarFunction: (Car carSelected) {
                   setState(() {
-                      selectedCar = carSelected;
+                    selectedCar = carSelected;
                   });
-                
                 },
               ),
             ),
@@ -186,15 +264,19 @@ class _StockFormScreenState extends State<StockFormScreen> {
                           children: [
                             Text("----------------------("),
                             IconButton(
-                              onPressed: () => context
-                                  .read<RadiatorStockCubit>()
-                                  .removeStock(index),
+                              onPressed: () {
+                                singleBlockKeys.removeAt(index);
+                                context
+                                    .read<RadiatorStockCubit>()
+                                    .removeStock(index);
+                              },
                               icon: Icon(Icons.close, color: Colors.red),
                             ),
                             Text(")----------------------"),
                           ],
                         ),
                         SingleStockBlock(
+                          formKey: singleBlockKeys[index],
                           key: ValueKey(stocks[index].id),
                           radiatorStock: stocks[index],
                           index: index,

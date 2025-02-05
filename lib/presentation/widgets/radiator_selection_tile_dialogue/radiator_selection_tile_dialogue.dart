@@ -147,11 +147,31 @@ class _RadiatorSelectionTileDialogueState
   }
 }
 
-class RadiatorListBottomSheet extends StatelessWidget {
+class RadiatorListBottomSheet extends StatefulWidget {
   RadiatorListBottomSheet(
       {super.key, required this.selectRadiatorFunction, this.selectedCar});
   final Function selectRadiatorFunction;
   Car? selectedCar;
+
+  @override
+  State<RadiatorListBottomSheet> createState() =>
+      _RadiatorListBottomSheetState();
+}
+
+class _RadiatorListBottomSheetState extends State<RadiatorListBottomSheet> {
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    if (widget.selectedCar != null) {
+      context
+          .read<RadiatorCubit>()
+          .fetchAllRadiatorsByCarId(widget.selectedCar!.id);
+    } else {
+      context.read<RadiatorCubit>().fetchAllRadiators();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final dimensions = Dimensions(context);
@@ -196,7 +216,7 @@ class RadiatorListBottomSheet extends StatelessWidget {
                             child: BlocProvider.value(
                               value: context.read<RadiatorCubit>(),
                               child: RadiatorDialogue(
-                                canEdit: selectedCar == null,
+                                canEdit: widget.selectedCar == null,
                                 radiator: Radiator(
                                     size: "",
                                     carFuelType: CarFuelType.petrol,
@@ -204,7 +224,7 @@ class RadiatorListBottomSheet extends StatelessWidget {
                                     fromYear: DateTime.now().year,
                                     toYear: DateTime.now().year,
                                     rows: null,
-                                    car: selectedCar!,
+                                    car: widget.selectedCar!,
                                     fin: null),
                               ),
                             ),
@@ -239,7 +259,7 @@ class RadiatorListBottomSheet extends StatelessWidget {
                           itemBuilder: (context, index) => Card(
                             child: ListTile(
                               onTap: () {
-                                selectRadiatorFunction(
+                                widget.selectRadiatorFunction(
                                     state.radiatorList[index]);
                                 AppRouter.pop();
                               },

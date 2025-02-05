@@ -14,9 +14,22 @@ import '../../widgets/styling/round_icon_button.dart';
 import 'cubit/radiator_cubit.dart';
 import 'widgets/radiator_dialogue.dart';
 
-class RadiatorScreen extends StatelessWidget {
+class RadiatorScreen extends StatefulWidget {
   RadiatorScreen({super.key});
+
+  @override
+  State<RadiatorScreen> createState() => _RadiatorScreenState();
+}
+
+class _RadiatorScreenState extends State<RadiatorScreen> {
   final TextEditingController searchController = TextEditingController();
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    context.read<RadiatorCubit>().fetchAllRadiators();
+  }
 
   @override
   Widget build(BuildContext context) {

@@ -1,23 +1,3 @@
-// import 'car.dart';
-// import 'radiator_stock.dart';
-
-// class Stock {
-//   final String id;
-//   final DateTime date;
-//   final DateTime time;
-//   final Car car;
-//   List<RadiatorStock> radiatorStock;
-
-//   Stock({
-//     required this.id,
-//     required this.date,
-//     required this.time,
-//     required this.car,
-//     required this.radiatorStock,
-//   });
-// }
-
-
 import 'car.dart'; 
 import 'radiator_stock.dart';
 
@@ -29,12 +9,12 @@ class Stock {
   List<RadiatorStock> radiatorStock;
 
   Stock({
-    required this.id,
+    String? id,
     required this.date,
     required this.time,
     required this.car,
     required this.radiatorStock,
-  });
+  })  : id = id ?? DateTime.now().millisecondsSinceEpoch.toString();
 
   Stock copyWith({
     String? id,
