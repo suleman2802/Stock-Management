@@ -36,32 +36,4 @@ class RadiatorStockCubit extends Cubit<List<RadiatorStock>> {
     }
     return true;
   }
-
-  calculateProfitMargins(int index) {
-    final List<RadiatorStock> newList = List<RadiatorStock>.from(state);
-    RadiatorStock stockItem = state[index];
-    double unitCost = stockItem.unitCost;
-    double retailProfit = stockItem.profitInRetailPrice;
-    double retailPrice = stockItem.retailPrice;
-    double retailProfitMargin = stockItem.retailProfitMargin;
-
-    unitCost = retailPrice - retailProfit;
-    retailPrice = unitCost + retailProfit;
-    retailProfit = retailPrice - unitCost;
-    retailProfitMargin = (retailProfit / unitCost) * 100;
-
-    log("unit cost $unitCost");
-    log("retailPrice $retailPrice");
-    log("retailProfitMargin $retailProfitMargin");
-    log("retailProfit : $retailProfit");
-
-    newList[index] = stockItem.copyWith(
-      profitInRetailPrice: retailProfit,
-      unitCost: unitCost,
-      retailPrice: retailPrice,
-      retailProfitMargin: retailProfitMargin,
-    );
-    
-    emit(newList);
-  }
 }

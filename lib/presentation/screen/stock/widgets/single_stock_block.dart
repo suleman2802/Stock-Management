@@ -1,5 +1,5 @@
 import 'dart:developer';
-
+import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -90,6 +90,129 @@ class _SingleStockBlockState extends State<SingleStockBlock> {
     selectedRadiator = widget.radiatorStock.radiator;
   }
 
+//Retail
+  void calculateProfitAndProfitMarginOnBaseOfRetailPrice() {
+    double unitCost = double.parse(unitCostController.text.trim());
+    double retailPrice = double.parse(retailPriceController.text.trim());
+    double retailProfit =
+        double.parse(profitInRetailPriceController.text.trim());
+    double retailProfitMargin =
+        double.parse(reatilProfitMarginController.text.trim());
+
+    retailProfit = retailPrice - unitCost;
+    retailProfitMargin = (retailProfit / unitCost) * 100;
+
+    profitInRetailPriceController.text = retailProfit.toString();
+    reatilProfitMarginController.text = retailProfitMargin.toString();
+  }
+
+  void calculateProfitAndProfitMarginOnBaseOfRetailProfit() {
+    double unitCost = double.parse(unitCostController.text.trim());
+    double retailPrice = double.parse(retailPriceController.text.trim());
+    double retailProfit =
+        double.parse(profitInRetailPriceController.text.trim());
+    double retailProfitMargin =
+        double.parse(reatilProfitMarginController.text.trim());
+
+    retailPrice = unitCost + retailProfit;
+    retailProfitMargin = (retailProfit / unitCost) * 100;
+
+    retailPriceController.text = retailPrice.toString();
+    reatilProfitMarginController.text = retailProfitMargin.toString();
+  }
+
+  void calculateProfitAndProfitMarginOnBaseOfUnitCost() {
+    double unitCost = double.parse(unitCostController.text.trim());
+    double retailPrice = double.parse(retailPriceController.text.trim());
+    double retailProfit =
+        double.parse(profitInRetailPriceController.text.trim());
+    double retailProfitMargin =
+        double.parse(reatilProfitMarginController.text.trim());
+
+    retailProfit = retailPrice - unitCost;
+    retailProfitMargin = (retailProfit / unitCost) * 100;
+
+    profitInRetailPriceController.text = retailProfit.toString();
+    reatilProfitMarginController.text = retailProfitMargin.toString();
+  }
+
+  void calculateProfitAndProfitMarginOnBaseOfRetailProfitMargin() {
+    double unitCost = double.parse(unitCostController.text.trim());
+    double retailPrice = double.parse(retailPriceController.text.trim());
+    double retailProfit =
+        double.parse(profitInRetailPriceController.text.trim());
+    double retailProfitMargin =
+        double.parse(reatilProfitMarginController.text.trim());
+
+    retailPrice = unitCost * (1 + (retailProfitMargin / 100));
+    retailProfit = retailPrice - unitCost;
+
+    retailPriceController.text = retailPrice.toString();
+    profitInRetailPriceController.text = retailProfit.toString();
+  }
+
+//Wholesale
+
+  void calculateProfitAndProfitMarginOnBaseOfWholesalePrice() {
+    double unitCost = double.parse(unitCostController.text.trim());
+    double wholesalePrice = double.parse(wholesaleRateController.text.trim());
+    double wholesaleProfit =
+        double.parse(profitInWholesalePriceController.text.trim());
+    double wholesaleProfitMargin =
+        double.parse(wholesaleProfitMarginController.text.trim());
+
+    wholesaleProfit = wholesalePrice - unitCost;
+    wholesaleProfitMargin = (wholesaleProfit / unitCost) * 100;
+
+    profitInWholesalePriceController.text = wholesaleProfit.toString();
+    wholesaleProfitMarginController.text = wholesaleProfitMargin.toString();
+  }
+
+  void calculateProfitAndProfitMarginOnBaseOfWholesaleProfit() {
+    double unitCost = double.parse(unitCostController.text.trim());
+    double wholesalePrice = double.parse(wholesaleRateController.text.trim());
+    double wholesaleProfit =
+        double.parse(profitInWholesalePriceController.text.trim());
+    double wholesaleProfitMargin =
+        double.parse(wholesaleProfitMarginController.text.trim());
+
+    wholesalePrice = unitCost + wholesaleProfit;
+    wholesaleProfitMargin = (wholesaleProfit / unitCost) * 100;
+
+    wholesaleRateController.text = wholesalePrice.toString();
+    wholesaleProfitMarginController.text = wholesaleProfitMargin.toString();
+  }
+
+  void calculateProfitAndProfitMarginOnBaseOfUnitCostInWholesale() {
+    double unitCost = double.parse(unitCostController.text.trim());
+    double wholesalePrice = double.parse(wholesaleRateController.text.trim());
+    double wholesaleProfit =
+        double.parse(profitInWholesalePriceController.text.trim());
+    double wholesaleProfitMargin =
+        double.parse(wholesaleProfitMarginController.text.trim());
+
+    wholesaleProfit = wholesalePrice - unitCost;
+    wholesaleProfitMargin = (wholesaleProfit / unitCost) * 100;
+
+    profitInWholesalePriceController.text = wholesaleProfit.toString();
+    wholesaleProfitMarginController.text = wholesaleProfitMargin.toString();
+  }
+
+  void calculateProfitAndProfitMarginOnBaseOfWholesaleProfitMargin() {
+    double unitCost = double.parse(unitCostController.text.trim());
+    double wholesalePrice = double.parse(wholesaleRateController.text.trim());
+    double wholesaleProfit =
+        double.parse(profitInWholesalePriceController.text.trim());
+    double wholesaleProfitMargin =
+        double.parse(wholesaleProfitMarginController.text.trim());
+
+    wholesalePrice = unitCost * (1 + (wholesaleProfitMargin / 100));
+    wholesaleProfit = wholesalePrice - unitCost;
+
+    wholesaleRateController.text = wholesalePrice.toString();
+    profitInWholesalePriceController.text = wholesaleProfit.toString();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -167,7 +290,6 @@ class _SingleStockBlockState extends State<SingleStockBlock> {
                     }
                   },
                   validator: (value) {
-                    log("validation called");
                     if (value!.isEmpty) {
                       return "Please enter quantity";
                     } else if (int.parse(value) < 0) {
@@ -189,10 +311,8 @@ class _SingleStockBlockState extends State<SingleStockBlock> {
                                 ) ??
                                 0.9,
                           ));
-
-                      context
-                          .read<RadiatorStockCubit>()
-                          .calculateProfitMargins(widget.index);
+                      calculateProfitAndProfitMarginOnBaseOfUnitCost();
+                      calculateProfitAndProfitMarginOnBaseOfUnitCostInWholesale();
                     }
                   },
                   validator: (value) {
@@ -217,9 +337,7 @@ class _SingleStockBlockState extends State<SingleStockBlock> {
                                 ) ??
                                 0.9,
                           ));
-                      context
-                          .read<RadiatorStockCubit>()
-                          .calculateProfitMargins(widget.index);
+                      calculateProfitAndProfitMarginOnBaseOfRetailPrice();
                     }
                   },
                   validator: (value) {
@@ -244,6 +362,7 @@ class _SingleStockBlockState extends State<SingleStockBlock> {
                                 ) ??
                                 0.9,
                           ));
+                      calculateProfitAndProfitMarginOnBaseOfWholesalePrice();
                     }
                   },
                   validator: (value) {
@@ -268,9 +387,7 @@ class _SingleStockBlockState extends State<SingleStockBlock> {
                                 ) ??
                                 0.9,
                           ));
-                      context
-                          .read<RadiatorStockCubit>()
-                          .calculateProfitMargins(widget.index);
+                      calculateProfitAndProfitMarginOnBaseOfRetailProfit();
                     }
                   },
                   validator: (value) {
@@ -293,6 +410,7 @@ class _SingleStockBlockState extends State<SingleStockBlock> {
                                 ) ??
                                 0.9,
                           ));
+                      calculateProfitAndProfitMarginOnBaseOfWholesaleProfit();
                     }
                   },
                   validator: (value) {
@@ -315,6 +433,7 @@ class _SingleStockBlockState extends State<SingleStockBlock> {
                                 ) ??
                                 0.9,
                           ));
+                      calculateProfitAndProfitMarginOnBaseOfRetailProfitMargin();
                     }
                   },
                   validator: (value) {
@@ -337,6 +456,7 @@ class _SingleStockBlockState extends State<SingleStockBlock> {
                                 ) ??
                                 0.9,
                           ));
+                      calculateProfitAndProfitMarginOnBaseOfWholesaleProfitMargin();
                     }
                   },
                   validator: (value) {
