@@ -109,7 +109,7 @@ class _SaleFormScreenState extends State<SaleFormScreen> {
                   subTotal: 0.0,
                   quantity: 1,
                   unitCost: 0.0,
-                  saleType: SaleType.retail,
+                  isRetail: true,
                 ),
               );
         },

@@ -7,7 +7,7 @@ class SaleItem {
   final int quantity;
   final double unitCost;
   final double subTotal;
-  final SaleType saleType;
+  final bool isRetail;
   RadiatorStock? radiator;
 
   SaleItem({
@@ -15,7 +15,7 @@ class SaleItem {
     required this.quantity,
     this.radiator,
     required this.unitCost,
-    required this.saleType,
+    required this.isRetail,
     required this.subTotal,
   }) : id = id ?? DateTime.now().millisecondsSinceEpoch.toString();
 
@@ -24,7 +24,7 @@ class SaleItem {
     int? quantity,
     double? subTotal,
     double? unitCost,
-    SaleType? saleType,
+    bool? isRetail,
     RadiatorStock? radiator,
   }) {
     return SaleItem(
@@ -32,7 +32,7 @@ class SaleItem {
       quantity: quantity ?? this.quantity,
       unitCost: unitCost ?? this.subTotal,
       subTotal: subTotal ?? this.subTotal,
-      saleType: saleType ?? this.saleType,
+      isRetail: isRetail ?? this.isRetail,
       radiator: radiator ?? this.radiator,
     );
   }
@@ -43,7 +43,7 @@ class SaleItem {
       'quantity': quantity,
       'unitCost': unitCost,
       'subTotal': subTotal,
-      'saleType': saleType.toString().split('.').last,
+      'saleType': isRetail,
       'radiator': radiator!.toMap(),
     };
   }
@@ -54,8 +54,7 @@ class SaleItem {
       quantity: map['quantity'] as int,
       subTotal: map['subTotal'] as double,
       unitCost: map['unitCost'] as double,
-      saleType: SaleType.values
-          .firstWhere((e) => e.toString() == 'SaleType.' + map['saleType']),
+      isRetail: map['isRetail'] as bool,
       radiator: RadiatorStock.fromMap(map['radiator'] as Map<String, dynamic>),
     );
   }

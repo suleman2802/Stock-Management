@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:stock_management_application/presentation/widgets/car_selection_tile_dialogue/car_selection_tile_dialogue.dart';
 
 import '../../../../domain/models/sale_item.dart';
 import '../../../widgets/input_feilds/number_input_field.dart';
 import '../../../widgets/radiator_selection_tile_dialogue/radiator_selection_tile_dialogue.dart';
+import '../../../widgets/radiator_stock_selection_tile_dialogue/radiator_stock_selection_tile_dialogue.dart';
 import '../../../widgets/spaces/space.dart';
 import '../../../widgets/styling/bordered_container.dart';
 import '../cubit/sale_item_list_cubit.dart';
@@ -59,6 +61,20 @@ class _SingleSaleBlockState extends State<SingleSaleBlock> {
         );
   }
 
+  void updateQuantity() {
+    double unitCost = double.parse(unitCostController.text.trim());
+    double subTotal = double.parse(subTotalController.text.trim());
+    int quantity = int.parse(quantityController.text.trim());
+
+    subTotal = unitCost * quantity;
+
+    subTotalController.text = subTotal.toString();
+    context.read<SaleItemListCubit>().updatesaleItem(
+          widget.index,
+          widget.saleItem.copyWith(quantity: quantity, subTotal: subTotal),
+        );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -68,33 +84,48 @@ class _SingleSaleBlockState extends State<SingleSaleBlock> {
           padding: const EdgeInsets.all(8.0),
           child: Column(
             children: [
-              RadiatorSelectionTileDialogue(
-                assignSelectedRadiatorFunciton: () {},
-              ),
+              CarSelectionTileDialogue(
+                  assignSelectedCarFunction: (){}),
               smallHeightSpace(),
-              NumberInputField(
-                controller: quantityController,
-                label: "Quantity",
-                onChange: (value) {
-                  if (value.isNotEmpty) {
-                    context.read<SaleItemListCubit>().updatesaleItem(
-                        widget.index,
-                        widget.saleItem.copyWith(
-                          quantity: int.tryParse(
-                                value.trim(),
-                              ) ??
-                              0,
-                        ));
-                  }
-                },
-                validator: (value) {
-                  if (value!.isEmpty) {
-                    return "Please enter quantity";
-                  } else if (int.parse(value) < 0) {
-                    return "Stock quantity can not be negative";
-                  }
-                  return null;
-                },
+              RadiatorStockSelectionTileDialogue(),
+              smallHeightSpace(),
+              Row(
+                children: [
+                  Expanded(
+                    child: NumberInputField(
+                      controller: quantityController,
+                      label: "Quantity",
+                      onChange: (value) {
+                        if (value.isNotEmpty) {
+                          updateQuantity();
+                        }
+                      },
+                      validator: (value) {
+                        if (value!.isEmpty) {
+                          return "Please enter quantity";
+                        } else if (int.parse(value) < 0) {
+                          return "Stock quantity can not be negative";
+                        }
+                        return null;
+                      },
+                    ),
+                  ),
+                  largeWidthSpace(),
+                  Row(
+                    children: [
+                      Text("Is Retail"),
+                      Checkbox(
+                        value: widget.saleItem.isRetail,
+                        onChanged: (value) {
+                          context.read<SaleItemListCubit>().updatesaleItem(
+                                widget.index,
+                                widget.saleItem.copyWith(isRetail: value),
+                              );
+                        },
+                      ),
+                    ],
+                  )
+                ],
               ),
               NumberInputField(
                 controller: unitCostController,
@@ -119,13 +150,15 @@ class _SingleSaleBlockState extends State<SingleSaleBlock> {
                 onChange: (value) {
                   if (value.isNotEmpty) {
                     context.read<SaleItemListCubit>().updatesaleItem(
-                        widget.index,
-                        widget.saleItem.copyWith(
-                          subTotal: double.tryParse(
-                                value.trim(),
-                              ) ??
-                              0,
-                        ));
+                          widget.index,
+                          widget.saleItem.copyWith(
+                            subTotal: double.tryParse(value) ??
+                                int.parse(quantityController.text) *
+                                    double.parse(
+                                      unitCostController.text.trim(),
+                                    ),
+                          ),
+                        );
                   }
                 },
                 validator: (value) {

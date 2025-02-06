@@ -37,19 +37,19 @@ class _RadiatorStockSelectionTileDialogueState
             leading: CircleAvatar(
               backgroundColor: Theme.of(context).primaryColor,
               child: Text(
-                widget.radiator!.radiator!.car.carCompany
+                widget.radiator!.radiator!.car.carName
                     .substring(1)
                     .toUpperCase(),
               ),
             ),
-            title: Text(widget.radiator!.radiator!.car.carName),
+            title: Text(widget.radiator!.company!.name),
             subtitle: Text(widget.radiator!.radiator!.size),
             trailing: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Text("Rows : 5"),
-                Text("Fin : 8 mm"),
+                Text("Rows : ${widget.radiator!.radiator!.rows!.noOfRows}"),
+                Text("Fin : ${widget.radiator!.radiator!.fin!.finSize}"),
               ],
             ),
           )
