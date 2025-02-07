@@ -12,9 +12,7 @@ class RadiatorCubit extends Cubit<RadiatorState> {
   final RadiatorRepository radiatorRepository;
 
   RadiatorCubit({required this.radiatorRepository})
-      : super(RadiatorInitialState()) {
-
-  }
+      : super(RadiatorInitialState());
 
   Future<void> fetchAllRadiators() async {
     try {

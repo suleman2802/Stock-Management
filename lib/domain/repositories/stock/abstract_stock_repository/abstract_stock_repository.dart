@@ -5,4 +5,5 @@ abstract class StockRepository {
   Future<bool> addNewStock(Stock stock);
   Future<bool> updateStock(Stock stock);
   Future<bool> deleteStock(String id);
+  Future<List<Stock>> getAllStocksByCarId(String carId);
 }

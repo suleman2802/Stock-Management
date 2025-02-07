@@ -1,25 +1,31 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:stock_management_application/presentation/widgets/car_selection_tile_dialogue/car_selection_tile_dialogue.dart';
 
+import '../../../../domain/models/car.dart';
+import '../../../../domain/models/radiator_stock.dart';
 import '../../../../domain/models/sale_item.dart';
+import '../../../../domain/repositories/car/abstract_car_repository/abstract_car_repository.dart';
+import '../../../../domain/repositories/stock/abstract_stock_repository/abstract_stock_repository.dart';
+import '../../../widgets/car_selection_tile_dialogue/car_selection_tile_dialogue.dart';
 import '../../../widgets/input_feilds/number_input_field.dart';
-import '../../../widgets/radiator_selection_tile_dialogue/radiator_selection_tile_dialogue.dart';
 import '../../../widgets/radiator_stock_selection_tile_dialogue/radiator_stock_selection_tile_dialogue.dart';
 import '../../../widgets/spaces/space.dart';
 import '../../../widgets/styling/bordered_container.dart';
+import '../../car/cubit/car_cubit.dart';
+import '../../stock/cubit/stock_cubit.dart';
 import '../cubit/sale_item_list_cubit.dart';
 
 class SingleSaleBlock extends StatefulWidget {
-  SingleSaleBlock({
-    super.key,
-    required this.saleItem,
-    required this.formKey,
-    required this.index,
-  });
+  SingleSaleBlock(
+      {super.key,
+      required this.saleItem,
+      required this.formKey,
+      required this.index,
+      this.selectedCar});
   SaleItem saleItem;
   int index;
   final GlobalKey<FormState> formKey;
+  Car? selectedCar;
 
   @override
   State<SingleSaleBlock> createState() => _SingleSaleBlockState();
@@ -84,10 +90,39 @@ class _SingleSaleBlockState extends State<SingleSaleBlock> {
           padding: const EdgeInsets.all(8.0),
           child: Column(
             children: [
-              CarSelectionTileDialogue(
-                  assignSelectedCarFunction: (){}),
-              smallHeightSpace(),
-              RadiatorStockSelectionTileDialogue(),
+              BlocProvider(
+                create: (context) => CarCubit(
+                  carRepository: context.read<CarRepository>(),
+                ),
+                child: CarSelectionTileDialogue(
+                  selectedCar: widget.selectedCar,
+                  assignSelectedCarFunction: (Car carSelected) {
+                    widget.selectedCar = carSelected;
+                    context.read<SaleItemListCubit>().updatesaleItem(
+                          widget.index,
+                          widget.saleItem.copyWith(car: widget.selectedCar),
+                        );
+                  },
+                ),
+              ),
+              BlocProvider(
+                create: (context) => StockCubit(
+                  stockRepository: context.read<StockRepository>(),
+                ),
+                child: RadiatorStockSelectionTileDialogue(
+                  radiator: widget.saleItem.radiator,
+                  car: widget.selectedCar,
+                  assignSelectedRadiatorFunciton:
+                      (RadiatorStock selectedRadiator) {
+                    context.read<SaleItemListCubit>().updatesaleItem(
+                          widget.index,
+                          widget.saleItem.copyWith(
+                            radiator: selectedRadiator,
+                          ),
+                        );
+                  },
+                ),
+              ),
               smallHeightSpace(),
               Row(
                 children: [

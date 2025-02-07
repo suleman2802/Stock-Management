@@ -10,9 +10,7 @@ part 'stock_state.dart';
 
 class StockCubit extends Cubit<StockState> {
   final StockRepository stockRepository;
-  StockCubit({required this.stockRepository}) : super(StockInitialState()) {
-    fetchAllStocks();
-  }
+  StockCubit({required this.stockRepository}) : super(StockInitialState());
 
   Future<void> fetchAllStocks() async {
     try {
@@ -62,6 +60,21 @@ class StockCubit extends Cubit<StockState> {
       log("Unable to delete Stock $error");
       await fetchAllStocks();
       return false;
+    }
+  }
+
+    Future<void> fetchAllStocksByCarId(String carId) async {
+    try {
+      emit(StockLoadingState());
+      final List<Stock> stockList =
+          await stockRepository.getAllStocksByCarId(carId);
+      emit(
+        StockLoadedState(
+          stockList: stockList,
+        ),
+      );
+    } catch (error) {
+      emit(StockErrorState(errorMessage: error.toString()));
     }
   }
 }

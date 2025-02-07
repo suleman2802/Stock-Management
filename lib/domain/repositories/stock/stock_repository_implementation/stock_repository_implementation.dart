@@ -2,7 +2,6 @@ import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-
 import '../../../models/stock.dart';
 import '../abstract_stock_repository/abstract_stock_repository.dart';
 
@@ -69,6 +68,28 @@ class StockRepositoryImplementation implements StockRepository {
     } catch (e) {
       log('Failed to update Stock: $e');
       return false;
+    }
+  }
+
+  @override
+  Future<List<Stock>> getAllStocksByCarId(String carId) async {
+    try {
+      // Query Firestore to get documents where 'car.id' matches the given carId
+      QuerySnapshot snapshot = await firestoreInstance
+          .collection('stocks')
+          .where('car.id', isEqualTo: carId)
+          .get();
+
+      // Map the documents to Radiator objects
+      List<Stock> stocks = snapshot.docs.map((doc) {
+        return Stock.fromMap(doc.data() as Map<String, dynamic>);
+      }).toList();
+
+      log('Retrieved Stocks for carId $carId: $stocks');
+      return stocks;
+    } catch (e) {
+      log('Failed to retrieve Stocks for carId $carId: $e');
+      return [];
     }
   }
 }

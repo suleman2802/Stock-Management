@@ -102,19 +102,10 @@ class HomeScreen extends StatelessWidget {
                       value: context.read<RadiatorRepository>(),
                     ),
                     RepositoryProvider.value(
-                      value: context.read<CompanyRepository>(),
-                    ),
-                    RepositoryProvider.value(
                       value: context.read<StockRepository>(),
                     ),
                      RepositoryProvider.value(
                       value: context.read<CarRepository>(),
-                    ),
-                    RepositoryProvider.value(
-                      value: context.read<FinRepository>(),
-                    ),
-                    RepositoryProvider.value(
-                      value: context.read<RowsRepository>(),
                     ),
                     RepositoryProvider.value(
                       value: context.read<SaleRepository>(),

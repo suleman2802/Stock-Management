@@ -33,6 +33,13 @@ class _StockScreenState extends State<StockScreen> {
   }
 
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    context.read<StockCubit>().fetchAllStocks();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return ListPageScaffold(
       // curentIndex: 1,
@@ -132,7 +139,8 @@ class _StockScreenState extends State<StockScreen> {
                                         value: context.read<StockCubit>(),
                                       ),
                                       BlocProvider(
-                                        create: (context) => RadiatorStockCubit(),
+                                        create: (context) =>
+                                            RadiatorStockCubit(),
                                       ),
                                     ],
                                     child: StockFormScreen(

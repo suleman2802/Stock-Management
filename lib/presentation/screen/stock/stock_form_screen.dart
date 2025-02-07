@@ -92,6 +92,7 @@ class _StockFormScreenState extends State<StockFormScreen> {
         singleBlockKeys.add(GlobalKey<FormState>());
       }
     }
+   
   }
 
   @override

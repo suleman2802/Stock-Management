@@ -255,6 +255,7 @@ class _SaleFormScreenState extends State<SaleFormScreen> {
                           ],
                         ),
                         SingleSaleBlock(
+                          selectedCar: saleItems[index].car,
                           formKey: singleBlockKeys[index],
                           key: ValueKey(saleItems[index].id),
                           saleItem: saleItems[index],

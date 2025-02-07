@@ -1,3 +1,4 @@
+import 'car.dart';
 import 'radiator_stock.dart';
 
 enum SaleType { retail, wholesale, other }
@@ -8,16 +9,18 @@ class SaleItem {
   final double unitCost;
   final double subTotal;
   final bool isRetail;
+  final Car? car;
   RadiatorStock? radiator;
 
-  SaleItem({
-    String? id,
-    required this.quantity,
-    this.radiator,
-    required this.unitCost,
-    required this.isRetail,
-    required this.subTotal,
-  }) : id = id ?? DateTime.now().millisecondsSinceEpoch.toString();
+  SaleItem(
+      {String? id,
+      required this.quantity,
+      this.radiator,
+      required this.unitCost,
+      required this.isRetail,
+      required this.subTotal,
+      this.car})
+      : id = id ?? DateTime.now().millisecondsSinceEpoch.toString();
 
   SaleItem copyWith({
     String? id,
@@ -25,16 +28,17 @@ class SaleItem {
     double? subTotal,
     double? unitCost,
     bool? isRetail,
+    Car? car,
     RadiatorStock? radiator,
   }) {
     return SaleItem(
-      id: id ?? this.id,
-      quantity: quantity ?? this.quantity,
-      unitCost: unitCost ?? this.subTotal,
-      subTotal: subTotal ?? this.subTotal,
-      isRetail: isRetail ?? this.isRetail,
-      radiator: radiator ?? this.radiator,
-    );
+        id: id ?? this.id,
+        quantity: quantity ?? this.quantity,
+        unitCost: unitCost ?? this.subTotal,
+        subTotal: subTotal ?? this.subTotal,
+        isRetail: isRetail ?? this.isRetail,
+        radiator: radiator ?? this.radiator,
+        car: car ?? this.car);
   }
 
   Map<String, dynamic> toMap() {
@@ -44,6 +48,7 @@ class SaleItem {
       'unitCost': unitCost,
       'subTotal': subTotal,
       'saleType': isRetail,
+      "car": car?.toMap() ?? {},
       'radiator': radiator!.toMap(),
     };
   }
@@ -55,6 +60,7 @@ class SaleItem {
       subTotal: map['subTotal'] as double,
       unitCost: map['unitCost'] as double,
       isRetail: map['isRetail'] as bool,
+      car: Car.fromMap(map['car'] as Map<String, dynamic>),
       radiator: RadiatorStock.fromMap(map['radiator'] as Map<String, dynamic>),
     );
   }

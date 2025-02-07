@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../domain/repositories/car/abstract_car_repository/abstract_car_repository.dart';
 import '../../../domain/repositories/radiator/abstract_radiator_repository/abstract_radiator_repository.dart';
+import '../../../domain/repositories/stock/abstract_stock_repository/abstract_stock_repository.dart';
 import '../../../utilities/app_routes/app_router.dart';
 import '../../widgets/layouts/page_scaffolds/list_page_scaffold.dart';
 import '../../widgets/spaces/space.dart';
@@ -46,9 +47,9 @@ class _SaleScreenState extends State<SaleScreen> {
               RepositoryProvider.value(
                 value: context.read<CarRepository>(),
               ),
-              // RepositoryProvider.value(
-              //   value: context.read<CompanyRepository>(),
-              // ),
+              RepositoryProvider.value(
+                value: context.read<StockRepository>(),
+              ),
               // RepositoryProvider.value(
               //   value: context.read<FinRepository>(),
               // ),

@@ -68,21 +68,21 @@ class _RadiatorDialogueState extends State<RadiatorDialogue> {
   }
 
   assignSelectedCar(Car car) {
-    // setState(() {
+     setState(() {
     _selectedCar = car;
-    // });
+     });
   }
 
   assignSelectedRows(Rows rows) {
-    // setState(() {
+     setState(() {
     _selectedRows = rows;
-    // });
+     });
   }
 
   assignSelectedFin(Fin fin) {
-    // setState(() {
+     setState(() {
     _selectedFin = fin;
-    // });
+     });
   }
 
   Future<void> submitRadiatorForm() async {
