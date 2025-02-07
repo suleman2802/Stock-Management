@@ -47,7 +47,7 @@ class SaleItem {
       'quantity': quantity,
       'unitCost': unitCost,
       'subTotal': subTotal,
-      'saleType': isRetail,
+      'isRetail': isRetail,
       "car": car?.toMap() ?? {},
       'radiator': radiator!.toMap(),
     };

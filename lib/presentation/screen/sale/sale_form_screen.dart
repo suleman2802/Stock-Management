@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
@@ -123,6 +125,7 @@ class _SaleFormScreenState extends State<SaleFormScreen> {
               for (GlobalKey<FormState> singleBlockkey in singleBlockKeys) {
                 if (singleBlockkey.currentState?.validate() ?? false) {
                 } else {
+                  log("inside else of loop");
                   AppAlertUtil.showError(
                       context, "Provide all necessary details");
                   break;
@@ -176,6 +179,7 @@ class _SaleFormScreenState extends State<SaleFormScreen> {
               }
               AppRouter.pop();
             } else {
+              log("inside else");
               AppAlertUtil.showError(context, "Provide all necessary details");
             }
           }),

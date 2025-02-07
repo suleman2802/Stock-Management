@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../domain/models/sale_item.dart';
@@ -28,11 +26,10 @@ class SaleItemListCubit extends Cubit<List<SaleItem>> {
   }
 
   bool valiadatSaleItemList() {
-    for (SaleItem singleSaleItemItem in state) {
-      if (singleSaleItemItem.radiator == null) {
+    for (SaleItem singleSaleItem in state) {
+      if (singleSaleItem.radiator == null) {
         return false;
-      } 
-      
+      }
     }
     return true;
   }

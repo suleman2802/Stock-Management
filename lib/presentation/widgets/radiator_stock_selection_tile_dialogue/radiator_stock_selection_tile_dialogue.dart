@@ -37,42 +37,47 @@ class _RadiatorStockSelectionTileDialogueState
   @override
   Widget build(BuildContext context) {
     return widget.radiator != null
-        ? ListTile(
-            onTap: () {
-              showModalBottomSheet(
-                context: context,
-                isScrollControlled: true,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
-                ),
-                builder: (ctx) => BlocProvider.value(
-                  value: context.read<StockCubit>(),
-                  child: RadiatorStockListBottomSheet(
-                    car: widget.car,
-                    selectRadiatorFunction: selectRadiator,
+        ? Card(
+          child: ListTile(
+              onTap: () {
+                showModalBottomSheet(
+                  context: context,
+                  isScrollControlled: true,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
                   ),
+                  builder: (ctx) => BlocProvider.value(
+                    value: context.read<StockCubit>(),
+                    child: RadiatorStockListBottomSheet(
+                      car: widget.car,
+                      selectRadiatorFunction: selectRadiator,
+                    ),
+                  ),
+                );
+              },
+              leading: CircleAvatar(
+                backgroundColor: Theme.of(context).primaryColor,
+                child: Text(
+                  widget.radiator!.radiator!.car.carName
+                      .substring(0,1)
+                      .toUpperCase(),
+                      style: TextStyle(
+                        color: Colors.white
+                      ),
                 ),
-              );
-            },
-            leading: CircleAvatar(
-              backgroundColor: Theme.of(context).primaryColor,
-              child: Text(
-                widget.radiator!.radiator!.car.carName
-                    .substring(1)
-                    .toUpperCase(),
+              ),
+              title: Text(widget.radiator!.company!.name),
+              subtitle: Text(widget.radiator!.radiator!.size),
+              trailing: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text("Rows : ${widget.radiator!.radiator!.rows!.noOfRows}"),
+                  Text("Fin : ${widget.radiator!.radiator!.fin!.finSize}"),
+                ],
               ),
             ),
-            title: Text(widget.radiator!.company!.name),
-            subtitle: Text(widget.radiator!.radiator!.size),
-            trailing: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Text("Rows : ${widget.radiator!.radiator!.rows!.noOfRows}"),
-                Text("Fin : ${widget.radiator!.radiator!.fin!.finSize}"),
-              ],
-            ),
-          )
+        )
         : BorderedContainer(
             child: Center(
               child: TextButton(
@@ -113,20 +118,17 @@ class RadiatorStockListBottomSheet extends StatefulWidget {
 
 class _RadiatorStockListBottomSheetState
     extends State<RadiatorStockListBottomSheet> {
-
-
-      @override
+  @override
   void initState() {
     // TODO: implement initState
     super.initState();
-      if (widget.car != null) {
-      context
-          .read<StockCubit>()
-          .fetchAllStocksByCarId(widget.car!.id);
+    if (widget.car != null) {
+      context.read<StockCubit>().fetchAllStocksByCarId(widget.car!.id);
     } else {
       context.read<StockCubit>().fetchAllStocks();
     }
   }
+
   @override
   Widget build(BuildContext context) {
     final dimensions = Dimensions(context);
@@ -165,28 +167,47 @@ class _RadiatorStockListBottomSheetState
                     errorMessage: state.errorMessage,
                   );
                 } else if (state is StockLoadedState) {
+                  List<RadiatorStock> list = [];
+                  for (var singleStock in state.stockList) {
+                    for (var radiatorStocks in singleStock.radiatorStock) {
+                      list.add(radiatorStocks);
+                    }
+                  }
                   return state.stockList.isEmpty
                       ? NoDataAvaliableText()
                       : ListView.builder(
-                          itemCount: state.stockList.length,
+                          itemCount: list.length,
                           itemBuilder: (context, index) => Card(
                             child: ListTile(
                               onTap: () {
                                 widget.selectRadiatorFunction(
-                                    state.stockList[index]);
+                                    list[index]);
                                 AppRouter.pop();
                               },
                               title: Text(
-                                state.stockList[index].car.carName,
+                                list[index].company!.name,
+                                // list[index].radiator!.car.carName,
                                 style: TextStyle(fontWeight: FontWeight.bold),
                               ),
-                              subtitle:
-                                  Text(state.stockList[index].car.carModel),
+                              trailing: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Text(
+                                      "Rows : ${list[index].radiator!.rows!.noOfRows}"),
+                                  Text(
+                                      "Fin : ${list[index].radiator!.fin!.finSize}"),
+                                ],
+                              ),
+                              subtitle: Text(
+                                  //"(" +
+                                  //  list[index].company!.name +
+                                  //   ")" +
+                                  list[index].radiator!.size),
                               leading: CircleAvatar(
                                 backgroundColor: Theme.of(context).primaryColor,
                                 child: Text(
-                                  state.stockList[index].radiatorStock.length
-                                      .toString(),
+                                  list[index].quantity.toString(),
                                   style: TextStyle(color: Colors.white),
                                 ),
                               ),

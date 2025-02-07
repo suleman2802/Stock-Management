@@ -2,10 +2,8 @@ import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-
 import '../../../models/sale.dart';
 import '../abstract_sale_repository/abstract_sale_repository.dart';
-
 
 class SaleRepositoryImplementation implements SaleRepository {
   final FirebaseFirestore firestoreInstance;
@@ -44,7 +42,6 @@ class SaleRepositoryImplementation implements SaleRepository {
     try {
       QuerySnapshot snapshot =
           await firestoreInstance.collection('sales').get();
-
       List<Sale> sales = snapshot.docs.map((doc) {
         return Sale.fromMap(doc.data() as Map<String, dynamic>);
       }).toList();

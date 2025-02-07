@@ -114,12 +114,22 @@ class _SingleSaleBlockState extends State<SingleSaleBlock> {
                   car: widget.selectedCar,
                   assignSelectedRadiatorFunciton:
                       (RadiatorStock selectedRadiator) {
+                    setState(() {
+                      widget.saleItem = widget.saleItem.copyWith(
+                        radiator: selectedRadiator,
+                      );
+                    });
                     context.read<SaleItemListCubit>().updatesaleItem(
                           widget.index,
                           widget.saleItem.copyWith(
                             radiator: selectedRadiator,
                           ),
                         );
+                    unitCostController.text = widget.saleItem.isRetail
+                        ? selectedRadiator.retailPrice.toString()
+                        : selectedRadiator.wholesaleRate.toString();
+
+                    updateUnitCost();
                   },
                 ),
               ),
@@ -152,10 +162,22 @@ class _SingleSaleBlockState extends State<SingleSaleBlock> {
                       Checkbox(
                         value: widget.saleItem.isRetail,
                         onChanged: (value) {
+                          setState(() {
+                            widget.saleItem = widget.saleItem.copyWith(
+                              isRetail: value,
+                            );
+                          });
+
                           context.read<SaleItemListCubit>().updatesaleItem(
                                 widget.index,
                                 widget.saleItem.copyWith(isRetail: value),
                               );
+                          unitCostController.text = value!
+                              ? widget.saleItem.radiator!.retailPrice.toString()
+                              : widget.saleItem.radiator!.wholesaleRate
+                                  .toString();
+
+                          updateUnitCost();
                         },
                       ),
                     ],
