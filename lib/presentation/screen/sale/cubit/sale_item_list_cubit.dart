@@ -30,6 +30,9 @@ class SaleItemListCubit extends Cubit<List<SaleItem>> {
       if (singleSaleItem.radiator == null) {
         return false;
       }
+      if (singleSaleItem.car == null) {
+        return false;
+      }
     }
     return true;
   }

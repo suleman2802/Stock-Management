@@ -50,12 +50,6 @@ class _SaleScreenState extends State<SaleScreen> {
               RepositoryProvider.value(
                 value: context.read<StockRepository>(),
               ),
-              // RepositoryProvider.value(
-              //   value: context.read<FinRepository>(),
-              // ),
-              // RepositoryProvider.value(
-              //   value: context.read<RowsRepository>(),
-              // ),
             ],
             child: MultiBlocProvider(
               providers: [
@@ -106,47 +100,43 @@ class _SaleScreenState extends State<SaleScreen> {
                           itemCount: state.saleList.length,
                           itemBuilder: (context, index) => Card(
                             child: ListTile(
-                              onTap: () {},
-                              // AppRouter.push(
-                              // MultiRepositoryProvider(
-                              //   providers: [
-                              //     RepositoryProvider.value(
-                              //       value: context.read<RadiatorRepository>(),
-                              //     ),
-                              //     RepositoryProvider.value(
-                              //       value: context.read<CarRepository>(),
-                              //     ),
-                              //     RepositoryProvider.value(
-                              //       value: context.read<CompanyRepository>(),
-                              //     ),
-                              //     RepositoryProvider.value(
-                              //       value: context.read<FinRepository>(),
-                              //     ),
-                              //     RepositoryProvider.value(
-                              //       value: context.read<RowsRepository>(),
-                              //     ),
-                              //   ],
-                              //   child: MultiBlocProvider(
-                              //     providers: [
-                              //       BlocProvider.value(
-                              //         value: context.read<StockCubit>(),
-                              //       ),
-                              //       BlocProvider(
-                              //         create: (context) => RadiatorStockCubit(),
-                              //       ),
-                              //     ],
-                              //     child: SaleFormScreen(
-                              //       sale: state.saleList[index],
-                              //     ),
-                              //   ),
-                              // ),
-                              // ),
+                              onTap: () => AppRouter.push(
+                                MultiRepositoryProvider(
+                                  providers: [
+                                    RepositoryProvider.value(
+                                      value: context.read<RadiatorRepository>(),
+                                    ),
+                                    RepositoryProvider.value(
+                                      value: context.read<CarRepository>(),
+                                    ),
+                                    RepositoryProvider.value(
+                                      value: context.read<StockRepository>(),
+                                    ),
+                                  ],
+                                  child: MultiBlocProvider(
+                                    providers: [
+                                      BlocProvider.value(
+                                        value: context.read<SaleCubit>(),
+                                      ),
+                                      BlocProvider(
+                                        create: (context) =>
+                                            SaleItemListCubit(),
+                                      ),
+                                    ],
+                                    child: SaleFormScreen(
+                                      sale: state.saleList[index],
+                                    ),
+                                  ),
+                                ),
+                              ),
                               title: Text(
                                 state.saleList[index].customerName,
                                 style: TextStyle(fontWeight: FontWeight.bold),
                               ),
-                              subtitle:
-                                  Text(state.saleList[index].date.toString()),
+                              subtitle: Text(state.saleList[index].date
+                                      .toString()
+                                      .substring(0, 11) +"-"+
+                                  state.saleList[index].time.toString().substring(11,19)),
                               leading: CircleAvatar(
                                 backgroundColor: Theme.of(context).primaryColor,
                                 child: Text(

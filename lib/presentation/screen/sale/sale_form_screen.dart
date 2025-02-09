@@ -83,6 +83,7 @@ class _SaleFormScreenState extends State<SaleFormScreen> {
     if (widget.sale != null) {
       _selectedDate = widget.sale!.date;
       _selectedTime = widget.sale!.time;
+      customerNameController.text = widget.sale?.customerName??"";
 
       context
           .read<SaleItemListCubit>()
@@ -125,9 +126,6 @@ class _SaleFormScreenState extends State<SaleFormScreen> {
               for (GlobalKey<FormState> singleBlockkey in singleBlockKeys) {
                 if (singleBlockkey.currentState?.validate() ?? false) {
                 } else {
-                  log("inside else of loop");
-                  AppAlertUtil.showError(
-                      context, "Provide all necessary details");
                   break;
                 }
               }
@@ -138,7 +136,7 @@ class _SaleFormScreenState extends State<SaleFormScreen> {
                           Sale(
                             customerName: customerNameController.text.trim(),
                             totalBill: 0.0,
-                            time: _selectedTime!,
+                            time:    _selectedTime!,
                             date: _selectedDate!,
                             saleItems: context
                                 .read<SaleItemListCubit>()
@@ -159,7 +157,10 @@ class _SaleFormScreenState extends State<SaleFormScreen> {
                     await context.read<SaleCubit>().updatesale(
                           Sale(
                             totalBill: 0.0,
-                            customerName: customerNameController.text.trim(),
+                            customerName:
+                                customerNameController.text.trim().isEmpty
+                                    ? "Customer"
+                                    : customerNameController.text.trim(),
                             id: widget.sale!.id,
                             time: _selectedTime!,
                             date: _selectedDate!,

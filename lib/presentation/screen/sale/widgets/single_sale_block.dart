@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:stock_management_application/utilities/app_alerts/app_alerts.dart';
 
 import '../../../../domain/models/car.dart';
 import '../../../../domain/models/radiator_stock.dart';
@@ -114,22 +115,32 @@ class _SingleSaleBlockState extends State<SingleSaleBlock> {
                   car: widget.selectedCar,
                   assignSelectedRadiatorFunciton:
                       (RadiatorStock selectedRadiator) {
-                    setState(() {
-                      widget.saleItem = widget.saleItem.copyWith(
-                        radiator: selectedRadiator,
-                      );
-                    });
-                    context.read<SaleItemListCubit>().updatesaleItem(
-                          widget.index,
-                          widget.saleItem.copyWith(
-                            radiator: selectedRadiator,
-                          ),
+                    if (selectedRadiator.quantity < 1) {
+                      AppAlertUtil.showError(context,
+                          "You can have no stock left against this ${selectedRadiator.radiator!.size}");
+                      setState(() {
+                        widget.saleItem = widget.saleItem.copyWith(
+                          radiator: null,
                         );
-                    unitCostController.text = widget.saleItem.isRetail
-                        ? selectedRadiator.retailPrice.toString()
-                        : selectedRadiator.wholesaleRate.toString();
+                      });
+                    } else {
+                      setState(() {
+                        widget.saleItem = widget.saleItem.copyWith(
+                          radiator: selectedRadiator,
+                        );
+                      });
+                      context.read<SaleItemListCubit>().updatesaleItem(
+                            widget.index,
+                            widget.saleItem.copyWith(
+                              radiator: selectedRadiator,
+                            ),
+                          );
+                      unitCostController.text = widget.saleItem.isRetail
+                          ? selectedRadiator.retailPrice.toString()
+                          : selectedRadiator.wholesaleRate.toString();
 
-                    updateUnitCost();
+                      updateUnitCost();
+                    }
                   },
                 ),
               ),
