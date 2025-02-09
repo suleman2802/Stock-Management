@@ -7,8 +7,9 @@ import '../../../widgets/state_indicators/general_alert/general_alert.dart';
 import '../cubit/company_cubit.dart';
 
 class CompanyDialogue extends StatefulWidget {
-  CompanyDialogue({super.key, this.company});
+  CompanyDialogue({super.key, this.company,required this.isAluminium});
   Company? company;
+  bool isAluminium;
 
   @override
   State<CompanyDialogue> createState() => _CompanyDialogueState();
@@ -37,7 +38,7 @@ class _CompanyDialogueState extends State<CompanyDialogue> {
         //? save fin here
         final bool isAddedSuccessfully = await context
             .read<CompanyCubit>()
-            .addNewCompany(Company(name: nameController.text.trim()));
+            .addNewCompany(Company(name: nameController.text.trim()),widget.isAluminium);
 
         if (mounted) {
           generalAlert(
@@ -52,7 +53,7 @@ class _CompanyDialogueState extends State<CompanyDialogue> {
         final isUpdatedSuccessfully = await context
             .read<CompanyCubit>()
             .updateCompany(Company(
-                id: widget.company!.id, name: nameController.text.trim()));
+                id: widget.company!.id, name: nameController.text.trim()),widget.isAluminium);
         if (mounted) {
           generalAlert(
             context: context,

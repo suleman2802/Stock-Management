@@ -10,15 +10,16 @@ part 'rows_state.dart';
 
 class RowsCubit extends Cubit<RowsState> {
   final RowsRepository rowsRepository;
+
   RowsCubit({required this.rowsRepository}) : super(RowsInitialState()) {
-    fetchAllRows();
+    fetchAllRows(true);
   }
 
-  Future<void> fetchAllRows() async {
+  Future<void> fetchAllRows(bool isAluminium) async {
     log("inside get");
     try {
       emit(RowsLoadingState());
-      final List<Rows> rowsList = await rowsRepository.getAllRows();
+      final List<Rows> rowsList = await rowsRepository.getAllRows(isAluminium);
       emit(
         RowsLoadedState(
           rowsList: rowsList,
@@ -29,38 +30,41 @@ class RowsCubit extends Cubit<RowsState> {
     }
   }
 
-  Future<bool> addNewRows(Rows rows) async {
+  Future<bool> addNewRows(Rows rows, bool isAluminium) async {
     try {
-      final bool isAddedSuccessfully = await rowsRepository.addNewRow(rows);
-      await fetchAllRows();
+      final bool isAddedSuccessfully =
+          await rowsRepository.addNewRow(rows, isAluminium);
+      await fetchAllRows(isAluminium);
       return isAddedSuccessfully;
     } catch (error) {
       log("Unable to add Rows $error");
-      await fetchAllRows();
+      await fetchAllRows(isAluminium);
       return false;
     }
   }
 
-  Future<bool> updateRows(Rows rows) async {
+  Future<bool> updateRows(Rows rows, bool isAluminium) async {
     try {
-      final bool isUpdatedSuccessfully = await rowsRepository.updateRow(rows);
-      await fetchAllRows();
+      final bool isUpdatedSuccessfully =
+          await rowsRepository.updateRow(rows, isAluminium);
+      await fetchAllRows(isAluminium);
       return isUpdatedSuccessfully;
     } catch (error) {
       log("Unable to upadate Rows $error");
-      await fetchAllRows();
+      await fetchAllRows(isAluminium);
       return false;
     }
   }
 
-  Future<bool> deleteRows(String id) async {
+  Future<bool> deleteRows(String id, bool isAluminium) async {
     try {
-      final bool isDeletedSuccessfully = await rowsRepository.deleteRow(id);
-      await fetchAllRows();
+      final bool isDeletedSuccessfully =
+          await rowsRepository.deleteRow(id, isAluminium);
+      await fetchAllRows(isAluminium);
       return isDeletedSuccessfully;
     } catch (error) {
       log("Unable to delete Rows $error");
-      await fetchAllRows();
+      await fetchAllRows(isAluminium);
       return false;
     }
   }

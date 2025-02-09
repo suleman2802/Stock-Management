@@ -15,12 +15,15 @@ import '../styling/bottom_sheet_header.dart';
 import '../styling/round_icon_button.dart';
 
 class CompanySelectionTileDialogue extends StatefulWidget {
-  CompanySelectionTileDialogue(
-      {super.key,
-      this.selectedCompany,
-      required this.assignSelectedCompanyFunciton});
+  CompanySelectionTileDialogue({
+    super.key,
+    this.selectedCompany,
+    required this.assignSelectedCompanyFunciton,
+    required this.isAluminium,
+  });
   Company? selectedCompany;
   final Function assignSelectedCompanyFunciton;
+  bool isAluminium;
 
   @override
   State<CompanySelectionTileDialogue> createState() =>
@@ -52,6 +55,7 @@ class _CompanySelectionTileDialogueState
                   builder: (ctx) => BlocProvider.value(
                     value: context.read<CompanyCubit>(),
                     child: CompanyListBottomSheet(
+                      isAluminium: widget.isAluminium,
                       selectcompanyFunction: selectCompany,
                     ),
                   ),
@@ -87,6 +91,7 @@ class _CompanySelectionTileDialogueState
                       builder: (ctx) => BlocProvider.value(
                           value: context.read<CompanyCubit>(),
                           child: CompanyListBottomSheet(
+                            isAluminium: widget.isAluminium,
                             selectcompanyFunction: selectCompany,
                           )),
                     );
@@ -100,8 +105,12 @@ class _CompanySelectionTileDialogueState
 }
 
 class CompanyListBottomSheet extends StatelessWidget {
-  const CompanyListBottomSheet({super.key, required this.selectcompanyFunction});
+  CompanyListBottomSheet(
+      {super.key,
+      required this.selectcompanyFunction,
+      required this.isAluminium});
   final Function selectcompanyFunction;
+  bool isAluminium;
   @override
   Widget build(BuildContext context) {
     final dimensions = Dimensions(context);
@@ -130,7 +139,9 @@ class CompanyListBottomSheet extends StatelessWidget {
                           context: context,
                           builder: (ctx) => BlocProvider.value(
                             value: context.read<CompanyCubit>(),
-                            child: CompanyDialogue(),
+                            child: CompanyDialogue(
+                              isAluminium: isAluminium,
+                            ),
                           ),
                         ),
                       ),

@@ -20,14 +20,17 @@ import '../styling/bottom_sheet_header.dart';
 import '../styling/round_icon_button.dart';
 
 class RadiatorSelectionTileDialogue extends StatefulWidget {
-  RadiatorSelectionTileDialogue(
-      {super.key,
-      this.selectedRadiator,
-      required this.assignSelectedRadiatorFunciton,
-      this.selectedCar});
+  RadiatorSelectionTileDialogue({
+    super.key,
+    this.selectedRadiator,
+    required this.assignSelectedRadiatorFunciton,
+    this.selectedCar,
+    required this.isAluminium,
+  });
   Radiator? selectedRadiator;
   Car? selectedCar;
   final Function assignSelectedRadiatorFunciton;
+  bool isAluminium;
 
   @override
   State<RadiatorSelectionTileDialogue> createState() =>
@@ -71,6 +74,7 @@ class _RadiatorSelectionTileDialogueState
                     child: BlocProvider.value(
                       value: context.read<RadiatorCubit>(),
                       child: RadiatorListBottomSheet(
+                        isAluminium: widget.isAluminium,
                         selectedCar: widget.selectedCar,
                         selectRadiatorFunction: selectRadiator,
                       ),
@@ -132,6 +136,7 @@ class _RadiatorSelectionTileDialogueState
                         child: BlocProvider.value(
                           value: context.read<RadiatorCubit>(),
                           child: RadiatorListBottomSheet(
+                            isAluminium: widget.isAluminium,
                             selectRadiatorFunction: selectRadiator,
                             selectedCar: widget.selectedCar,
                           ),
@@ -149,9 +154,13 @@ class _RadiatorSelectionTileDialogueState
 
 class RadiatorListBottomSheet extends StatefulWidget {
   RadiatorListBottomSheet(
-      {super.key, required this.selectRadiatorFunction, this.selectedCar});
+      {super.key,
+      required this.selectRadiatorFunction,
+      this.selectedCar,
+      required this.isAluminium});
   final Function selectRadiatorFunction;
   Car? selectedCar;
+  bool isAluminium;
 
   @override
   State<RadiatorListBottomSheet> createState() =>
@@ -216,6 +225,7 @@ class _RadiatorListBottomSheetState extends State<RadiatorListBottomSheet> {
                             child: BlocProvider.value(
                               value: context.read<RadiatorCubit>(),
                               child: RadiatorDialogue(
+                                isAluminium: widget.isAluminium,
                                 canEdit: widget.selectedCar == null,
                                 radiator: Radiator(
                                     size: "",

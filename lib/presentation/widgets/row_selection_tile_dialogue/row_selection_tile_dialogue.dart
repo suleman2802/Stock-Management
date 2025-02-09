@@ -15,9 +15,14 @@ import '../styling/bottom_sheet_header.dart';
 import '../styling/round_icon_button.dart';
 
 class RowSelectionTileDialogue extends StatefulWidget {
-  RowSelectionTileDialogue({super.key, this.selectedRows,required this.assignSelectedRowsFunciton});
+  RowSelectionTileDialogue(
+      {super.key,
+      this.selectedRows,
+      required this.assignSelectedRowsFunciton,
+      required this.isAluminium});
   Rows? selectedRows;
   final Function assignSelectedRowsFunciton;
+  bool isAluminium;
 
   @override
   State<RowSelectionTileDialogue> createState() =>
@@ -48,6 +53,7 @@ class _RowSelectionTileDialogueState extends State<RowSelectionTileDialogue> {
                   builder: (ctx) => BlocProvider.value(
                     value: context.read<RowsCubit>(),
                     child: RowListBottomSheet(
+                      isAluminium: widget.isAluminium,
                       selectRowsFunction: selectRow,
                     ),
                   ),
@@ -83,6 +89,7 @@ class _RowSelectionTileDialogueState extends State<RowSelectionTileDialogue> {
                       builder: (ctx) => BlocProvider.value(
                           value: context.read<RowsCubit>(),
                           child: RowListBottomSheet(
+                            isAluminium: widget.isAluminium,
                             selectRowsFunction: selectRow,
                           )),
                     );
@@ -96,8 +103,10 @@ class _RowSelectionTileDialogueState extends State<RowSelectionTileDialogue> {
 }
 
 class RowListBottomSheet extends StatelessWidget {
-  const RowListBottomSheet({super.key, required this.selectRowsFunction});
+  RowListBottomSheet(
+      {super.key, required this.selectRowsFunction, required this.isAluminium});
   final Function selectRowsFunction;
+  bool isAluminium;
   @override
   Widget build(BuildContext context) {
     final dimensions = Dimensions(context);
@@ -126,7 +135,9 @@ class RowListBottomSheet extends StatelessWidget {
                           context: context,
                           builder: (ctx) => BlocProvider.value(
                             value: context.read<RowsCubit>(),
-                            child: RowsDialogue(),
+                            child: RowsDialogue(
+                              isAluminium: isAluminium,
+                            ),
                           ),
                         ),
                       ),

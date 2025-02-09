@@ -12,15 +12,15 @@ class CompanyCubit extends Cubit<CompanyState> {
   final CompanyRepository companyRepository;
   CompanyCubit({required this.companyRepository})
       : super(CompanyInitialState()) {
-    fetchAllCompany();
+    fetchAllCompany(true);
   }
 
-  Future<void> fetchAllCompany() async {
+  Future<void> fetchAllCompany(bool isAluminium) async {
     log("inside get");
     try {
       emit(CompanyLoadingState());
       final List<Company> companyList =
-          await companyRepository.getAllCompanies();
+          await companyRepository.getAllCompanies(isAluminium);
       emit(
         CompanyLoadedState(
           companyList: companyList,
@@ -31,50 +31,50 @@ class CompanyCubit extends Cubit<CompanyState> {
     }
   }
 
-  Future<bool> addNewCompany(Company company) async {
+  Future<bool> addNewCompany(Company company, bool isAluminium) async {
     try {
       final bool isAddedSuccessfully =
-          await companyRepository.addNewCompany(company);
-      await fetchAllCompany();
+          await companyRepository.addNewCompany(company, isAluminium);
+      await fetchAllCompany(isAluminium);
       return isAddedSuccessfully;
     } catch (error) {
       log("Unable to add Company $error");
-      await fetchAllCompany();
+      await fetchAllCompany(isAluminium);
       return false;
     }
   }
 
-  Future<bool> updateCompany(Company company) async {
+  Future<bool> updateCompany(Company company, bool isAluminium) async {
     try {
       final bool isUpdatedSuccessfully =
-          await companyRepository.updateCompany(company);
-      await fetchAllCompany();
+          await companyRepository.updateCompany(company, isAluminium);
+      await fetchAllCompany(isAluminium);
       return isUpdatedSuccessfully;
     } catch (error) {
       log("Unable to upadate Company $error");
-      await fetchAllCompany();
+      await fetchAllCompany(isAluminium);
       return false;
     }
   }
 
-  Future<bool> deleteCompany(String id) async {
+  Future<bool> deleteCompany(String id, bool isAluminium) async {
     try {
       final bool isDeletedSuccessfully =
-          await companyRepository.deleteCompany(id);
-      await fetchAllCompany();
+          await companyRepository.deleteCompany(id, isAluminium);
+      await fetchAllCompany(isAluminium);
       return isDeletedSuccessfully;
     } catch (error) {
       log("Unable to delete Company $error");
-      await fetchAllCompany();
+      await fetchAllCompany(isAluminium);
       return false;
     }
   }
 
-  Future<void> fetchAllCompaniesByName(String name) async {
+  Future<void> fetchAllCompaniesByName(String name, bool isAluminium) async {
     try {
       emit(CompanyLoadingState());
       final List<Company> companyList =
-          await companyRepository.getAllCompaniesByName(name);
+          await companyRepository.getAllCompaniesByName(name, isAluminium);
       emit(
         CompanyLoadedState(
           companyList: companyList,

@@ -28,11 +28,13 @@ class SingleStockBlock extends StatefulWidget {
     required this.index,
     this.selectedCar,
     required this.formKey,
+    required this.isAluminium,
   });
   RadiatorStock radiatorStock;
   int index;
   Car? selectedCar;
   final GlobalKey<FormState> formKey;
+  bool isAluminium;
 
   @override
   State<SingleStockBlock> createState() => _SingleStockBlockState();
@@ -308,6 +310,7 @@ class _SingleStockBlockState extends State<SingleStockBlock> {
                       radiatorRepository: context.read<RadiatorRepository>(),
                     ),
                     child: RadiatorSelectionTileDialogue(
+                      isAluminium: widget.isAluminium,
                       selectedRadiator: widget.radiatorStock.radiator,
                       selectedCar: widget.selectedCar,
                       assignSelectedRadiatorFunciton:
@@ -326,6 +329,7 @@ class _SingleStockBlockState extends State<SingleStockBlock> {
                   create: (context) => CompanyCubit(
                       companyRepository: context.read<CompanyRepository>()),
                   child: CompanySelectionTileDialogue(
+                    isAluminium: widget.isAluminium,
                     selectedCompany: widget.radiatorStock.company,
                     assignSelectedCompanyFunciton: (Company selectedCompany) {
                       context.read<RadiatorStockCubit>().updateStock(

@@ -8,10 +8,10 @@ class CompanyRepositoryImplementation implements CompanyRepository {
   FirebaseFirestore firestoreInstance;
   CompanyRepositoryImplementation(this.firestoreInstance);
   @override
-  Future<bool> addNewCompany(Company company) async {
+  Future<bool> addNewCompany(Company company,bool isAluminium) async {
     try {
       await firestoreInstance
-          .collection('companies')
+          .collection(isAluminium?'companiesA':'companiesC')
           .doc(company.id)
           .set(company.toMap());
 
@@ -24,9 +24,9 @@ class CompanyRepositoryImplementation implements CompanyRepository {
   }
 
   @override
-  Future<bool> deleteCompany(String id) async {
+  Future<bool> deleteCompany(String id,bool isAluminium) async {
     try {
-      await firestoreInstance.collection('companies').doc(id).delete();
+      await firestoreInstance.collection(isAluminium?'companiesA':'companiesC').doc(id).delete();
 
       log('company with ID $id deleted successfully.');
       return true;
@@ -37,10 +37,10 @@ class CompanyRepositoryImplementation implements CompanyRepository {
   }
 
   @override
-  Future<List<Company>> getAllCompanies() async {
+  Future<List<Company>> getAllCompanies(bool isAluminium) async {
     try {
       QuerySnapshot snapshot =
-          await firestoreInstance.collection('companies').get();
+          await firestoreInstance.collection(isAluminium?'companiesA':'companiesC').get();
 
       List<Company> companyList = snapshot.docs.map((doc) {
         return Company.fromMap(doc.data() as Map<String, dynamic>);
@@ -55,10 +55,10 @@ class CompanyRepositoryImplementation implements CompanyRepository {
   }
 
   @override
-  Future<bool> updateCompany(Company company) async {
+  Future<bool> updateCompany(Company company,bool isAluminium) async {
     try {
       await firestoreInstance
-          .collection('companies')
+          .collection(isAluminium?'companiesA':'companiesC')
           .doc(company.id)
           .update(company.toMap());
 
@@ -71,11 +71,11 @@ class CompanyRepositoryImplementation implements CompanyRepository {
   }
 
   @override
-  Future<List<Company>> getAllCompaniesByName(String companyName) async {
+  Future<List<Company>> getAllCompaniesByName(String companyName,bool isAluminium) async {
     try {
       // Retrieve all companies from Firestore
       QuerySnapshot snapshot =
-          await firestoreInstance.collection('companies').get();
+          await firestoreInstance.collection(isAluminium?'companiesA':'companiesC').get();
 
       // Filter companies on the client side (case-insensitive partial match)
       List<Company> companyList = snapshot.docs

@@ -33,6 +33,7 @@ class _StockFormScreenState extends State<StockFormScreen> {
   DateTime? _selectedDate = DateTime.now();
   DateTime? _selectedTime = DateTime.now();
   Car? selectedCar;
+  bool isAluminium = true;
   List<GlobalKey<FormState>> singleBlockKeys = [];
   Future<void> _startDatePicker() async {
     final DateTime? picked = await showDatePicker(
@@ -98,7 +99,6 @@ class _StockFormScreenState extends State<StockFormScreen> {
 
   @override
   Widget build(BuildContext context) {
-    
     return ListPageScaffold(
       // curentIndex: 1,
       label: "Add Stock",
@@ -279,6 +279,7 @@ class _StockFormScreenState extends State<StockFormScreen> {
                           ],
                         ),
                         SingleStockBlock(
+                          isAluminium: isAluminium,
                           formKey: singleBlockKeys[index],
                           key: ValueKey(stocks[index].id),
                           radiatorStock: stocks[index],

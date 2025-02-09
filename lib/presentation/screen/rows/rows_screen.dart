@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../widgets/layouts/page_scaffolds/list_page_scaffold.dart';
+import '../../widgets/select_type_drop_down/select_type_drop_down.dart';
 import '../../widgets/state_indicators/error_text/error_text.dart';
 import '../../widgets/state_indicators/general_alert/general_alert.dart';
 import '../../widgets/state_indicators/loading_indicator/loading_indicator.dart';
@@ -9,25 +10,49 @@ import '../../widgets/styling/round_icon_button.dart';
 import 'cubit/rows_cubit.dart';
 import 'widgets/rows_dialogue.dart';
 
-class RowsScreen extends StatelessWidget {
+class RowsScreen extends StatefulWidget {
   const RowsScreen({super.key});
+
+  @override
+  State<RowsScreen> createState() => _RowsScreenState();
+}
+
+class _RowsScreenState extends State<RowsScreen> {
+  bool isAluminium = true;
+
+  selectedType(bool isAluminiumSelected) {
+    setState(() {
+      isAluminium = isAluminiumSelected;
+    });
+    context.read<RowsCubit>().fetchAllRows(isAluminiumSelected);
+  }
 
   @override
   Widget build(BuildContext context) {
     return ListPageScaffold(
       label: "Row",
       // curentIndex: 0,
-      action: RoundIconButton(
-        iconData: Icons.add,
-        onPress: () {
-          showDialog(
-            context: context,
-            builder: (ctx) => BlocProvider.value(
-              value: context.read<RowsCubit>(),
-              child: RowsDialogue(),
-            ),
-          );
-        },
+      action: Row(
+        children: [
+          RoundIconButton(
+            iconData: Icons.add,
+            onPress: () {
+              showDialog(
+                context: context,
+                builder: (ctx) => BlocProvider.value(
+                  value: context.read<RowsCubit>(),
+                  child: RowsDialogue(
+                    isAluminium: isAluminium,
+                  ),
+                ),
+              );
+            },
+          ),
+          SelectTypeDropDown(
+            isAluminium: isAluminium,
+            selectedTypeFunction: selectedType,
+          ),
+        ],
       ),
       body: BlocBuilder<RowsCubit, RowsState>(
         builder: (context, state) {
@@ -49,6 +74,7 @@ class RowsScreen extends StatelessWidget {
                           builder: (ctx) => BlocProvider.value(
                             value: context.read<RowsCubit>(),
                             child: RowsDialogue(
+                              isAluminium: isAluminium,
                               rows: state.rowsList[index],
                             ),
                           ),
@@ -58,8 +84,9 @@ class RowsScreen extends StatelessWidget {
                           onPressed: () async {
                             final bool isDeletedSuccessfully = await context
                                 .read<RowsCubit>()
-                                .deleteRows(state.rowsList[index].id);
-                      
+                                .deleteRows(
+                                    state.rowsList[index].id, isAluminium);
+
                             generalAlert(
                               context: context,
                               isSuccessful: isDeletedSuccessfully,

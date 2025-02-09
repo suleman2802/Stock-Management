@@ -23,7 +23,7 @@ class RadiatorScreen extends StatefulWidget {
 
 class _RadiatorScreenState extends State<RadiatorScreen> {
   final TextEditingController searchController = TextEditingController();
-
+  bool isAluminium = true;
   @override
   void initState() {
     // TODO: implement initState
@@ -59,7 +59,9 @@ class _RadiatorScreenState extends State<RadiatorScreen> {
               ],
               child: BlocProvider.value(
                 value: context.read<RadiatorCubit>(),
-                child: RadiatorDialogue(),
+                child: RadiatorDialogue(
+                  isAluminium: isAluminium,
+                ),
               ),
             ),
           );
@@ -121,6 +123,7 @@ class _RadiatorScreenState extends State<RadiatorScreen> {
                                     child: BlocProvider.value(
                                       value: context.read<RadiatorCubit>(),
                                       child: RadiatorDialogue(
+                                        isAluminium: isAluminium,
                                         radiator: state.radiatorList[index],
                                       ),
                                     ),

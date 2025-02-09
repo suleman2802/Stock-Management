@@ -8,9 +8,12 @@ class RowsRepositoryImplementation implements RowsRepository {
   FirebaseFirestore firestoreInstance;
   RowsRepositoryImplementation(this.firestoreInstance);
   @override
-  Future<bool> addNewRow(Rows rows) async {
+  Future<bool> addNewRow(Rows rows, bool isAluminium) async {
     try {
-      await firestoreInstance.collection('rows').doc(rows.id).set(rows.toMap());
+      await firestoreInstance
+          .collection(isAluminium ? 'rowsA' : 'rowsC')
+          .doc(rows.id)
+          .set(rows.toMap());
 
       log('Rows with ID $rows.id added successfully.');
       return true;
@@ -21,9 +24,12 @@ class RowsRepositoryImplementation implements RowsRepository {
   }
 
   @override
-  Future<bool> deleteRow(String id) async {
+  Future<bool> deleteRow(String id, bool isAluminium) async {
     try {
-      await firestoreInstance.collection('rows').doc(id).delete();
+      await firestoreInstance
+          .collection(isAluminium ? 'rowsA' : 'rowsC')
+          .doc(id)
+          .delete();
 
       log('Rows with ID $id deleted successfully.');
       return true;
@@ -34,9 +40,11 @@ class RowsRepositoryImplementation implements RowsRepository {
   }
 
   @override
-  Future<List<Rows>> getAllRows() async {
+  Future<List<Rows>> getAllRows(bool isAluminium) async {
     try {
-      QuerySnapshot snapshot = await firestoreInstance.collection('rows').get();
+      QuerySnapshot snapshot = await firestoreInstance
+          .collection(isAluminium ? 'rowsA' : 'rowsC')
+          .get();
 
       List<Rows> rowsList = snapshot.docs.map((doc) {
         return Rows.fromMap(doc.data() as Map<String, dynamic>);
@@ -51,10 +59,10 @@ class RowsRepositoryImplementation implements RowsRepository {
   }
 
   @override
-  Future<bool> updateRow(Rows rows) async {
+  Future<bool> updateRow(Rows rows, bool isAluminium) async {
     try {
       await firestoreInstance
-          .collection('rows')
+          .collection(isAluminium ? 'rowsA' : 'rowsC')
           .doc(rows.id)
           .update(rows.toMap());
 

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../widgets/layouts/page_scaffolds/list_page_scaffold.dart';
+import '../../widgets/select_type_drop_down/select_type_drop_down.dart';
 import '../../widgets/spaces/space.dart';
 import '../../widgets/state_indicators/error_text/error_text.dart';
 import '../../widgets/state_indicators/general_alert/general_alert.dart';
@@ -25,22 +26,41 @@ class _CompanyScreenState extends State<CompanyScreen> {
     searchController.dispose();
   }
 
+  bool isAluminium = true;
+
+  selectedType(bool isAluminiumSelected) {
+    setState(() {
+      isAluminium = isAluminiumSelected;
+    });
+    context.read<CompanyCubit>().fetchAllCompany(isAluminiumSelected);
+  }
+
   @override
   Widget build(BuildContext context) {
     return ListPageScaffold(
       label: "Companies",
       // curentIndex: 0,
-      action: RoundIconButton(
-        iconData: Icons.add,
-        onPress: () {
-          showDialog(
-            context: context,
-            builder: (ctx) => BlocProvider.value(
-              value: context.read<CompanyCubit>(),
-              child: CompanyDialogue(),
-            ),
-          );
-        },
+      action: Row(
+        children: [
+          RoundIconButton(
+            iconData: Icons.add,
+            onPress: () {
+              showDialog(
+                context: context,
+                builder: (ctx) => BlocProvider.value(
+                  value: context.read<CompanyCubit>(),
+                  child: CompanyDialogue(
+                    isAluminium: isAluminium,
+                  ),
+                ),
+              );
+            },
+          ),
+          SelectTypeDropDown(
+            isAluminium: isAluminium,
+            selectedTypeFunction: selectedType,
+          ),
+        ],
       ),
       body: Column(
         children: [
@@ -56,9 +76,11 @@ class _CompanyScreenState extends State<CompanyScreen> {
                   if (value.isNotEmpty) {
                     await context
                         .read<CompanyCubit>()
-                        .fetchAllCompaniesByName(value.trim());
+                        .fetchAllCompaniesByName(value.trim(), isAluminium);
                   } else {
-                    await context.read<CompanyCubit>().fetchAllCompany();
+                    await context
+                        .read<CompanyCubit>()
+                        .fetchAllCompany(isAluminium);
                   }
                 },
                 leading: IconButton(
@@ -90,6 +112,7 @@ class _CompanyScreenState extends State<CompanyScreen> {
                                 builder: (ctx) => BlocProvider.value(
                                   value: context.read<CompanyCubit>(),
                                   child: CompanyDialogue(
+                                    isAluminium: isAluminium,
                                     company: state.companyList[index],
                                   ),
                                 ),
@@ -110,7 +133,8 @@ class _CompanyScreenState extends State<CompanyScreen> {
                                       await context
                                           .read<CompanyCubit>()
                                           .deleteCompany(
-                                              state.companyList[index].id);
+                                              state.companyList[index].id,
+                                              isAluminium);
 
                                   generalAlert(
                                     context: context,

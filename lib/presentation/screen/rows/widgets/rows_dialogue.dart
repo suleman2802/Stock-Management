@@ -7,8 +7,9 @@ import '../../../widgets/state_indicators/general_alert/general_alert.dart';
 import '../cubit/rows_cubit.dart';
 
 class RowsDialogue extends StatefulWidget {
-  const RowsDialogue({super.key, this.rows});
+  RowsDialogue({super.key, this.rows, required this.isAluminium});
   final Rows? rows;
+  bool isAluminium;
 
   @override
   State<RowsDialogue> createState() => _RowsDialogueState();
@@ -37,7 +38,8 @@ class _RowsDialogueState extends State<RowsDialogue> {
         //? save fin here
         final bool isAddedSuccessfully = await context
             .read<RowsCubit>()
-            .addNewRows(Rows(noOfRows: int.parse(rowsController.text.trim())));
+            .addNewRows(Rows(noOfRows: int.parse(rowsController.text.trim())),
+                widget.isAluminium);
 
         if (mounted) {
           generalAlert(
@@ -51,9 +53,11 @@ class _RowsDialogueState extends State<RowsDialogue> {
         //? edit fin
         final isUpdatedSuccessfully = await context
             .read<RowsCubit>()
-            .updateRows(Rows(
-                id: widget.rows!.id,
-                noOfRows: int.parse(rowsController.text.trim())));
+            .updateRows(
+                Rows(
+                    id: widget.rows!.id,
+                    noOfRows: int.parse(rowsController.text.trim())),
+                widget.isAluminium);
         if (mounted) {
           generalAlert(
             context: context,
@@ -89,7 +93,7 @@ class _RowsDialogueState extends State<RowsDialogue> {
         child: Form(
           key: formKey,
           child: NumberInputField(
-            label: "Enter Rows in mm",
+            label: "Enter Rows in ${widget.isAluminium ? "mm" : "number"}",
             validator: (value) {
               if (value == null || value.isEmpty) {
                 return "Number of Rows is required";

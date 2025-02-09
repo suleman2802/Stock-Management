@@ -24,9 +24,14 @@ import '../../rows/cubit/rows_cubit.dart';
 import '../cubit/radiator_cubit.dart';
 
 class RadiatorDialogue extends StatefulWidget {
-  const RadiatorDialogue({super.key, this.radiator, this.canEdit = true});
+  RadiatorDialogue(
+      {super.key,
+      this.radiator,
+      this.canEdit = true,
+      required this.isAluminium});
   final Radiator? radiator;
   final bool canEdit;
+  bool isAluminium;
 
   @override
   State<RadiatorDialogue> createState() => _RadiatorDialogueState();
@@ -68,21 +73,21 @@ class _RadiatorDialogueState extends State<RadiatorDialogue> {
   }
 
   assignSelectedCar(Car car) {
-     setState(() {
-    _selectedCar = car;
-     });
+    setState(() {
+      _selectedCar = car;
+    });
   }
 
   assignSelectedRows(Rows rows) {
-     setState(() {
-    _selectedRows = rows;
-     });
+    setState(() {
+      _selectedRows = rows;
+    });
   }
 
   assignSelectedFin(Fin fin) {
-     setState(() {
-    _selectedFin = fin;
-     });
+    setState(() {
+      _selectedFin = fin;
+    });
   }
 
   Future<void> submitRadiatorForm() async {
@@ -191,6 +196,7 @@ class _RadiatorDialogueState extends State<RadiatorDialogue> {
                     rowsRepository: context.read<RowsRepository>(),
                   ),
                   child: RowSelectionTileDialogue(
+                    isAluminium: widget.isAluminium,
                     selectedRows: _selectedRows,
                     assignSelectedRowsFunciton: assignSelectedRows,
                   ),
