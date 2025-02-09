@@ -51,12 +51,12 @@ class _CompanyScreenState extends State<CompanyScreen> {
               child: SearchBar(
                 onTap: () {},
                 controller: searchController,
-                hintText: "Search by car name",
+                hintText: "Search by Company name",
                 onChanged: (value) async {
                   if (value.isNotEmpty) {
                     await context
                         .read<CompanyCubit>()
-                        .fetchAllStocksByName(value.trim());
+                        .fetchAllCompaniesByName(value.trim());
                   } else {
                     await context.read<CompanyCubit>().fetchAllCompany();
                   }

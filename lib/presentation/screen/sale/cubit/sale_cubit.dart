@@ -14,6 +14,37 @@ class SaleCubit extends Cubit<SaleState> {
     fetchAllSales();
   }
 
+  Future<void> getAllSalesByStartEndDate(
+      DateTime startDate, DateTime endDate) async {
+    try {
+      emit(SaleLoadingState());
+      final List<Sale> saleList =
+          await saleRepository.getAllSalesByStartEndDate(startDate, endDate);
+      emit(
+        SaleLoadedState(
+          saleList: saleList,
+        ),
+      );
+    } catch (error) {
+      emit(SaleErrorState(errorMessage: error.toString()));
+    }
+  }
+
+  Future<void> fetchAllSalesByCustomerName(String customerName) async {
+    try {
+      emit(SaleLoadingState());
+      final List<Sale> saleList =
+          await saleRepository.getAllSalesByCustomerName(customerName);
+      emit(
+        SaleLoadedState(
+          saleList: saleList,
+        ),
+      );
+    } catch (error) {
+      emit(SaleErrorState(errorMessage: error.toString()));
+    }
+  }
+
   Future<void> fetchAllSales() async {
     try {
       emit(SaleLoadingState());

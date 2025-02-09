@@ -70,7 +70,7 @@ class CompanyCubit extends Cubit<CompanyState> {
     }
   }
 
-  Future<void> fetchAllStocksByName(String name) async {
+  Future<void> fetchAllCompaniesByName(String name) async {
     try {
       emit(CompanyLoadingState());
       final List<Company> companyList =

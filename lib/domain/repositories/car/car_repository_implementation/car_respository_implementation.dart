@@ -66,4 +66,33 @@ class CarRepositoryImplementation implements CarRepository {
       return false;
     }
   }
+  
+  @override
+  Future<List<Car>> getAllCarByName(String carName)async {
+   try {
+      // Retrieve all companies from Firestore
+      QuerySnapshot snapshot =
+          await firestoreInstance.collection('cars').get();
+
+      // Filter companies on the client side (case-insensitive partial match)
+      List<Car> carList = snapshot.docs
+          .where((doc) {
+            final data = doc.data() as Map<String, dynamic>;
+            final name = data['carName'] as String?;
+
+            // Perform case-insensitive partial match
+            return name?.toLowerCase().contains(carName.toLowerCase()) ??
+                false;
+          })
+          .map((doc) => Car.fromMap(doc.data() as Map<String, dynamic>))
+          .toList();
+
+      // Debug: Print the filtered list
+      log('Filtered cars for name $carName: $carList');
+      return carList;
+    } catch (e) {
+      log('Failed to retrieve cars for name $carName: $e');
+      return [];
+    }
+  }
 }

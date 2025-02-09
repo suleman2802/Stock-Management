@@ -1,18 +1,16 @@
-import 'dart:developer';
-
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
-import 'package:stock_management_application/presentation/widgets/state_indicators/loading_indicator/loading_indicator.dart';
 import '../../../domain/models/car.dart';
 import '../../../domain/models/radiator_stock.dart';
 import '../../../domain/models/sale.dart';
 import '../../../domain/repositories/car/abstract_car_repository/abstract_car_repository.dart';
+import '../../../domain/repositories/sale/abstract_sale_repository/abstract_sale_repository.dart';
 import '../../../domain/repositories/stock/abstract_stock_repository/abstract_stock_repository.dart';
 import '../../../utilities/app_alerts/app_alerts.dart';
 import '../../../utilities/app_routes/app_router.dart';
 import '../../widgets/car_selection_tile_dialogue/car_selection_tile_dialogue.dart';
+import '../../widgets/layouts/page_scaffolds/list_page_scaffold.dart';
 import '../../widgets/radiator_stock_selection_tile_dialogue/radiator_stock_selection_tile_dialogue.dart';
 import '../car/cubit/car_cubit.dart';
 import '../stock/cubit/stock_cubit.dart';
@@ -29,34 +27,6 @@ class _ReportScreenState extends State<ReportScreen> {
   RadiatorStock? radiatorStock;
   bool showLoading = false;
 
-  Future<List<Sale>> getSalesReport(DateTime? startDate, DateTime? endDate,
-      String carId, String radiatorStockId) async {
-    final firestoreInstance = FirebaseFirestore.instance;
-
-    // Fetch all sales data (since Firestore doesn't support string date filtering)
-    QuerySnapshot snapshot = await firestoreInstance.collection('sales').get();
-
-    // Convert documents to Sale objects
-    List<Sale> sales = snapshot.docs.map((doc) {
-      return Sale.fromMap(doc.data() as Map<String, dynamic>);
-    }).toList();
-    if (startDate != null && endDate != null) {
-      // Filter sales by date range locally
-      sales = sales.where((sale) {
-        final saleDate = sale.date; // Sale date as DateTime
-        return saleDate.isAfter(startDate!.subtract(Duration(days: 1))) &&
-            saleDate.isBefore(endDate!.add(Duration(days: 1)));
-      }).toList();
-    }
-    // Further filter by car ID and radiator stock ID
-    sales = sales.where((sale) {
-      return sale.saleItems.any((item) =>
-          item.car?.id == carId && item.radiator?.id == radiatorStockId);
-    }).toList();
-
-    return sales;
-  }
-
   Future<void> _selectStartDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
       context: context,
@@ -64,10 +34,11 @@ class _ReportScreenState extends State<ReportScreen> {
       firstDate: DateTime(2025),
       lastDate: DateTime.now(),
     );
-    if (picked != null && picked != startDate)
+    if (picked != null && picked != startDate) {
       setState(() {
         startDate = picked;
       });
+    }
   }
 
   Future<void> _selectEndDate(BuildContext context) async {
@@ -77,10 +48,11 @@ class _ReportScreenState extends State<ReportScreen> {
       firstDate: DateTime(2025),
       lastDate: DateTime.now(),
     );
-    if (picked != null && picked != endDate)
+    if (picked != null && picked != endDate) {
       setState(() {
         endDate = picked;
       });
+    }
   }
 
   void _generateReport() async {
@@ -96,8 +68,9 @@ class _ReportScreenState extends State<ReportScreen> {
       return;
     }
 
-    List<Sale> sales =
-        await getSalesReport(startDate, endDate, car!.id, radiatorStock!.id);
+    List<Sale> sales = await context
+        .read<SaleRepository>()
+        .getSalesReport(startDate, endDate, car!.id, radiatorStock!.id);
 
     int retailUnits = 0;
     int wholesaleUnits = 0;
@@ -144,10 +117,8 @@ class _ReportScreenState extends State<ReportScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Sales Report'),
-      ),
+    return ListPageScaffold(
+      label: 'Sales Report',
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(

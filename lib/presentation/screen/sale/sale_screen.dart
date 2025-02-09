@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
+import 'package:stock_management_application/utilities/app_alerts/app_alerts.dart';
 
 import '../../../domain/repositories/car/abstract_car_repository/abstract_car_repository.dart';
 import '../../../domain/repositories/radiator/abstract_radiator_repository/abstract_radiator_repository.dart';
@@ -29,6 +31,35 @@ class _SaleScreenState extends State<SaleScreen> {
   void dispose() {
     super.dispose();
     searchController.dispose();
+  }
+
+  DateTime? startDate;
+  DateTime? endDate;
+
+  Future<void> _selectStartDate(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(2025),
+      lastDate: DateTime.now(),
+    );
+    if (picked != null && picked != startDate)
+      setState(() {
+        startDate = picked;
+      });
+  }
+
+  Future<void> _selectEndDate(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(2025),
+      lastDate: DateTime.now(),
+    );
+    if (picked != null && picked != endDate)
+      setState(() {
+        endDate = picked;
+      });
   }
 
   @override
@@ -74,14 +105,77 @@ class _SaleScreenState extends State<SaleScreen> {
               child: SearchBar(
                 onTap: () {},
                 controller: searchController,
-                hintText: "Search by car name",
-                onChanged: (value) {},
+                hintText: "Search by Customer name",
+                onChanged: (value) async {
+                  if (value.isNotEmpty) {
+                    await context
+                        .read<SaleCubit>()
+                        .fetchAllSalesByCustomerName(value.trim());
+                  } else {
+                    await context.read<SaleCubit>().fetchAllSales();
+                  }
+                },
                 leading: IconButton(
                   icon: Icon(Icons.search),
                   onPressed: () {},
                 ),
               ),
             ),
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              Row(
+                children: [
+                  Text(
+                      '${startDate != null ? DateFormat('yyyy-MM-dd').format(startDate!) : 'Starting date'}'),
+                  IconButton(
+                    icon: Icon(Icons.calendar_month),
+                    onPressed: () => _selectStartDate(context),
+                  ),
+                ],
+              ),
+              Row(
+                children: [
+                  Text(
+                      '${endDate != null ? DateFormat('yyyy-MM-dd').format(endDate!) : 'Ending date'}'),
+                  IconButton(
+                    icon: Icon(Icons.calendar_month),
+                    onPressed: () => _selectEndDate(context),
+                  ),
+                ],
+              ),
+              IconButton(
+                  color: Theme.of(context).appBarTheme.backgroundColor,
+                  onPressed: () async {
+                    if (startDate == null) {
+                      AppAlertUtil.showError(
+                          context, "Please Select Starting Date");
+                    } else if (endDate == null) {
+                      AppAlertUtil.showError(
+                          context, "Please Select Ending Date");
+                    } else {
+                      await context
+                          .read<SaleCubit>()
+                          .getAllSalesByStartEndDate(startDate!, endDate!);
+                    }
+                  },
+                  icon: Icon(
+                    Icons.filter_alt,
+                  )),
+              IconButton(
+                  onPressed: () async {
+                    setState(() {
+                      startDate = null;
+                      endDate = null;
+                    });
+                    searchController.text = "";
+                    await context.read<SaleCubit>().fetchAllSales();
+                  },
+                  icon: Icon(
+                    Icons.restart_alt_rounded,
+                  )),
+            ],
           ),
           mediumHeightSpace(),
           Expanded(
@@ -135,8 +229,11 @@ class _SaleScreenState extends State<SaleScreen> {
                               ),
                               subtitle: Text(state.saleList[index].date
                                       .toString()
-                                      .substring(0, 11) +"-"+
-                                  state.saleList[index].time.toString().substring(11,19)),
+                                      .substring(0, 11) +
+                                  "-" +
+                                  state.saleList[index].time
+                                      .toString()
+                                      .substring(11, 19)),
                               leading: CircleAvatar(
                                 backgroundColor: Theme.of(context).primaryColor,
                                 child: Text(

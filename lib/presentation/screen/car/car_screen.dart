@@ -41,7 +41,15 @@ class CarScreen extends StatelessWidget {
                 onTap: () {},
                 controller: searchController,
                 hintText: "Search by car name",
-                onChanged: (value) {},
+                onChanged: (value) async {
+                  if (value.isNotEmpty) {
+                    await context
+                        .read<CarCubit>()
+                        .fetchAllCarsByName(value.trim());
+                  } else {
+                    await context.read<CarCubit>().fetchAllCars();
+                  }
+                },
                 leading: IconButton(
                   icon: Icon(Icons.search),
                   onPressed: () {},

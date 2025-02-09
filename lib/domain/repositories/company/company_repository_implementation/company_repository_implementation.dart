@@ -71,7 +71,7 @@ class CompanyRepositoryImplementation implements CompanyRepository {
   }
 
   @override
-  Future<List<Company>> getAllCompaniesByName(String name) async {
+  Future<List<Company>> getAllCompaniesByName(String companyName) async {
     try {
       // Retrieve all companies from Firestore
       QuerySnapshot snapshot =
@@ -82,15 +82,19 @@ class CompanyRepositoryImplementation implements CompanyRepository {
           .where((doc) {
             final data = doc.data() as Map<String, dynamic>;
             final name = data['name'] as String?;
-            return name?.toLowerCase().contains(name.toLowerCase()) ?? false;
+
+            // Perform case-insensitive partial match
+            return name?.toLowerCase().contains(companyName.toLowerCase()) ??
+                false;
           })
           .map((doc) => Company.fromMap(doc.data() as Map<String, dynamic>))
           .toList();
 
-      log('Retrieved companies for name $name: $companyList');
+      // Debug: Print the filtered list
+      log('Filtered companies for name $companyName: $companyList');
       return companyList;
     } catch (e) {
-      log('Failed to retrieve companies for name $name: $e');
+      log('Failed to retrieve companies for name $companyName: $e');
       return [];
     }
   }

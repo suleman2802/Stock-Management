@@ -13,6 +13,20 @@ class CarCubit extends Cubit<CarState> {
   CarCubit({required this.carRepository}) : super(CarInitialState()) {
     fetchAllCars();
   }
+   Future<void> fetchAllCarsByName(String name) async {
+    try {
+      emit(CarLoadingState());
+      final List<Car> carList =
+          await carRepository.getAllCarByName(name);
+      emit(
+        CarLoadedState(
+          carList: carList,
+        ),
+      );
+    } catch (error) {
+      emit(CarErrorState(errorMessage: error.toString()));
+    }
+  }
 
   Future<void> fetchAllCars() async {
     try {

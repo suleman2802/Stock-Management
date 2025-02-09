@@ -126,6 +126,9 @@ class HomeScreen extends StatelessWidget {
                 MultiRepositoryProvider(
                   providers: [
                     RepositoryProvider.value(
+                      value: context.read<SaleRepository>(),
+                    ),
+                    RepositoryProvider.value(
                       value: context.read<CarRepository>(),
                     ),
                     RepositoryProvider.value(

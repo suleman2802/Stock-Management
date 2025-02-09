@@ -5,5 +5,5 @@ abstract class CompanyRepository {
   Future<bool> addNewCompany(Company company);
   Future<bool> updateCompany(Company company);
   Future<bool> deleteCompany(String id);
-  Future<List<Company>> getAllCompaniesByName(String name);
+  Future<List<Company>> getAllCompaniesByName(String companyName);
 }
