@@ -100,18 +100,19 @@ class _RadiatorDialogueState extends State<RadiatorDialogue> {
         // Save functionality here
         if (widget.radiator == null) {
           //? save car here
-          final isAddedSuccessfully =
-              await context.read<RadiatorCubit>().addNewRadiator(
-                    Radiator(
-                        size: sizeController.text.trim(),
-                        carFuelType: _selectedFuelType,
-                        carAutomation: _selectedCarAutomationType,
-                        fromYear: int.parse(fromYearController.text.trim()),
-                        toYear: int.parse(toYearController.text.trim()),
-                        rows: _selectedRows!,
-                        car: _selectedCar!,
-                        fin: _selectedFin!),
-                  );
+          final isAddedSuccessfully = await context
+              .read<RadiatorCubit>()
+              .addNewRadiator(
+                  Radiator(
+                      size: sizeController.text.trim(),
+                      carFuelType: _selectedFuelType,
+                      carAutomation: _selectedCarAutomationType,
+                      fromYear: int.parse(fromYearController.text.trim()),
+                      toYear: int.parse(toYearController.text.trim()),
+                      rows: _selectedRows!,
+                      car: _selectedCar!,
+                      fin: _selectedFin!),
+                  widget.isAluminium);
 
           if (mounted) {
             generalAlert(
@@ -123,19 +124,20 @@ class _RadiatorDialogueState extends State<RadiatorDialogue> {
           }
         } else {
           //? edit car
-          final isUpdatedSuccessfully =
-              await context.read<RadiatorCubit>().updateRadiator(
-                    Radiator(
-                        id: widget.radiator!.id,
-                        size: sizeController.text.trim(),
-                        carFuelType: _selectedFuelType,
-                        carAutomation: _selectedCarAutomationType,
-                        fromYear: int.parse(fromYearController.text.trim()),
-                        toYear: int.parse(toYearController.text.trim()),
-                        rows: _selectedRows!,
-                        car: _selectedCar!,
-                        fin: _selectedFin!),
-                  );
+          final isUpdatedSuccessfully = await context
+              .read<RadiatorCubit>()
+              .updateRadiator(
+                  Radiator(
+                      id: widget.radiator!.id,
+                      size: sizeController.text.trim(),
+                      carFuelType: _selectedFuelType,
+                      carAutomation: _selectedCarAutomationType,
+                      fromYear: int.parse(fromYearController.text.trim()),
+                      toYear: int.parse(toYearController.text.trim()),
+                      rows: _selectedRows!,
+                      car: _selectedCar!,
+                      fin: _selectedFin!),
+                  widget.isAluminium);
           if (mounted) {
             generalAlert(
               context: context,

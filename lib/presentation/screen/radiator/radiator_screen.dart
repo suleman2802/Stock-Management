@@ -6,6 +6,7 @@ import '../../../domain/repositories/fin/abstract_fin_repository/abstract_fin_re
 import '../../../domain/repositories/radiator/abstract_radiator_repository/abstract_radiator_repository.dart';
 import '../../../domain/repositories/rows/abstract_rows_repository/abstract_rows_repository.dart';
 import '../../widgets/layouts/page_scaffolds/list_page_scaffold.dart';
+import '../../widgets/select_type_drop_down/select_type_drop_down.dart';
 import '../../widgets/state_indicators/error_text/error_text.dart';
 import '../../widgets/state_indicators/general_alert/general_alert.dart';
 import '../../widgets/state_indicators/loading_indicator/loading_indicator.dart';
@@ -28,7 +29,14 @@ class _RadiatorScreenState extends State<RadiatorScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    context.read<RadiatorCubit>().fetchAllRadiators();
+    context.read<RadiatorCubit>().fetchAllRadiators(isAluminium);
+  }
+
+  selectedType(bool isAluminiumSelected) {
+    setState(() {
+      isAluminium = isAluminiumSelected;
+    });
+    context.read<RadiatorCubit>().fetchAllRadiators(isAluminiumSelected);
   }
 
   @override
@@ -36,36 +44,44 @@ class _RadiatorScreenState extends State<RadiatorScreen> {
     return ListPageScaffold(
       // curentIndex: 0,
       label: "Radiators",
-      action: RoundIconButton(
-        iconData: Icons.add,
-        onPress: () {
-          // add new radiator
-          showDialog(
-            context: context,
-            builder: (ctx) => MultiRepositoryProvider(
-              providers: [
-                RepositoryProvider.value(
-                  value: context.read<RadiatorRepository>(),
+      action: Row(
+        children: [
+          RoundIconButton(
+            iconData: Icons.add,
+            onPress: () {
+              // add new radiator
+              showDialog(
+                context: context,
+                builder: (ctx) => MultiRepositoryProvider(
+                  providers: [
+                    RepositoryProvider.value(
+                      value: context.read<RadiatorRepository>(),
+                    ),
+                    RepositoryProvider.value(
+                      value: context.read<CarRepository>(),
+                    ),
+                    RepositoryProvider.value(
+                      value: context.read<FinRepository>(),
+                    ),
+                    RepositoryProvider.value(
+                      value: context.read<RowsRepository>(),
+                    ),
+                  ],
+                  child: BlocProvider.value(
+                    value: context.read<RadiatorCubit>(),
+                    child: RadiatorDialogue(
+                      isAluminium: isAluminium,
+                    ),
+                  ),
                 ),
-                RepositoryProvider.value(
-                  value: context.read<CarRepository>(),
-                ),
-                RepositoryProvider.value(
-                  value: context.read<FinRepository>(),
-                ),
-                RepositoryProvider.value(
-                  value: context.read<RowsRepository>(),
-                ),
-              ],
-              child: BlocProvider.value(
-                value: context.read<RadiatorCubit>(),
-                child: RadiatorDialogue(
-                  isAluminium: isAluminium,
-                ),
-              ),
-            ),
-          );
-        },
+              );
+            },
+          ),
+          SelectTypeDropDown(
+            isAluminium: isAluminium,
+            selectedTypeFunction: selectedType,
+          ),
+        ],
       ),
       body: Column(
         children: [
@@ -150,7 +166,8 @@ class _RadiatorScreenState extends State<RadiatorScreen> {
                                       await context
                                           .read<RadiatorCubit>()
                                           .deleteRadiator(
-                                              state.radiatorList[index].id);
+                                              state.radiatorList[index].id,
+                                              isAluminium);
 
                                   generalAlert(
                                     context: context,

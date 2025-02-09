@@ -9,10 +9,10 @@ class RadiatorRepositoryImplementation implements RadiatorRepository {
   final FirebaseFirestore firestoreInstance;
   RadiatorRepositoryImplementation(this.firestoreInstance);
   @override
-  Future<bool> addNewRadiator(Radiator radiator) async {
+  Future<bool> addNewRadiator(Radiator radiator, bool isAluminium) async {
     try {
       await firestoreInstance
-          .collection('radiators')
+          .collection(isAluminium ? 'radiatorsA' : 'radiatorsC')
           .doc(radiator.id)
           .set(radiator.toMap());
 
@@ -25,9 +25,12 @@ class RadiatorRepositoryImplementation implements RadiatorRepository {
   }
 
   @override
-  Future<bool> deleteRadiator(String id) async {
+  Future<bool> deleteRadiator(String id, bool isAluminium) async {
     try {
-      await firestoreInstance.collection('radiators').doc(id).delete();
+      await firestoreInstance
+          .collection(isAluminium ? 'radiatorsA' : 'radiatorsC')
+          .doc(id)
+          .delete();
 
       log('Radiator with ID $id deleted successfully.');
       return true;
@@ -38,10 +41,11 @@ class RadiatorRepositoryImplementation implements RadiatorRepository {
   }
 
   @override
-  Future<List<Radiator>> getAllRadiators() async {
+  Future<List<Radiator>> getAllRadiators(bool isAluminium) async {
     try {
-      QuerySnapshot snapshot =
-          await firestoreInstance.collection('radiators').get();
+      QuerySnapshot snapshot = await firestoreInstance
+          .collection(isAluminium ? 'radiatorsA' : 'radiatorsC')
+          .get();
 
       List<Radiator> radiators = snapshot.docs.map((doc) {
         return Radiator.fromMap(doc.data() as Map<String, dynamic>);
@@ -56,10 +60,10 @@ class RadiatorRepositoryImplementation implements RadiatorRepository {
   }
 
   @override
-  Future<bool> updateRadiator(Radiator radiator) async {
+  Future<bool> updateRadiator(Radiator radiator, bool isAluminium) async {
     try {
       await firestoreInstance
-          .collection('radiators')
+          .collection(isAluminium ? 'radiatorsA' : 'radiatorsC')
           .doc(radiator.id)
           .update(radiator.toMap());
 
@@ -72,11 +76,12 @@ class RadiatorRepositoryImplementation implements RadiatorRepository {
   }
 
   @override
-  Future<List<Radiator>> getAllRadiatorsByCarId(String carId) async {
+  Future<List<Radiator>> getAllRadiatorsByCarId(
+      String carId, bool isAluminium) async {
     try {
       // Query Firestore to get documents where 'car.id' matches the given carId
       QuerySnapshot snapshot = await firestoreInstance
-          .collection('radiators')
+          .collection(isAluminium ? 'radiatorsA' : 'radiatorsC')
           .where('car.id', isEqualTo: carId)
           .get();
 

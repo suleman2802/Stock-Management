@@ -175,9 +175,9 @@ class _RadiatorListBottomSheetState extends State<RadiatorListBottomSheet> {
     if (widget.selectedCar != null) {
       context
           .read<RadiatorCubit>()
-          .fetchAllRadiatorsByCarId(widget.selectedCar!.id);
+          .fetchAllRadiatorsByCarId(widget.selectedCar!.id, widget.isAluminium);
     } else {
-      context.read<RadiatorCubit>().fetchAllRadiators();
+      context.read<RadiatorCubit>().fetchAllRadiators(widget.isAluminium);
     }
   }
 
