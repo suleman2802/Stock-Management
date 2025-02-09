@@ -3,8 +3,6 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-
-
 import '../../../domain/repositories/car/abstract_car_repository/abstract_car_repository.dart';
 import '../../../domain/repositories/company/abstract_company_repository/abstract_company_repository.dart';
 import '../../../domain/repositories/fin/abstract_fin_repository/abstract_fin_repository.dart';
@@ -22,6 +20,7 @@ import '../fin/cubit/fin_cubit.dart';
 import '../fin/fin_screen.dart';
 import '../radiator/cubit/radiator_cubit.dart';
 import '../radiator/radiator_screen.dart';
+import '../reports/reports_screen.dart';
 import '../rows/cubit/rows_cubit.dart';
 import '../rows/rows_screen.dart';
 import '../sale/cubit/sale_cubit.dart';
@@ -68,7 +67,7 @@ class HomeScreen extends StatelessWidget {
                     RepositoryProvider.value(
                       value: context.read<StockRepository>(),
                     ),
-                     RepositoryProvider.value(
+                    RepositoryProvider.value(
                       value: context.read<CarRepository>(),
                     ),
                     RepositoryProvider.value(
@@ -90,7 +89,7 @@ class HomeScreen extends StatelessWidget {
             DashboardTileGrid(
               title: "Sale",
               icon: Icons.arrow_outward_rounded,
-             onTap: () => AppRouter.push(
+              onTap: () => AppRouter.push(
                 MultiBlocProvider(
                   providers: [
                     BlocProvider(
@@ -104,7 +103,7 @@ class HomeScreen extends StatelessWidget {
                     RepositoryProvider.value(
                       value: context.read<StockRepository>(),
                     ),
-                     RepositoryProvider.value(
+                    RepositoryProvider.value(
                       value: context.read<CarRepository>(),
                     ),
                     RepositoryProvider.value(
@@ -123,7 +122,19 @@ class HomeScreen extends StatelessWidget {
             DashboardTileGrid(
               title: "Reports",
               icon: Icons.query_stats_sharp,
-              onTap: () {},
+              onTap: () => AppRouter.push(
+                MultiRepositoryProvider(
+                  providers: [
+                    RepositoryProvider.value(
+                      value: context.read<CarRepository>(),
+                    ),
+                    RepositoryProvider.value(
+                      value: context.read<StockRepository>(),
+                    ),
+                  ],
+                  child: ReportScreen(),
+                ),
+              ),
             ),
             DashboardTileGrid(
               title: "Companies",

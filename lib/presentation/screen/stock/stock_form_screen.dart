@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
@@ -92,11 +94,11 @@ class _StockFormScreenState extends State<StockFormScreen> {
         singleBlockKeys.add(GlobalKey<FormState>());
       }
     }
-   
   }
 
   @override
   Widget build(BuildContext context) {
+    
     return ListPageScaffold(
       // curentIndex: 1,
       label: "Add Stock",

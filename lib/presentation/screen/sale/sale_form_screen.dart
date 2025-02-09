@@ -83,7 +83,7 @@ class _SaleFormScreenState extends State<SaleFormScreen> {
     if (widget.sale != null) {
       _selectedDate = widget.sale!.date;
       _selectedTime = widget.sale!.time;
-      customerNameController.text = widget.sale?.customerName??"";
+      customerNameController.text = widget.sale?.customerName ?? "";
 
       context
           .read<SaleItemListCubit>()
@@ -96,6 +96,7 @@ class _SaleFormScreenState extends State<SaleFormScreen> {
 
   @override
   Widget build(BuildContext context) {
+  
     return ListPageScaffold(
       // curentIndex: 2,
       label: "Add Sale",
@@ -136,7 +137,7 @@ class _SaleFormScreenState extends State<SaleFormScreen> {
                           Sale(
                             customerName: customerNameController.text.trim(),
                             totalBill: 0.0,
-                            time:    _selectedTime!,
+                            time: _selectedTime!,
                             date: _selectedDate!,
                             saleItems: context
                                 .read<SaleItemListCubit>()
@@ -193,7 +194,6 @@ class _SaleFormScreenState extends State<SaleFormScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Row(
-                  //mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: <Widget>[
                     Text(
                       _selectedDate == null

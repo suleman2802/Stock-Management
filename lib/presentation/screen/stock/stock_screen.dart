@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../domain/repositories/car/abstract_car_repository/abstract_car_repository.dart';
@@ -89,7 +91,15 @@ class _StockScreenState extends State<StockScreen> {
                 onTap: () {},
                 controller: searchController,
                 hintText: "Search by car name",
-                onChanged: (value) {},
+                onChanged: (value) async {
+                  if (value.isNotEmpty) {
+                    await context
+                        .read<StockCubit>()
+                        .fetchAllStocksByCarName(value.trim());
+                  } else {
+                    await context.read<StockCubit>().fetchAllStocks();
+                  }
+                },
                 leading: IconButton(
                   icon: Icon(Icons.search),
                   onPressed: () {},

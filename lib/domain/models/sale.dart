@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 import 'sale_item.dart';
 
 class Sale {
@@ -54,7 +56,8 @@ class Sale {
       time: DateTime.parse(map['time'] as String),
       totalBill: map['totalBill'] as double,
       saleItems: List<SaleItem>.from(
-        (map['saleItems'] as List).map((e) => SaleItem.fromMap(e as Map<String, dynamic>)),
+        (map['saleItems'] as List)
+            .map((e) => SaleItem.fromMap(e as Map<String, dynamic>)),
       ),
     );
   }

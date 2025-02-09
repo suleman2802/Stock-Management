@@ -69,4 +69,29 @@ class CompanyRepositoryImplementation implements CompanyRepository {
       return false;
     }
   }
+
+  @override
+  Future<List<Company>> getAllCompaniesByName(String name) async {
+    try {
+      // Retrieve all companies from Firestore
+      QuerySnapshot snapshot =
+          await firestoreInstance.collection('companies').get();
+
+      // Filter companies on the client side (case-insensitive partial match)
+      List<Company> companyList = snapshot.docs
+          .where((doc) {
+            final data = doc.data() as Map<String, dynamic>;
+            final name = data['name'] as String?;
+            return name?.toLowerCase().contains(name.toLowerCase()) ?? false;
+          })
+          .map((doc) => Company.fromMap(doc.data() as Map<String, dynamic>))
+          .toList();
+
+      log('Retrieved companies for name $name: $companyList');
+      return companyList;
+    } catch (e) {
+      log('Failed to retrieve companies for name $name: $e');
+      return [];
+    }
+  }
 }

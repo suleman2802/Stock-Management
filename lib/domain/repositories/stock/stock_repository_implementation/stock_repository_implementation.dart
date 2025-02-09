@@ -92,4 +92,33 @@ class StockRepositoryImplementation implements StockRepository {
       return [];
     }
   }
+
+  @override
+  Future<List<Stock>> getAllStocksByCarName(String carName) async {
+    try {
+      // Retrieve all documents from the 'stocks' collection
+      QuerySnapshot snapshot =
+          await firestoreInstance.collection('stocks').get();
+
+      // Filter documents where 'car.carName' contains the provided carName (case-insensitive)
+      List<Stock> stocks = snapshot.docs
+          .where((doc) {
+            final data = doc.data() as Map<String, dynamic>;
+            final carData = data['car'] as Map<String, dynamic>?;
+            final carNameInDoc = carData?['carName'] as String?;
+            return carNameInDoc
+                    ?.toLowerCase()
+                    .contains(carName.toLowerCase()) ??
+                false;
+          })
+          .map((doc) => Stock.fromMap(doc.data() as Map<String, dynamic>))
+          .toList();
+
+      log('Retrieved Stocks for car name $carName: $stocks');
+      return stocks;
+    } catch (e) {
+      log('Failed to retrieve Stocks for car name $carName: $e');
+      return [];
+    }
+  }
 }

@@ -69,4 +69,19 @@ class CompanyCubit extends Cubit<CompanyState> {
       return false;
     }
   }
+
+  Future<void> fetchAllStocksByName(String name) async {
+    try {
+      emit(CompanyLoadingState());
+      final List<Company> companyList =
+          await companyRepository.getAllCompaniesByName(name);
+      emit(
+        CompanyLoadedState(
+          companyList: companyList,
+        ),
+      );
+    } catch (error) {
+      emit(CompanyErrorState(errorMessage: error.toString()));
+    }
+  }
 }

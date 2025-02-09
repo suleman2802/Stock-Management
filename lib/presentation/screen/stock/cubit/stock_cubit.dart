@@ -63,7 +63,7 @@ class StockCubit extends Cubit<StockState> {
     }
   }
 
-    Future<void> fetchAllStocksByCarId(String carId) async {
+  Future<void> fetchAllStocksByCarId(String carId) async {
     try {
       emit(StockLoadingState());
       final List<Stock> stockList =
@@ -76,5 +76,42 @@ class StockCubit extends Cubit<StockState> {
     } catch (error) {
       emit(StockErrorState(errorMessage: error.toString()));
     }
+  }
+
+  Future<void> fetchAllStocksByCarName(String carName) async {
+    try {
+      emit(StockLoadingState());
+      final List<Stock> stockList =
+          await stockRepository.getAllStocksByCarName(carName);
+      emit(
+        StockLoadedState(
+          stockList: stockList,
+        ),
+      );
+    } catch (error) {
+      emit(StockErrorState(errorMessage: error.toString()));
+    }
+    //  try {
+    //   // Get the current state
+    //   if (state is StockLoadedState) {
+    //     final currentState = state as StockLoadedState;
+
+    //     // Filter the stock list based on carName (case-insensitive)
+    //     final List<Stock> filteredStocks = currentState.stockList.where((stock) {
+    //       return stock.car.carName.toLowerCase().contains(carName.toLowerCase());
+    //     }).toList();
+
+    //     // Emit a new state with the filtered list
+    //     emit(
+    //       StockLoadedState(
+    //         stockList: filteredStocks,
+    //       ),
+    //     );
+    //   } else {
+    //     log("Cannot filter stocks: Current state is not StockLoadedState");
+    //   }
+    // } catch (error) {
+    //   emit(StockErrorState(errorMessage: error.toString()));
+    // }
   }
 }
