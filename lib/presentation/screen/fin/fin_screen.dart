@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../widgets/select_type_drop_down/select_type_drop_down.dart';
 import '../../widgets/state_indicators/error_text/error_text.dart';
 import '../../widgets/layouts/page_scaffolds/list_page_scaffold.dart';
 import '../../widgets/state_indicators/general_alert/general_alert.dart';
@@ -9,25 +10,49 @@ import '../../widgets/styling/round_icon_button.dart';
 import 'cubit/fin_cubit.dart';
 import 'widgets/fin_dialogue.dart';
 
-class FinScreen extends StatelessWidget {
+class FinScreen extends StatefulWidget {
   const FinScreen({super.key});
+
+  @override
+  State<FinScreen> createState() => _FinScreenState();
+}
+
+class _FinScreenState extends State<FinScreen> {
+  bool isAluminium = true;
+
+  selectedType(bool isAluminiumSelected) {
+    setState(() {
+      isAluminium = isAluminiumSelected;
+    });
+    context.read<FinCubit>().fetchAllFinSizes(isAluminiumSelected);
+  }
 
   @override
   Widget build(BuildContext context) {
     return ListPageScaffold(
       label: "Fin Screen",
       // curentIndex: 0,
-      action: RoundIconButton(
-        iconData: Icons.add,
-        onPress: () {
-          showDialog(
-            context: context,
-            builder: (ctx) => BlocProvider.value(
-              value: context.read<FinCubit>(),
-              child: FinDialogue(),
-            ),
-          );
-        },
+      action: Row(
+        children: [
+          RoundIconButton(
+            iconData: Icons.add,
+            onPress: () {
+              showDialog(
+                context: context,
+                builder: (ctx) => BlocProvider.value(
+                  value: context.read<FinCubit>(),
+                  child: FinDialogue(
+                    isAluminium: isAluminium,
+                  ),
+                ),
+              );
+            },
+          ),
+          SelectTypeDropDown(
+            isAluminium: isAluminium,
+            selectedTypeFunction: selectedType,
+          ),
+        ],
       ),
       body: BlocBuilder<FinCubit, FinState>(
         builder: (context, state) {
@@ -49,6 +74,7 @@ class FinScreen extends StatelessWidget {
                           builder: (ctx) => BlocProvider.value(
                             value: context.read<FinCubit>(),
                             child: FinDialogue(
+                              isAluminium: isAluminium,
                               fin: state.finList[index],
                             ),
                           ),
@@ -58,8 +84,9 @@ class FinScreen extends StatelessWidget {
                           onPressed: () async {
                             final bool isDeletedSuccessfully = await context
                                 .read<FinCubit>()
-                                .deleteFinSize(state.finList[index].id);
-                      
+                                .deleteFinSize(
+                                    state.finList[index].id, isAluminium);
+
                             generalAlert(
                               context: context,
                               isSuccessful: isDeletedSuccessfully,

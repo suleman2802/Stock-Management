@@ -16,10 +16,13 @@ import '../styling/round_icon_button.dart';
 
 class FinSelectionTileDialogue extends StatefulWidget {
   FinSelectionTileDialogue(
-      {super.key, this.selectedFin, required this.assignSelectedFinFunction});
+      {super.key,
+      this.selectedFin,
+      required this.assignSelectedFinFunction,
+      required this.isAluminium});
   Fin? selectedFin;
   final Function assignSelectedFinFunction;
-
+  bool isAluminium;
   @override
   State<FinSelectionTileDialogue> createState() =>
       _FinSelectionTileDialogueState();
@@ -49,6 +52,7 @@ class _FinSelectionTileDialogueState extends State<FinSelectionTileDialogue> {
                   builder: (ctx) => BlocProvider.value(
                     value: context.read<FinCubit>(),
                     child: FinListBottomSheet(
+                      isAluminium: widget.isAluminium,
                       selectFinFunction: selectFin,
                     ),
                   ),
@@ -82,6 +86,7 @@ class _FinSelectionTileDialogueState extends State<FinSelectionTileDialogue> {
                       builder: (ctx) => BlocProvider.value(
                         value: context.read<FinCubit>(),
                         child: FinListBottomSheet(
+                          isAluminium: widget.isAluminium,
                           selectFinFunction: selectFin,
                         ),
                       ),
@@ -96,8 +101,10 @@ class _FinSelectionTileDialogueState extends State<FinSelectionTileDialogue> {
 }
 
 class FinListBottomSheet extends StatelessWidget {
-  const FinListBottomSheet({super.key, required this.selectFinFunction});
+  FinListBottomSheet(
+      {super.key, required this.selectFinFunction, required this.isAluminium});
   final Function selectFinFunction;
+  bool isAluminium;
 
   @override
   Widget build(BuildContext context) {
@@ -127,7 +134,9 @@ class FinListBottomSheet extends StatelessWidget {
                           context: context,
                           builder: (ctx) => BlocProvider.value(
                             value: context.read<FinCubit>(),
-                            child: FinDialogue(),
+                            child: FinDialogue(
+                              isAluminium: isAluminium,
+                            ),
                           ),
                         ),
                       ),

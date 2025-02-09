@@ -7,8 +7,9 @@ import '../../../widgets/state_indicators/general_alert/general_alert.dart';
 import '../cubit/car_cubit.dart';
 
 class CarDialogue extends StatefulWidget {
-  const CarDialogue({super.key, this.car});
+  CarDialogue({super.key, this.car, required this.isAluminium});
   final Car? car;
+  bool isAluminium;
 
   @override
   State<CarDialogue> createState() => _CarDialogueState();
@@ -46,7 +47,8 @@ class _CarDialogueState extends State<CarDialogue> {
             Car(
                 carCompany: carCompanyController.text.trim(),
                 carModel: carModelController.text.trim(),
-                carName: carNameController.text.trim()));
+                carName: carNameController.text.trim()),
+            widget.isAluminium);
 
         if (mounted) {
           generalAlert(
@@ -63,7 +65,8 @@ class _CarDialogueState extends State<CarDialogue> {
                 id: widget.car!.id,
                 carCompany: carCompanyController.text.trim(),
                 carModel: carModelController.text.trim(),
-                carName: carNameController.text.trim()));
+                carName: carNameController.text.trim()),
+            widget.isAluminium);
         if (mounted) {
           generalAlert(
             context: context,

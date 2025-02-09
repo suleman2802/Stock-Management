@@ -12,6 +12,7 @@ import '../../../utilities/app_routes/app_router.dart';
 import '../../widgets/car_selection_tile_dialogue/car_selection_tile_dialogue.dart';
 import '../../widgets/layouts/page_scaffolds/list_page_scaffold.dart';
 import '../../widgets/radiator_stock_selection_tile_dialogue/radiator_stock_selection_tile_dialogue.dart';
+import '../../widgets/select_type_drop_down/select_type_drop_down.dart';
 import '../car/cubit/car_cubit.dart';
 import '../stock/cubit/stock_cubit.dart';
 
@@ -26,6 +27,13 @@ class _ReportScreenState extends State<ReportScreen> {
   Car? car;
   RadiatorStock? radiatorStock;
   bool showLoading = false;
+  bool isAluminium = true;
+
+  selectedType(bool isAluminiumSelected) {
+    setState(() {
+      isAluminium = isAluminiumSelected;
+    });
+  }
 
   Future<void> _selectStartDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
@@ -119,6 +127,10 @@ class _ReportScreenState extends State<ReportScreen> {
   Widget build(BuildContext context) {
     return ListPageScaffold(
       label: 'Sales Report',
+      action: SelectTypeDropDown(
+        isAluminium: isAluminium,
+        selectedTypeFunction: selectedType,
+      ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -148,6 +160,7 @@ class _ReportScreenState extends State<ReportScreen> {
                 carRepository: context.read<CarRepository>(),
               ),
               child: CarSelectionTileDialogue(
+                isAluminium: isAluminium,
                 selectedCar: car,
                 assignSelectedCarFunction: (Car carSelected) {
                   setState(() {

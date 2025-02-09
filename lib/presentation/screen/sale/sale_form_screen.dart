@@ -17,8 +17,9 @@ import 'cubit/sale_item_list_cubit.dart';
 import 'widgets/single_sale_block.dart';
 
 class SaleFormScreen extends StatefulWidget {
-  SaleFormScreen({super.key, this.sale});
+  SaleFormScreen({super.key, this.sale, required this.isAluminium});
   Sale? sale;
+  bool isAluminium;
   @override
   State<SaleFormScreen> createState() => _SaleFormScreenState();
 }
@@ -96,7 +97,6 @@ class _SaleFormScreenState extends State<SaleFormScreen> {
 
   @override
   Widget build(BuildContext context) {
-  
     return ListPageScaffold(
       // curentIndex: 2,
       label: "Add Sale",
@@ -260,6 +260,7 @@ class _SaleFormScreenState extends State<SaleFormScreen> {
                           ],
                         ),
                         SingleSaleBlock(
+                          isAluminium: widget.isAluminium,
                           selectedCar: saleItems[index].car,
                           formKey: singleBlockKeys[index],
                           key: ValueKey(saleItems[index].id),

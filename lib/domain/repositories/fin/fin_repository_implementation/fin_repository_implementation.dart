@@ -8,10 +8,10 @@ class FinRepositoryImplementation implements FinRepository {
   FirebaseFirestore firestoreInstance;
   FinRepositoryImplementation(this.firestoreInstance);
   @override
-  Future<bool> addNewFinSize(Fin fin) async {
+  Future<bool> addNewFinSize(Fin fin,bool isAluminium) async {
     try {
       await firestoreInstance
-          .collection('fins')
+          .collection(isAluminium?'finsA':'finsC')
           .doc(fin.id)
           .set(fin.toMap());
 
@@ -24,9 +24,9 @@ class FinRepositoryImplementation implements FinRepository {
   }
 
   @override
-  Future<bool> deleteFinSize(String id) async {
+  Future<bool> deleteFinSize(String id,bool isAluminium) async {
     try {
-      await firestoreInstance.collection('fins').doc(id).delete();
+      await firestoreInstance.collection(isAluminium?'finsA':'finsC').doc(id).delete();
 
       log('Fin with ID $id deleted successfully.');
       return true;
@@ -37,10 +37,10 @@ class FinRepositoryImplementation implements FinRepository {
   }
 
   @override
-  Future<List<Fin>> getAllFinSizes() async {
+  Future<List<Fin>> getAllFinSizes(bool isAluminium) async {
     try {
       QuerySnapshot snapshot =
-          await firestoreInstance.collection('fins').get();
+          await firestoreInstance.collection(isAluminium?'finsA':'finsC').get();
 
       List<Fin> fins = snapshot.docs.map((doc) {
         return Fin.fromMap(doc.data() as Map<String, dynamic>);
@@ -55,10 +55,10 @@ class FinRepositoryImplementation implements FinRepository {
   }
 
   @override
-  Future<bool> updateFinSize(Fin fin) async {
+  Future<bool> updateFinSize(Fin fin,bool isAluminium) async {
     try {
       await firestoreInstance
-          .collection('fins')
+          .collection(isAluminium?'finsA':'finsC')
           .doc(fin.id)
           .update(fin.toMap());
 

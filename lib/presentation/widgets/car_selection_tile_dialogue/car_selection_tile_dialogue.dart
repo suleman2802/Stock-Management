@@ -19,10 +19,12 @@ class CarSelectionTileDialogue extends StatefulWidget {
       {super.key,
       this.selectedCar,
       required this.assignSelectedCarFunction,
-      this.canEdit = true});
+      this.canEdit = true,
+      required this.isAluminium});
   Car? selectedCar;
   final Function assignSelectedCarFunction;
   final bool canEdit;
+  bool isAluminium;
   @override
   State<CarSelectionTileDialogue> createState() =>
       _CarSelectionTileDialogueState();
@@ -30,7 +32,7 @@ class CarSelectionTileDialogue extends StatefulWidget {
 
 class _CarSelectionTileDialogueState extends State<CarSelectionTileDialogue> {
   void selectCar(Car selectedCar) {
-      widget.selectedCar = selectedCar;
+    widget.selectedCar = selectedCar;
     widget.assignSelectedCarFunction(selectedCar);
   }
 
@@ -51,6 +53,7 @@ class _CarSelectionTileDialogueState extends State<CarSelectionTileDialogue> {
                         builder: (ctx) => BlocProvider.value(
                           value: context.read<CarCubit>(),
                           child: CarListBottomSheet(
+                            isAluminium: widget.isAluminium,
                             selectCarFunction: selectCar,
                           ),
                         ),
@@ -86,6 +89,7 @@ class _CarSelectionTileDialogueState extends State<CarSelectionTileDialogue> {
                       builder: (ctx) => BlocProvider.value(
                         value: context.read<CarCubit>(),
                         child: CarListBottomSheet(
+                          isAluminium: widget.isAluminium,
                           selectCarFunction: selectCar,
                         ),
                       ),
@@ -100,9 +104,10 @@ class _CarSelectionTileDialogueState extends State<CarSelectionTileDialogue> {
 }
 
 class CarListBottomSheet extends StatelessWidget {
-  const CarListBottomSheet({super.key, required this.selectCarFunction});
+  CarListBottomSheet(
+      {super.key, required this.selectCarFunction, required this.isAluminium});
   final Function selectCarFunction;
-
+  bool isAluminium;
   @override
   Widget build(BuildContext context) {
     final dimensions = Dimensions(context);
@@ -131,7 +136,9 @@ class CarListBottomSheet extends StatelessWidget {
                           context: context,
                           builder: (ctx) => BlocProvider.value(
                             value: context.read<CarCubit>(),
-                            child: CarDialogue(),
+                            child: CarDialogue(
+                              isAluminium: isAluminium,
+                            ),
                           ),
                         ),
                       ),

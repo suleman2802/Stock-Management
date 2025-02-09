@@ -9,9 +9,9 @@ class CarRepositoryImplementation implements CarRepository {
   FirebaseFirestore firestoreInstance;
   CarRepositoryImplementation(this.firestoreInstance);
   @override
-  Future<bool> addNewCar(Car car) async {
+  Future<bool> addNewCar(Car car,bool isAluminium) async {
     try {
-      await firestoreInstance.collection('cars').doc(car.id).set(car.toMap());
+      await firestoreInstance.collection(isAluminium?'carsA':'carC').doc(car.id).set(car.toMap());
 
       log('Fin with ID $car.id added successfully.');
       return true;
@@ -22,9 +22,9 @@ class CarRepositoryImplementation implements CarRepository {
   }
 
   @override
-  Future<bool> deleteCar(String id) async {
+  Future<bool> deleteCar(String id,bool isAluminium) async {
     try {
-      await firestoreInstance.collection('cars').doc(id).delete();
+      await firestoreInstance.collection(isAluminium?'carsA':'carC').doc(id).delete();
 
       log('car with ID $id deleted successfully.');
       return true;
@@ -35,9 +35,9 @@ class CarRepositoryImplementation implements CarRepository {
   }
 
   @override
-  Future<List<Car>> getAllCars() async {
+  Future<List<Car>> getAllCars(bool isAluminium) async {
     try {
-      QuerySnapshot snapshot = await firestoreInstance.collection('cars').get();
+      QuerySnapshot snapshot = await firestoreInstance.collection(isAluminium?'carsA':'carC').get();
 
       List<Car> cars = snapshot.docs.map((doc) {
         return Car.fromMap(doc.data() as Map<String, dynamic>);
@@ -52,10 +52,10 @@ class CarRepositoryImplementation implements CarRepository {
   }
 
   @override
-  Future<bool> updateCar(Car car) async {
+  Future<bool> updateCar(Car car,bool isAluminium) async {
     try {
       await firestoreInstance
-          .collection('cars')
+          .collection(isAluminium?'carsA':'carC')
           .doc(car.id)
           .update(car.toMap());
 
@@ -68,11 +68,11 @@ class CarRepositoryImplementation implements CarRepository {
   }
   
   @override
-  Future<List<Car>> getAllCarByName(String carName)async {
+  Future<List<Car>> getAllCarByName(String carName,bool isAluminium)async {
    try {
       // Retrieve all companies from Firestore
       QuerySnapshot snapshot =
-          await firestoreInstance.collection('cars').get();
+          await firestoreInstance.collection(isAluminium?'carsA':'carC').get();
 
       // Filter companies on the client side (case-insensitive partial match)
       List<Car> carList = snapshot.docs

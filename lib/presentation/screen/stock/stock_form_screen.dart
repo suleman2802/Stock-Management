@@ -21,9 +21,9 @@ import 'stock_screen.dart';
 import 'widgets/single_stock_block.dart';
 
 class StockFormScreen extends StatefulWidget {
-  StockFormScreen({super.key, this.stock});
+  StockFormScreen({super.key, this.stock, required this.isAluminium});
   Stock? stock;
-
+  bool isAluminium;
   @override
   State<StockFormScreen> createState() => _StockFormScreenState();
 }
@@ -247,6 +247,7 @@ class _StockFormScreenState extends State<StockFormScreen> {
                 carRepository: context.read<CarRepository>(),
               ),
               child: CarSelectionTileDialogue(
+                isAluminium: widget.isAluminium,
                 selectedCar: selectedCar,
                 assignSelectedCarFunction: (Car carSelected) {
                   setState(() {

@@ -11,13 +11,13 @@ part 'car_state.dart';
 class CarCubit extends Cubit<CarState> {
   final CarRepository carRepository;
   CarCubit({required this.carRepository}) : super(CarInitialState()) {
-    fetchAllCars();
+    fetchAllCars(true);
   }
-   Future<void> fetchAllCarsByName(String name) async {
+  Future<void> fetchAllCarsByName(String name, bool isAluminium) async {
     try {
       emit(CarLoadingState());
       final List<Car> carList =
-          await carRepository.getAllCarByName(name);
+          await carRepository.getAllCarByName(name, isAluminium);
       emit(
         CarLoadedState(
           carList: carList,
@@ -28,10 +28,10 @@ class CarCubit extends Cubit<CarState> {
     }
   }
 
-  Future<void> fetchAllCars() async {
+  Future<void> fetchAllCars(bool isAluminium) async {
     try {
       emit(CarLoadingState());
-      final List<Car> carList = await carRepository.getAllCars();
+      final List<Car> carList = await carRepository.getAllCars(isAluminium);
       emit(
         CarLoadedState(
           carList: carList,
@@ -42,38 +42,41 @@ class CarCubit extends Cubit<CarState> {
     }
   }
 
-  Future<bool> addNewCar(Car car) async {
+  Future<bool> addNewCar(Car car, bool isAluminium) async {
     try {
-      final bool isAddedSuccessfully = await carRepository.addNewCar(car);
-      await fetchAllCars();
+      final bool isAddedSuccessfully =
+          await carRepository.addNewCar(car, isAluminium);
+      await fetchAllCars(isAluminium);
       return isAddedSuccessfully;
     } catch (error) {
       log("Unable to add Car $error");
-      await fetchAllCars();
+      await fetchAllCars(isAluminium);
       return false;
     }
   }
 
-  Future<bool> updateCar(Car car) async {
+  Future<bool> updateCar(Car car, bool isAluminium) async {
     try {
-      final bool isUpdatedSuccessfully = await carRepository.updateCar(car);
-      await fetchAllCars();
+      final bool isUpdatedSuccessfully =
+          await carRepository.updateCar(car, isAluminium);
+      await fetchAllCars(isAluminium);
       return isUpdatedSuccessfully;
     } catch (error) {
       log("Unable to upadate Car Size $error");
-      await fetchAllCars();
+      await fetchAllCars(isAluminium);
       return false;
     }
   }
 
-  Future<bool> deleteCar(String id) async {
+  Future<bool> deleteCar(String id, bool isAluminium) async {
     try {
-      final bool isDeletedSuccessfully = await carRepository.deleteCar(id);
-      await fetchAllCars();
+      final bool isDeletedSuccessfully =
+          await carRepository.deleteCar(id, isAluminium);
+      await fetchAllCars(isAluminium);
       return isDeletedSuccessfully;
     } catch (error) {
       log("Unable to delete Car $error");
-      await fetchAllCars();
+      await fetchAllCars(isAluminium);
       return false;
     }
   }

@@ -22,11 +22,12 @@ class SingleSaleBlock extends StatefulWidget {
       required this.saleItem,
       required this.formKey,
       required this.index,
-      this.selectedCar});
+      this.selectedCar,required this.isAluminium});
   SaleItem saleItem;
   int index;
   final GlobalKey<FormState> formKey;
   Car? selectedCar;
+  bool isAluminium;
 
   @override
   State<SingleSaleBlock> createState() => _SingleSaleBlockState();
@@ -96,6 +97,7 @@ class _SingleSaleBlockState extends State<SingleSaleBlock> {
                   carRepository: context.read<CarRepository>(),
                 ),
                 child: CarSelectionTileDialogue(
+                  isAluminium: widget.isAluminium,
                   selectedCar: widget.selectedCar,
                   assignSelectedCarFunction: (Car carSelected) {
                     widget.selectedCar = carSelected;

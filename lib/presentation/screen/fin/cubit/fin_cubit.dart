@@ -10,14 +10,15 @@ part 'fin_state.dart';
 class FinCubit extends Cubit<FinState> {
   final FinRepository finRepository;
   FinCubit({required this.finRepository}) : super(FinInitialState()) {
-    fetchAllFinSizes();
+    fetchAllFinSizes(true);
   }
 
-  Future<void> fetchAllFinSizes() async {
+  Future<void> fetchAllFinSizes(bool isAluminium) async {
     log("inside get");
     try {
       emit(FinLoadingState());
-      final List<Fin> finSizesList = await finRepository.getAllFinSizes();
+      final List<Fin> finSizesList =
+          await finRepository.getAllFinSizes(isAluminium);
       emit(
         FinLoadedState(
           finList: finSizesList,
@@ -28,38 +29,41 @@ class FinCubit extends Cubit<FinState> {
     }
   }
 
-  Future<bool> addNewFinSize(Fin fin) async {
+  Future<bool> addNewFinSize(Fin fin, bool isAluminium) async {
     try {
-      final bool isAddedSuccessfully = await finRepository.addNewFinSize(fin);
-      await fetchAllFinSizes();
+      final bool isAddedSuccessfully =
+          await finRepository.addNewFinSize(fin, isAluminium);
+      await fetchAllFinSizes(isAluminium);
       return isAddedSuccessfully;
     } catch (error) {
       log("Unable to add Fin Size $error");
-      await fetchAllFinSizes();
+      await fetchAllFinSizes(isAluminium);
       return false;
     }
   }
 
-  Future<bool> updateFinSize(Fin fin) async {
+  Future<bool> updateFinSize(Fin fin, bool isAluminium) async {
     try {
-      final bool isUpdatedSuccessfully = await finRepository.updateFinSize(fin);
-      await fetchAllFinSizes();
+      final bool isUpdatedSuccessfully =
+          await finRepository.updateFinSize(fin, isAluminium);
+      await fetchAllFinSizes(isAluminium);
       return isUpdatedSuccessfully;
     } catch (error) {
       log("Unable to upadate Fin Size $error");
-      await fetchAllFinSizes();
+      await fetchAllFinSizes(isAluminium);
       return false;
     }
   }
 
-  Future<bool> deleteFinSize(String id) async {
+  Future<bool> deleteFinSize(String id, bool isAluminium) async {
     try {
-      final bool isDeletedSuccessfully = await finRepository.deleteFinSize(id);
-      await fetchAllFinSizes();
+      final bool isDeletedSuccessfully =
+          await finRepository.deleteFinSize(id, isAluminium);
+      await fetchAllFinSizes(isAluminium);
       return isDeletedSuccessfully;
     } catch (error) {
       log("Unable to delete Fin Size $error");
-      await fetchAllFinSizes();
+      await fetchAllFinSizes(isAluminium);
       return false;
     }
   }

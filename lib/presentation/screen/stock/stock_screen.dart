@@ -9,6 +9,7 @@ import '../../../domain/repositories/radiator/abstract_radiator_repository/abstr
 import '../../../domain/repositories/rows/abstract_rows_repository/abstract_rows_repository.dart';
 import '../../../utilities/app_routes/app_router.dart';
 import '../../widgets/layouts/page_scaffolds/list_page_scaffold.dart';
+import '../../widgets/select_type_drop_down/select_type_drop_down.dart';
 import '../../widgets/spaces/space.dart';
 import '../../widgets/state_indicators/error_text/error_text.dart';
 import '../../widgets/state_indicators/general_alert/general_alert.dart';
@@ -41,45 +42,64 @@ class _StockScreenState extends State<StockScreen> {
     context.read<StockCubit>().fetchAllStocks();
   }
 
+  bool isAluminium = true;
+
+  selectedType(bool isAluminiumSelected) {
+    setState(() {
+      isAluminium = isAluminiumSelected;
+    });
+    context.read<StockCubit>().fetchAllStocks();
+  }
+
   @override
   Widget build(BuildContext context) {
     return ListPageScaffold(
       // curentIndex: 1,
       label: "Stock",
-      action: RoundIconButton(
-        iconData: Icons.add,
-        onPress: () => AppRouter.push(
-          MultiRepositoryProvider(
-            providers: [
-              RepositoryProvider.value(
-                value: context.read<RadiatorRepository>(),
-              ),
-              RepositoryProvider.value(
-                value: context.read<CarRepository>(),
-              ),
-              RepositoryProvider.value(
-                value: context.read<CompanyRepository>(),
-              ),
-              RepositoryProvider.value(
-                value: context.read<FinRepository>(),
-              ),
-              RepositoryProvider.value(
-                value: context.read<RowsRepository>(),
-              ),
-            ],
-            child: MultiBlocProvider(
-              providers: [
-                BlocProvider.value(
-                  value: context.read<StockCubit>(),
+      action: Row(
+        children: [
+          RoundIconButton(
+            iconData: Icons.add,
+            onPress: () => AppRouter.push(
+              MultiRepositoryProvider(
+                providers: [
+                  RepositoryProvider.value(
+                    value: context.read<RadiatorRepository>(),
+                  ),
+                  RepositoryProvider.value(
+                    value: context.read<CarRepository>(),
+                  ),
+                  RepositoryProvider.value(
+                    value: context.read<CompanyRepository>(),
+                  ),
+                  RepositoryProvider.value(
+                    value: context.read<FinRepository>(),
+                  ),
+                  RepositoryProvider.value(
+                    value: context.read<RowsRepository>(),
+                  ),
+                ],
+                child: MultiBlocProvider(
+                  providers: [
+                    BlocProvider.value(
+                      value: context.read<StockCubit>(),
+                    ),
+                    BlocProvider(
+                      create: (context) => RadiatorStockCubit(),
+                    ),
+                  ],
+                  child: StockFormScreen(
+                    isAluminium: isAluminium,
+                  ),
                 ),
-                BlocProvider(
-                  create: (context) => RadiatorStockCubit(),
-                ),
-              ],
-              child: StockFormScreen(),
+              ),
             ),
           ),
-        ),
+          SelectTypeDropDown(
+            isAluminium: isAluminium,
+            selectedTypeFunction: selectedType,
+          ),
+        ],
       ),
       body: Column(
         children: [
@@ -154,6 +174,7 @@ class _StockScreenState extends State<StockScreen> {
                                       ),
                                     ],
                                     child: StockFormScreen(
+                                      isAluminium: isAluminium,
                                       stock: state.stockList[index],
                                     ),
                                   ),

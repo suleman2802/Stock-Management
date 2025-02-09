@@ -186,6 +186,7 @@ class _RadiatorDialogueState extends State<RadiatorDialogue> {
                     carRepository: context.read<CarRepository>(),
                   ),
                   child: CarSelectionTileDialogue(
+                    isAluminium: widget.isAluminium,
                     canEdit: widget.canEdit,
                     selectedCar: _selectedCar,
                     assignSelectedCarFunction: assignSelectedCar,
@@ -205,6 +206,7 @@ class _RadiatorDialogueState extends State<RadiatorDialogue> {
                   create: (context) =>
                       FinCubit(finRepository: context.read<FinRepository>()),
                   child: FinSelectionTileDialogue(
+                    isAluminium: widget.isAluminium,
                     selectedFin: _selectedFin,
                     assignSelectedFinFunction: assignSelectedFin,
                   ),

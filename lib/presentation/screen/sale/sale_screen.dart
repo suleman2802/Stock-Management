@@ -8,6 +8,7 @@ import '../../../domain/repositories/radiator/abstract_radiator_repository/abstr
 import '../../../domain/repositories/stock/abstract_stock_repository/abstract_stock_repository.dart';
 import '../../../utilities/app_routes/app_router.dart';
 import '../../widgets/layouts/page_scaffolds/list_page_scaffold.dart';
+import '../../widgets/select_type_drop_down/select_type_drop_down.dart';
 import '../../widgets/spaces/space.dart';
 import '../../widgets/state_indicators/error_text/error_text.dart';
 import '../../widgets/state_indicators/general_alert/general_alert.dart';
@@ -35,6 +36,14 @@ class _SaleScreenState extends State<SaleScreen> {
 
   DateTime? startDate;
   DateTime? endDate;
+  bool isAluminium = true;
+
+  selectedType(bool isAluminiumSelected) {
+    setState(() {
+      isAluminium = isAluminiumSelected;
+    });
+    context.read<SaleCubit>().fetchAllSales();
+  }
 
   Future<void> _selectStartDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
@@ -67,34 +76,44 @@ class _SaleScreenState extends State<SaleScreen> {
     return ListPageScaffold(
       // curentIndex: 2,
       label: "Sale",
-      action: RoundIconButton(
-        iconData: Icons.add,
-        onPress: () => AppRouter.push(
-          MultiRepositoryProvider(
-            providers: [
-              RepositoryProvider.value(
-                value: context.read<RadiatorRepository>(),
-              ),
-              RepositoryProvider.value(
-                value: context.read<CarRepository>(),
-              ),
-              RepositoryProvider.value(
-                value: context.read<StockRepository>(),
-              ),
-            ],
-            child: MultiBlocProvider(
-              providers: [
-                BlocProvider.value(
-                  value: context.read<SaleCubit>(),
+      action: Row(
+        children: [
+          RoundIconButton(
+            iconData: Icons.add,
+            onPress: () => AppRouter.push(
+              MultiRepositoryProvider(
+                providers: [
+                  RepositoryProvider.value(
+                    value: context.read<RadiatorRepository>(),
+                  ),
+                  RepositoryProvider.value(
+                    value: context.read<CarRepository>(),
+                  ),
+                  RepositoryProvider.value(
+                    value: context.read<StockRepository>(),
+                  ),
+                ],
+                child: MultiBlocProvider(
+                  providers: [
+                    BlocProvider.value(
+                      value: context.read<SaleCubit>(),
+                    ),
+                    BlocProvider(
+                      create: (context) => SaleItemListCubit(),
+                    ),
+                  ],
+                  child: SaleFormScreen(
+                    isAluminium: isAluminium,
+                  ),
                 ),
-                BlocProvider(
-                  create: (context) => SaleItemListCubit(),
-                ),
-              ],
-              child: SaleFormScreen(),
+              ),
             ),
           ),
-        ),
+          SelectTypeDropDown(
+            isAluminium: isAluminium,
+            selectedTypeFunction: selectedType,
+          ),
+        ],
       ),
       body: Column(
         children: [
@@ -218,6 +237,7 @@ class _SaleScreenState extends State<SaleScreen> {
                                       ),
                                     ],
                                     child: SaleFormScreen(
+                                      isAluminium: isAluminium,
                                       sale: state.saleList[index],
                                     ),
                                   ),

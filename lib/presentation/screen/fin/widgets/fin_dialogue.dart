@@ -6,8 +6,9 @@ import '../../../../utilities/app_routes/app_router.dart';
 import '../../../widgets/state_indicators/general_alert/general_alert.dart';
 
 class FinDialogue extends StatefulWidget {
-  const FinDialogue({super.key, this.fin});
+  FinDialogue({super.key, this.fin, required this.isAluminium});
   final Fin? fin;
+  bool isAluminium;
 
   @override
   State<FinDialogue> createState() => _FinDialogueState();
@@ -36,7 +37,8 @@ class _FinDialogueState extends State<FinDialogue> {
         //? save fin here
         final isAddedSuccessfully = await context
             .read<FinCubit>()
-            .addNewFinSize(Fin(finSize: int.parse(finController.text.trim())));
+            .addNewFinSize(Fin(finSize: int.parse(finController.text.trim())),
+                widget.isAluminium);
 
         if (mounted) {
           generalAlert(
@@ -50,9 +52,11 @@ class _FinDialogueState extends State<FinDialogue> {
         //? edit fin
         final isUpdatedSuccessfully = await context
             .read<FinCubit>()
-            .updateFinSize(Fin(
-                id: widget.fin!.id,
-                finSize: int.parse(finController.text.trim())));
+            .updateFinSize(
+                Fin(
+                    id: widget.fin!.id,
+                    finSize: int.parse(finController.text.trim())),
+                widget.isAluminium);
         if (mounted) {
           generalAlert(
             context: context,

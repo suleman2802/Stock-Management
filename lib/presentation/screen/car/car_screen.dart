@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../widgets/layouts/page_scaffolds/list_page_scaffold.dart';
+import '../../widgets/select_type_drop_down/select_type_drop_down.dart';
 import '../../widgets/state_indicators/error_text/error_text.dart';
 import '../../widgets/state_indicators/general_alert/general_alert.dart';
 import '../../widgets/state_indicators/loading_indicator/loading_indicator.dart';
@@ -10,26 +11,50 @@ import '../../widgets/styling/round_icon_button.dart';
 import 'cubit/car_cubit.dart';
 import 'widgets/car_dialogue.dart';
 
-class CarScreen extends StatelessWidget {
+class CarScreen extends StatefulWidget {
   CarScreen({super.key});
+
+  @override
+  State<CarScreen> createState() => _CarScreenState();
+}
+
+class _CarScreenState extends State<CarScreen> {
   final TextEditingController searchController = TextEditingController();
+  bool isAluminium = true;
+
+  selectedType(bool isAluminiumSelected) {
+    setState(() {
+      isAluminium = isAluminiumSelected;
+    });
+    context.read<CarCubit>().fetchAllCars(isAluminiumSelected);
+  }
 
   @override
   Widget build(BuildContext context) {
     return ListPageScaffold(
       // curentIndex: 0,
       label: "Car",
-      action: RoundIconButton(
-        iconData: Icons.add,
-        onPress: () {
-          showDialog(
-            context: context,
-            builder: (ctx) => BlocProvider.value(
-              value: context.read<CarCubit>(),
-              child: CarDialogue(),
-            ),
-          );
-        },
+      action: Row(
+        children: [
+          RoundIconButton(
+            iconData: Icons.add,
+            onPress: () {
+              showDialog(
+                context: context,
+                builder: (ctx) => BlocProvider.value(
+                  value: context.read<CarCubit>(),
+                  child: CarDialogue(
+                    isAluminium: isAluminium,
+                  ),
+                ),
+              );
+            },
+          ),
+          SelectTypeDropDown(
+            isAluminium: isAluminium,
+            selectedTypeFunction: selectedType,
+          ),
+        ],
       ),
       body: Column(
         children: [
@@ -45,9 +70,9 @@ class CarScreen extends StatelessWidget {
                   if (value.isNotEmpty) {
                     await context
                         .read<CarCubit>()
-                        .fetchAllCarsByName(value.trim());
+                        .fetchAllCarsByName(value.trim(), isAluminium);
                   } else {
-                    await context.read<CarCubit>().fetchAllCars();
+                    await context.read<CarCubit>().fetchAllCars(isAluminium);
                   }
                 },
                 leading: IconButton(
@@ -79,6 +104,7 @@ class CarScreen extends StatelessWidget {
                                   builder: (ctx) => BlocProvider.value(
                                     value: context.read<CarCubit>(),
                                     child: CarDialogue(
+                                      isAluminium: isAluminium,
                                       car: state.carList[index],
                                     ),
                                   ),
@@ -101,9 +127,8 @@ class CarScreen extends StatelessWidget {
                               trailing: IconButton(
                                 onPressed: () async {
                                   final bool isDeletedSuccessfully =
-                                      await context
-                                          .read<CarCubit>()
-                                          .deleteCar(state.carList[index].id);
+                                      await context.read<CarCubit>().deleteCar(
+                                          state.carList[index].id, isAluminium);
 
                                   generalAlert(
                                     context: context,
