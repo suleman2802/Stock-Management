@@ -93,7 +93,9 @@ class _RadiatorSelectionTileDialogueState
                   ),
                 ),
               ),
-              title: Text(widget.selectedRadiator!.car.carName),
+              title: Text(widget.selectedRadiator!.car.carName,style: TextStyle(
+                fontWeight: FontWeight.bold,
+              ),),
               subtitle: Text(widget.selectedRadiator!.size),
               trailing: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -225,6 +227,7 @@ class _RadiatorListBottomSheetState extends State<RadiatorListBottomSheet> {
                             child: BlocProvider.value(
                               value: context.read<RadiatorCubit>(),
                               child: RadiatorDialogue(
+                                isNew: true,
                                 isAluminium: widget.isAluminium,
                                 canEdit: widget.selectedCar == null,
                                 radiator: Radiator(

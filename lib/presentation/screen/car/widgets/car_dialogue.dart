@@ -4,6 +4,7 @@ import '../../../../domain/models/car.dart';
 import '../../../../utilities/app_routes/app_router.dart';
 import '../../../widgets/input_feilds/text_input_field.dart';
 import '../../../widgets/state_indicators/general_alert/general_alert.dart';
+import '../../../widgets/state_indicators/loading_indicator/loading_indicator.dart';
 import '../cubit/car_cubit.dart';
 
 class CarDialogue extends StatefulWidget {
@@ -20,7 +21,7 @@ class _CarDialogueState extends State<CarDialogue> {
   final TextEditingController carNameController = TextEditingController();
   final TextEditingController carModelController = TextEditingController();
   final TextEditingController carCompanyController = TextEditingController();
-
+  bool showLoading = false;
   @override
   void initState() {
     super.initState();
@@ -40,6 +41,9 @@ class _CarDialogueState extends State<CarDialogue> {
   }
 
   submitCarForm() async {
+    setState(() {
+      showLoading = true;
+    });
     if (formKey.currentState?.validate() ?? false) {
       if (widget.car == null) {
         //? save car here
@@ -78,6 +82,9 @@ class _CarDialogueState extends State<CarDialogue> {
       }
       AppRouter.pop();
     }
+    setState(() {
+      showLoading = false;
+    });
   }
 
   @override
@@ -97,46 +104,48 @@ class _CarDialogueState extends State<CarDialogue> {
         "Car Details",
         style: Theme.of(context).textTheme.titleMedium,
       ),
-      content: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: IntrinsicHeight(
-          child: Form(
-            key: formKey,
-            child: Column(
-              children: [
-                TextInputField(
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter Car name';
-                    } else if (value.length <= 2) {
-                      return 'Car name must be more than 2 characters';
-                    }
-                    return null;
-                  },
-                  controller: carNameController,
-                  label: "Enter Car Name",
+      content: showLoading
+          ? FittedBox(fit: BoxFit.scaleDown, child: LoadingIndicator())
+          : Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: IntrinsicHeight(
+                child: Form(
+                  key: formKey,
+                  child: Column(
+                    children: [
+                      TextInputField(
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter Car name';
+                          } else if (value.length <= 2) {
+                            return 'Car name must be more than 2 characters';
+                          }
+                          return null;
+                        },
+                        controller: carNameController,
+                        label: "Enter Car Name",
+                      ),
+                      TextInputField(
+                        controller: carModelController,
+                        label: "Enter Car Model",
+                      ),
+                      TextInputField(
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter Car company name';
+                          } else if (value.length <= 2) {
+                            return 'Company name must be more than 2 characters';
+                          }
+                          return null;
+                        },
+                        controller: carCompanyController,
+                        label: "Enter Car Company",
+                      ),
+                    ],
+                  ),
                 ),
-                TextInputField(
-                  controller: carModelController,
-                  label: "Enter Car Model",
-                ),
-                TextInputField(
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter Car company name';
-                    } else if (value.length <= 2) {
-                      return 'Company name must be more than 2 characters';
-                    }
-                    return null;
-                  },
-                  controller: carCompanyController,
-                  label: "Enter Car Company",
-                ),
-              ],
+              ),
             ),
-          ),
-        ),
-      ),
     );
   }
 }

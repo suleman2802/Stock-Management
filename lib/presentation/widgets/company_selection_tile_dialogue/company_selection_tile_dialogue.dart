@@ -72,6 +72,9 @@ class _CompanySelectionTileDialogueState
               ),
               title: Text(
                 widget.selectedCompany!.name,
+                style: TextStyle(
+                  fontWeight: FontWeight.w500,
+                ),
               ),
             ),
           )

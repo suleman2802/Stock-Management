@@ -100,11 +100,23 @@ class _FinSelectionTileDialogueState extends State<FinSelectionTileDialogue> {
   }
 }
 
-class FinListBottomSheet extends StatelessWidget {
+class FinListBottomSheet extends StatefulWidget {
   FinListBottomSheet(
       {super.key, required this.selectFinFunction, required this.isAluminium});
   final Function selectFinFunction;
   bool isAluminium;
+
+  @override
+  State<FinListBottomSheet> createState() => _FinListBottomSheetState();
+}
+
+class _FinListBottomSheetState extends State<FinListBottomSheet> {
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    context.read<FinCubit>().fetchAllFinSizes(widget.isAluminium);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -135,7 +147,7 @@ class FinListBottomSheet extends StatelessWidget {
                           builder: (ctx) => BlocProvider.value(
                             value: context.read<FinCubit>(),
                             child: FinDialogue(
-                              isAluminium: isAluminium,
+                              isAluminium: widget.isAluminium,
                             ),
                           ),
                         ),
@@ -168,7 +180,7 @@ class FinListBottomSheet extends StatelessWidget {
                           itemBuilder: (context, index) => Card(
                             child: ListTile(
                               onTap: () {
-                                selectFinFunction(state.finList[index]);
+                                widget.selectFinFunction(state.finList[index]);
                                 AppRouter.pop();
                               },
                               title: Text("${state.finList[index].finSize} mm"),

@@ -1,4 +1,3 @@
-import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -17,7 +16,6 @@ import '../../widgets/styling/round_icon_button.dart';
 import '../car/cubit/car_cubit.dart';
 import 'cubit/radiator_stock_list_cubit.dart';
 import 'cubit/stock_cubit.dart';
-import 'stock_screen.dart';
 import 'widgets/single_stock_block.dart';
 
 class StockFormScreen extends StatefulWidget {
@@ -33,7 +31,6 @@ class _StockFormScreenState extends State<StockFormScreen> {
   DateTime? _selectedDate = DateTime.now();
   DateTime? _selectedTime = DateTime.now();
   Car? selectedCar;
-  bool isAluminium = true;
   List<GlobalKey<FormState>> singleBlockKeys = [];
   Future<void> _startDatePicker() async {
     final DateTime? picked = await showDatePicker(
@@ -155,7 +152,7 @@ class _StockFormScreenState extends State<StockFormScreen> {
                             radiatorStock: context
                                 .read<RadiatorStockCubit>()
                                 .getAllListRecord(),
-                          ),
+                          ),widget.isAluminium
                         );
                 if (context.mounted) {
                   generalAlert(
@@ -178,6 +175,7 @@ class _StockFormScreenState extends State<StockFormScreen> {
                                 .read<RadiatorStockCubit>()
                                 .getAllListRecord(),
                           ),
+                          widget.isAluminium,
                         );
                 if (context.mounted) {
                   generalAlert(
@@ -280,7 +278,7 @@ class _StockFormScreenState extends State<StockFormScreen> {
                           ],
                         ),
                         SingleStockBlock(
-                          isAluminium: isAluminium,
+                          isAluminium: widget.isAluminium,
                           formKey: singleBlockKeys[index],
                           key: ValueKey(stocks[index].id),
                           radiatorStock: stocks[index],

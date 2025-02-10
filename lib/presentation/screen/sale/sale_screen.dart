@@ -42,7 +42,7 @@ class _SaleScreenState extends State<SaleScreen> {
     setState(() {
       isAluminium = isAluminiumSelected;
     });
-    context.read<SaleCubit>().fetchAllSales();
+    context.read<SaleCubit>().fetchAllSales(isAluminium);
   }
 
   Future<void> _selectStartDate(BuildContext context) async {
@@ -65,10 +65,11 @@ class _SaleScreenState extends State<SaleScreen> {
       firstDate: DateTime(2025),
       lastDate: DateTime.now(),
     );
-    if (picked != null && picked != endDate)
+    if (picked != null && picked != endDate) {
       setState(() {
         endDate = picked;
       });
+    }
   }
 
   @override
@@ -129,9 +130,9 @@ class _SaleScreenState extends State<SaleScreen> {
                   if (value.isNotEmpty) {
                     await context
                         .read<SaleCubit>()
-                        .fetchAllSalesByCustomerName(value.trim());
+                        .fetchAllSalesByCustomerName(value.trim(), isAluminium);
                   } else {
-                    await context.read<SaleCubit>().fetchAllSales();
+                    await context.read<SaleCubit>().fetchAllSales(isAluminium);
                   }
                 },
                 leading: IconButton(
@@ -146,8 +147,9 @@ class _SaleScreenState extends State<SaleScreen> {
             children: [
               Row(
                 children: [
-                  Text(
-                      '${startDate != null ? DateFormat('yyyy-MM-dd').format(startDate!) : 'Starting date'}'),
+                  Text(startDate != null
+                      ? DateFormat('yyyy-MM-dd').format(startDate!)
+                      : 'Starting date'),
                   IconButton(
                     icon: Icon(Icons.calendar_month),
                     onPressed: () => _selectStartDate(context),
@@ -156,8 +158,9 @@ class _SaleScreenState extends State<SaleScreen> {
               ),
               Row(
                 children: [
-                  Text(
-                      '${endDate != null ? DateFormat('yyyy-MM-dd').format(endDate!) : 'Ending date'}'),
+                  Text(endDate != null
+                      ? DateFormat('yyyy-MM-dd').format(endDate!)
+                      : 'Ending date'),
                   IconButton(
                     icon: Icon(Icons.calendar_month),
                     onPressed: () => _selectEndDate(context),
@@ -173,10 +176,15 @@ class _SaleScreenState extends State<SaleScreen> {
                     } else if (endDate == null) {
                       AppAlertUtil.showError(
                           context, "Please Select Ending Date");
+                    } else if (startDate!.isAfter(endDate!)) {
+                      AppAlertUtil.showError(context,
+                          "Starting date shouldn't be after then ending date");
+                    } else if (endDate!.isBefore(startDate!)) {
+                      AppAlertUtil.showError(context,
+                          "Ending date shouldn't be before then starting date");
                     } else {
-                      await context
-                          .read<SaleCubit>()
-                          .getAllSalesByStartEndDate(startDate!, endDate!);
+                      await context.read<SaleCubit>().getAllSalesByStartEndDate(
+                          startDate!, endDate!, isAluminium);
                     }
                   },
                   icon: Icon(
@@ -189,7 +197,7 @@ class _SaleScreenState extends State<SaleScreen> {
                       endDate = null;
                     });
                     searchController.text = "";
-                    await context.read<SaleCubit>().fetchAllSales();
+                    await context.read<SaleCubit>().fetchAllSales(isAluminium);
                   },
                   icon: Icon(
                     Icons.restart_alt_rounded,
@@ -267,7 +275,8 @@ class _SaleScreenState extends State<SaleScreen> {
                                   final bool isDeletedSuccessfully =
                                       await context
                                           .read<SaleCubit>()
-                                          .deleteSale(state.saleList[index].id);
+                                          .deleteSale(state.saleList[index].id,
+                                              isAluminium);
 
                                   generalAlert(
                                     context: context,

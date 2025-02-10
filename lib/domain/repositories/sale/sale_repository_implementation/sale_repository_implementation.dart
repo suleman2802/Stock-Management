@@ -9,10 +9,10 @@ class SaleRepositoryImplementation implements SaleRepository {
   final FirebaseFirestore firestoreInstance;
   SaleRepositoryImplementation(this.firestoreInstance);
   @override
-  Future<bool> addNewSale(Sale sale) async {
+  Future<bool> addNewSale(Sale sale, bool isAluminium) async {
     try {
       await firestoreInstance
-          .collection('sales')
+          .collection(isAluminium ? 'salesA' : 'salesC')
           .doc(sale.id)
           .set(sale.toMap());
 
@@ -25,9 +25,12 @@ class SaleRepositoryImplementation implements SaleRepository {
   }
 
   @override
-  Future<bool> deleteSale(String id) async {
+  Future<bool> deleteSale(String id, bool isAluminium) async {
     try {
-      await firestoreInstance.collection('sales').doc(id).delete();
+      await firestoreInstance
+          .collection(isAluminium ? 'salesA' : 'salesC')
+          .doc(id)
+          .delete();
 
       log('sale with ID $id deleted successfully.');
       return true;
@@ -38,10 +41,11 @@ class SaleRepositoryImplementation implements SaleRepository {
   }
 
   @override
-  Future<List<Sale>> getAllSales() async {
+  Future<List<Sale>> getAllSales(bool isAluminium) async {
     try {
-      QuerySnapshot snapshot =
-          await firestoreInstance.collection('sales').get();
+      QuerySnapshot snapshot = await firestoreInstance
+          .collection(isAluminium ? 'salesA' : 'salesC')
+          .get();
       List<Sale> sales = snapshot.docs.map((doc) {
         return Sale.fromMap(doc.data() as Map<String, dynamic>);
       }).toList();
@@ -55,10 +59,10 @@ class SaleRepositoryImplementation implements SaleRepository {
   }
 
   @override
-  Future<bool> updateSale(Sale sale) async {
+  Future<bool> updateSale(Sale sale, bool isAluminium) async {
     try {
       await firestoreInstance
-          .collection('sales')
+          .collection(isAluminium ? 'salesA' : 'salesC')
           .doc(sale.id)
           .update(sale.toMap());
 
@@ -71,11 +75,13 @@ class SaleRepositoryImplementation implements SaleRepository {
   }
 
   @override
-  Future<List<Sale>> getAllSalesByCustomerName(String customerName) async {
+  Future<List<Sale>> getAllSalesByCustomerName(
+      String customerName, bool isAluminium) async {
     try {
       // Retrieve all companies from Firestore
-      QuerySnapshot snapshot =
-          await firestoreInstance.collection('sales').get();
+      QuerySnapshot snapshot = await firestoreInstance
+          .collection(isAluminium ? 'salesA' : 'salesC')
+          .get();
 
       // Filter companies on the client side (case-insensitive partial match)
       List<Sale> saleList = snapshot.docs
@@ -101,9 +107,11 @@ class SaleRepositoryImplementation implements SaleRepository {
 
   @override
   Future<List<Sale>> getAllSalesByStartEndDate(
-      DateTime startDate, DateTime endDate) async {
+      DateTime startDate, DateTime endDate, bool isAluminium) async {
     // Fetch all sales data (since Firestore doesn't support string date filtering)
-    QuerySnapshot snapshot = await firestoreInstance.collection('sales').get();
+    QuerySnapshot snapshot = await firestoreInstance
+        .collection(isAluminium ? 'salesA' : 'salesC')
+        .get();
 
     // Convert documents to Sale objects
     List<Sale> sales = snapshot.docs.map((doc) {
@@ -113,18 +121,21 @@ class SaleRepositoryImplementation implements SaleRepository {
     // Filter sales by date range locally
     sales = sales.where((sale) {
       final saleDate = sale.date; // Sale date as DateTime
-      return saleDate.isAfter(startDate!.subtract(Duration(days: 1))) &&
-          saleDate.isBefore(endDate!.add(Duration(days: 1)));
+      return saleDate.isAfter(startDate.subtract(Duration(days: 1))) &&
+          saleDate.isBefore(endDate.add(Duration(days: 1)));
     }).toList();
 
     return sales;
   }
+
   Future<List<Sale>> getSalesReport(DateTime? startDate, DateTime? endDate,
-      String carId, String radiatorStockId) async {
+      String carId, String radiatorStockId, bool isAluminium) async {
     final firestoreInstance = FirebaseFirestore.instance;
 
     // Fetch all sales data (since Firestore doesn't support string date filtering)
-    QuerySnapshot snapshot = await firestoreInstance.collection('sales').get();
+    QuerySnapshot snapshot = await firestoreInstance
+        .collection(isAluminium ? 'salesA' : 'salesC')
+        .get();
 
     // Convert documents to Sale objects
     List<Sale> sales = snapshot.docs.map((doc) {

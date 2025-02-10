@@ -70,6 +70,7 @@ class _RadiatorScreenState extends State<RadiatorScreen> {
                   child: BlocProvider.value(
                     value: context.read<RadiatorCubit>(),
                     child: RadiatorDialogue(
+                      isNew: true,
                       isAluminium: isAluminium,
                     ),
                   ),
@@ -147,6 +148,7 @@ class _RadiatorScreenState extends State<RadiatorScreen> {
                                     child: BlocProvider.value(
                                       value: context.read<RadiatorCubit>(),
                                       child: RadiatorDialogue(
+                                        isNew: false,
                                         isAluminium: isAluminium,
                                         radiator: state.radiatorList[index],
                                       ),

@@ -4,6 +4,7 @@ import 'package:stock_management_application/presentation/screen/fin/cubit/fin_c
 import '../../../../domain/models/fin.dart';
 import '../../../../utilities/app_routes/app_router.dart';
 import '../../../widgets/state_indicators/general_alert/general_alert.dart';
+import '../../../widgets/state_indicators/loading_indicator/loading_indicator.dart';
 
 class FinDialogue extends StatefulWidget {
   FinDialogue({super.key, this.fin, required this.isAluminium});
@@ -17,6 +18,7 @@ class FinDialogue extends StatefulWidget {
 class _FinDialogueState extends State<FinDialogue> {
   final TextEditingController finController = TextEditingController();
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  bool showLoading = false;
   @override
   void initState() {
     super.initState();
@@ -32,6 +34,9 @@ class _FinDialogueState extends State<FinDialogue> {
   }
 
   submitFinForm() async {
+    setState(() {
+      showLoading = true;
+    });
     if (formKey.currentState?.validate() ?? false) {
       if (widget.fin == null) {
         //? save fin here
@@ -68,6 +73,9 @@ class _FinDialogueState extends State<FinDialogue> {
       }
       AppRouter.pop();
     }
+    setState(() {
+      showLoading = false;
+    });
   }
 
   @override
@@ -87,28 +95,30 @@ class _FinDialogueState extends State<FinDialogue> {
         "Fin (size)",
         style: Theme.of(context).textTheme.titleMedium,
       ),
-      content: Padding(
-        padding: EdgeInsets.all(16),
-        child: Form(
-          key: formKey,
-          child: TextFormField(
-            decoration: InputDecoration(
-              labelText: "Enter Fin size in mm",
+      content: showLoading
+          ? FittedBox(fit: BoxFit.scaleDown, child: LoadingIndicator())
+          : Padding(
+              padding: EdgeInsets.all(16),
+              child: Form(
+                key: formKey,
+                child: TextFormField(
+                  decoration: InputDecoration(
+                    labelText: "Enter Fin size in mm",
+                  ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return "Fin is required";
+                    }
+                    if (int.parse(value) <= 0) {
+                      return "Fin must be greater than 0";
+                    }
+                    return null;
+                  },
+                  keyboardType: TextInputType.number,
+                  controller: finController,
+                ),
+              ),
             ),
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return "Fin is required";
-              }
-              if (int.parse(value) <= 0) {
-                return "Fin must be greater than 0";
-              }
-              return null;
-            },
-            keyboardType: TextInputType.number,
-            controller: finController,
-          ),
-        ),
-      ),
     );
   }
 }

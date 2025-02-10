@@ -134,16 +134,16 @@ class _SaleFormScreenState extends State<SaleFormScreen> {
                 //add
                 bool isAddedSuccessfully =
                     await context.read<SaleCubit>().addNewsale(
-                          Sale(
-                            customerName: customerNameController.text.trim(),
-                            totalBill: 0.0,
-                            time: _selectedTime!,
-                            date: _selectedDate!,
-                            saleItems: context
-                                .read<SaleItemListCubit>()
-                                .getAllListRecord(),
-                          ),
-                        );
+                        Sale(
+                          customerName: customerNameController.text.trim(),
+                          totalBill: 0.0,
+                          time: _selectedTime!,
+                          date: _selectedDate!,
+                          saleItems: context
+                              .read<SaleItemListCubit>()
+                              .getAllListRecord(),
+                        ),
+                        widget.isAluminium);
                 if (context.mounted) {
                   generalAlert(
                     context: context,
@@ -169,6 +169,7 @@ class _SaleFormScreenState extends State<SaleFormScreen> {
                                 .read<SaleItemListCubit>()
                                 .getAllListRecord(),
                           ),
+                          widget.isAluminium,
                         );
                 if (context.mounted) {
                   generalAlert(

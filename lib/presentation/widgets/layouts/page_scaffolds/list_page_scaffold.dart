@@ -1,10 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../../../../utilities/app_routes/app_router.dart';
-import '../../../screen/home/home_screen.dart';
-import '../../../screen/sale/sale_screen.dart';
-import '../../../screen/stock/stock_screen.dart';
-
 
 class ListPageScaffold extends StatelessWidget {
   const ListPageScaffold({
@@ -14,19 +9,21 @@ class ListPageScaffold extends StatelessWidget {
     // required this.curentIndex,
     this.action,
     this.floatingActionButton,
+    this.showBackButton = true,
   });
 
   final String label;
   final Widget? action;
   final Widget body;
   final Widget? floatingActionButton;
+  final bool showBackButton;
   // final int curentIndex;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-
+        automaticallyImplyLeading: showBackButton,
         actions: [
           Padding(
             padding: const EdgeInsets.only(right: 10.0),

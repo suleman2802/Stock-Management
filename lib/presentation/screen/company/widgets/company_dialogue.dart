@@ -4,10 +4,11 @@ import '../../../../domain/models/company.dart';
 import '../../../../utilities/app_routes/app_router.dart';
 import '../../../widgets/input_feilds/text_input_field.dart';
 import '../../../widgets/state_indicators/general_alert/general_alert.dart';
+import '../../../widgets/state_indicators/loading_indicator/loading_indicator.dart';
 import '../cubit/company_cubit.dart';
 
 class CompanyDialogue extends StatefulWidget {
-  CompanyDialogue({super.key, this.company,required this.isAluminium});
+  CompanyDialogue({super.key, this.company, required this.isAluminium});
   Company? company;
   bool isAluminium;
 
@@ -18,6 +19,7 @@ class CompanyDialogue extends StatefulWidget {
 class _CompanyDialogueState extends State<CompanyDialogue> {
   final TextEditingController nameController = TextEditingController();
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  bool showLoading = false;
   @override
   void initState() {
     super.initState();
@@ -33,12 +35,16 @@ class _CompanyDialogueState extends State<CompanyDialogue> {
   }
 
   Future<void> submitRowForm() async {
+    setState(() {
+      showLoading = true;
+    });
     if (formKey.currentState?.validate() ?? false) {
       if (widget.company == null) {
         //? save fin here
         final bool isAddedSuccessfully = await context
             .read<CompanyCubit>()
-            .addNewCompany(Company(name: nameController.text.trim()),widget.isAluminium);
+            .addNewCompany(
+                Company(name: nameController.text.trim()), widget.isAluminium);
 
         if (mounted) {
           generalAlert(
@@ -52,8 +58,10 @@ class _CompanyDialogueState extends State<CompanyDialogue> {
         //? edit fin
         final isUpdatedSuccessfully = await context
             .read<CompanyCubit>()
-            .updateCompany(Company(
-                id: widget.company!.id, name: nameController.text.trim()),widget.isAluminium);
+            .updateCompany(
+                Company(
+                    id: widget.company!.id, name: nameController.text.trim()),
+                widget.isAluminium);
         if (mounted) {
           generalAlert(
             context: context,
@@ -65,6 +73,9 @@ class _CompanyDialogueState extends State<CompanyDialogue> {
       }
       AppRouter.pop();
     }
+    setState(() {
+      showLoading = false;
+    });
   }
 
   @override
@@ -84,22 +95,24 @@ class _CompanyDialogueState extends State<CompanyDialogue> {
         "Company",
         style: Theme.of(context).textTheme.titleMedium,
       ),
-      content: Padding(
-        padding: EdgeInsets.all(16),
-        child: Form(
-          key: formKey,
-          child: TextInputField(
-            label: "Enter Company Name",
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return "Company Name is required";
-              }
-              return null;
-            },
-            controller: nameController,
-          ),
-        ),
-      ),
+      content: showLoading
+          ? FittedBox(fit: BoxFit.scaleDown, child: LoadingIndicator())
+          : Padding(
+              padding: EdgeInsets.all(16),
+              child: Form(
+                key: formKey,
+                child: TextInputField(
+                  label: "Enter Company Name",
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return "Company Name is required";
+                    }
+                    return null;
+                  },
+                  controller: nameController,
+                ),
+              ),
+            ),
     );
   }
 }

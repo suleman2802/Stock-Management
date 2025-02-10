@@ -9,10 +9,10 @@ class StockRepositoryImplementation implements StockRepository {
   final FirebaseFirestore firestoreInstance;
   StockRepositoryImplementation(this.firestoreInstance);
   @override
-  Future<bool> addNewStock(Stock stock) async {
+  Future<bool> addNewStock(Stock stock, bool isAluminium) async {
     try {
       await firestoreInstance
-          .collection('stocks')
+          .collection(isAluminium ? 'stocksA' : 'stocksC')
           .doc(stock.id)
           .set(stock.toMap());
 
@@ -25,9 +25,12 @@ class StockRepositoryImplementation implements StockRepository {
   }
 
   @override
-  Future<bool> deleteStock(String id) async {
+  Future<bool> deleteStock(String id, bool isAluminium) async {
     try {
-      await firestoreInstance.collection('stocks').doc(id).delete();
+      await firestoreInstance
+          .collection(isAluminium ? 'stocksA' : 'stocksC')
+          .doc(id)
+          .delete();
 
       log('Stock with ID $id deleted successfully.');
       return true;
@@ -38,10 +41,11 @@ class StockRepositoryImplementation implements StockRepository {
   }
 
   @override
-  Future<List<Stock>> getAllStocks() async {
+  Future<List<Stock>> getAllStocks(bool isAluminium) async {
     try {
-      QuerySnapshot snapshot =
-          await firestoreInstance.collection('stocks').get();
+      QuerySnapshot snapshot = await firestoreInstance
+          .collection(isAluminium ? 'stocksA' : 'stocksC')
+          .get();
 
       List<Stock> stocks = snapshot.docs.map((doc) {
         return Stock.fromMap(doc.data() as Map<String, dynamic>);
@@ -56,10 +60,10 @@ class StockRepositoryImplementation implements StockRepository {
   }
 
   @override
-  Future<bool> updateStock(Stock stock) async {
+  Future<bool> updateStock(Stock stock, bool isAluminium) async {
     try {
       await firestoreInstance
-          .collection('stocks')
+          .collection(isAluminium ? 'stocksA' : 'stocksC')
           .doc(stock.id)
           .update(stock.toMap());
 
@@ -72,11 +76,12 @@ class StockRepositoryImplementation implements StockRepository {
   }
 
   @override
-  Future<List<Stock>> getAllStocksByCarId(String carId) async {
+  Future<List<Stock>> getAllStocksByCarId(
+      String carId, bool isAluminium) async {
     try {
       // Query Firestore to get documents where 'car.id' matches the given carId
       QuerySnapshot snapshot = await firestoreInstance
-          .collection('stocks')
+          .collection(isAluminium ? 'stocksA' : 'stocksC')
           .where('car.id', isEqualTo: carId)
           .get();
 
@@ -94,11 +99,13 @@ class StockRepositoryImplementation implements StockRepository {
   }
 
   @override
-  Future<List<Stock>> getAllStocksByCarName(String carName) async {
+  Future<List<Stock>> getAllStocksByCarName(
+      String carName, bool isAluminium) async {
     try {
       // Retrieve all documents from the 'stocks' collection
-      QuerySnapshot snapshot =
-          await firestoreInstance.collection('stocks').get();
+      QuerySnapshot snapshot = await firestoreInstance
+          .collection(isAluminium ? 'stocksA' : 'stocksC')
+          .get();
 
       // Filter documents where 'car.carName' contains the provided carName (case-insensitive)
       List<Stock> stocks = snapshot.docs

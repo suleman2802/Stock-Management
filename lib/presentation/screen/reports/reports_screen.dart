@@ -32,6 +32,8 @@ class _ReportScreenState extends State<ReportScreen> {
   selectedType(bool isAluminiumSelected) {
     setState(() {
       isAluminium = isAluminiumSelected;
+      car = null;
+      radiatorStock = null;
     });
   }
 
@@ -69,16 +71,34 @@ class _ReportScreenState extends State<ReportScreen> {
     });
     if (car == null) {
       AppAlertUtil.showError(context, "Please Select Car");
-      // Show error message
+      setState(() {
+        showLoading = false;
+      });
       return;
     } else if (radiatorStock == null) {
       AppAlertUtil.showError(context, "Please Select Radiator");
+      setState(() {
+        showLoading = false;
+      });
+      return;
+    } else if (startDate!.isAfter(endDate!)) {
+      AppAlertUtil.showError(
+          context, "Starting date shouldn't be after then ending date");
+      setState(() {
+        showLoading = false;
+      });
+      return;
+    } else if (endDate!.isBefore(startDate!)) {
+      AppAlertUtil.showError(
+          context, "Ending date shouldn't be before then starting date");
+      setState(() {
+        showLoading = false;
+      });
       return;
     }
 
-    List<Sale> sales = await context
-        .read<SaleRepository>()
-        .getSalesReport(startDate, endDate, car!.id, radiatorStock!.id);
+    List<Sale> sales = await context.read<SaleRepository>().getSalesReport(
+        startDate, endDate, car!.id, radiatorStock!.id, isAluminium);
 
     int retailUnits = 0;
     int wholesaleUnits = 0;
@@ -174,6 +194,7 @@ class _ReportScreenState extends State<ReportScreen> {
                 stockRepository: context.read<StockRepository>(),
               ),
               child: RadiatorStockSelectionTileDialogue(
+                isAluminium: isAluminium,
                 radiator: radiatorStock,
                 car: car,
                 assignSelectedRadiatorFunciton:

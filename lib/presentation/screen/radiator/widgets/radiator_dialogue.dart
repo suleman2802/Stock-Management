@@ -18,20 +18,24 @@ import '../../../widgets/input_feilds/text_input_field.dart';
 import '../../../widgets/row_selection_tile_dialogue/row_selection_tile_dialogue.dart';
 import '../../../widgets/spaces/space.dart';
 import '../../../widgets/state_indicators/general_alert/general_alert.dart';
+import '../../../widgets/state_indicators/loading_indicator/loading_indicator.dart';
 import '../../car/cubit/car_cubit.dart';
 import '../../fin/cubit/fin_cubit.dart';
 import '../../rows/cubit/rows_cubit.dart';
 import '../cubit/radiator_cubit.dart';
 
 class RadiatorDialogue extends StatefulWidget {
-  RadiatorDialogue(
-      {super.key,
-      this.radiator,
-      this.canEdit = true,
-      required this.isAluminium});
+  RadiatorDialogue({
+    super.key,
+    this.radiator,
+    this.canEdit = true,
+    required this.isAluminium,
+    required this.isNew,
+  });
   final Radiator? radiator;
   final bool canEdit;
   bool isAluminium;
+  bool isNew;
 
   @override
   State<RadiatorDialogue> createState() => _RadiatorDialogueState();
@@ -48,14 +52,15 @@ class _RadiatorDialogueState extends State<RadiatorDialogue> {
   Rows? _selectedRows;
   Fin? _selectedFin;
   Car? _selectedCar;
+  bool showLoading = false;
 
   @override
   void initState() {
     super.initState();
     if (widget.radiator != null) {
       sizeController.text = widget.radiator!.size;
-      fromYearController.text = widget.radiator!.fromYear.toString();
-      toYearController.text = widget.radiator!.toYear.toString();
+      fromYearController.text = widget.radiator!.fromYear?.toString() ?? "";
+      toYearController.text = widget.radiator!.toYear?.toString() ?? "";
       _selectedFuelType = widget.radiator!.carFuelType;
       _selectedCarAutomationType = widget.radiator!.carAutomation;
       _selectedCar = widget.radiator!.car;
@@ -91,71 +96,86 @@ class _RadiatorDialogueState extends State<RadiatorDialogue> {
   }
 
   Future<void> submitRadiatorForm() async {
+    setState(() {
+      showLoading = true;
+    });
     try {
-      if (formKey.currentState?.validate() ??
-          false ||
-              (_selectedCar != null &&
-                  _selectedRows != null &&
-                  _selectedFin != null)) {
-        // Save functionality here
-        if (widget.radiator == null) {
-          //? save car here
-          final isAddedSuccessfully = await context
-              .read<RadiatorCubit>()
-              .addNewRadiator(
-                  Radiator(
-                      size: sizeController.text.trim(),
-                      carFuelType: _selectedFuelType,
-                      carAutomation: _selectedCarAutomationType,
-                      fromYear: int.parse(fromYearController.text.trim()),
-                      toYear: int.parse(toYearController.text.trim()),
-                      rows: _selectedRows!,
-                      car: _selectedCar!,
-                      fin: _selectedFin!),
-                  widget.isAluminium);
+      if (formKey.currentState?.validate() ?? false) {
+        if (_selectedCar != null &&
+            _selectedRows != null &&
+            _selectedFin != null) {
+          // Save functionality here
+          if (widget.isNew) {
+            //? save car here
+            final isAddedSuccessfully = await context
+                .read<RadiatorCubit>()
+                .addNewRadiator(
+                    Radiator(
+                        size: sizeController.text.trim(),
+                        carFuelType: _selectedFuelType,
+                        carAutomation: _selectedCarAutomationType,
+                        fromYear: int.tryParse(fromYearController.text.trim()),
+                        toYear: int.tryParse(toYearController.text.trim()),
+                        rows: _selectedRows!,
+                        car: _selectedCar!,
+                        fin: _selectedFin!),
+                    widget.isAluminium);
 
-          if (mounted) {
-            generalAlert(
-              context: context,
-              isSuccessful: isAddedSuccessfully,
-              tile: "Radiator",
-              type: AlertType.added,
-            );
+            if (mounted) {
+              generalAlert(
+                context: context,
+                isSuccessful: isAddedSuccessfully,
+                tile: "Radiator",
+                type: AlertType.added,
+              );
+            }
+          } else {
+            //? edit car
+            final isUpdatedSuccessfully = await context
+                .read<RadiatorCubit>()
+                .updateRadiator(
+                    Radiator(
+                        id: widget.radiator!.id,
+                        size: sizeController.text.trim(),
+                        carFuelType: _selectedFuelType,
+                        carAutomation: _selectedCarAutomationType,
+                        fromYear: int.parse(fromYearController.text.trim()),
+                        toYear: int.parse(toYearController.text.trim()),
+                        rows: _selectedRows!,
+                        car: _selectedCar!,
+                        fin: _selectedFin!),
+                    widget.isAluminium);
+            if (mounted) {
+              generalAlert(
+                context: context,
+                isSuccessful: isUpdatedSuccessfully,
+                tile: "Radiator",
+                type: AlertType.updated,
+              );
+            }
           }
+          AppRouter.pop();
         } else {
-          //? edit car
-          final isUpdatedSuccessfully = await context
-              .read<RadiatorCubit>()
-              .updateRadiator(
-                  Radiator(
-                      id: widget.radiator!.id,
-                      size: sizeController.text.trim(),
-                      carFuelType: _selectedFuelType,
-                      carAutomation: _selectedCarAutomationType,
-                      fromYear: int.parse(fromYearController.text.trim()),
-                      toYear: int.parse(toYearController.text.trim()),
-                      rows: _selectedRows!,
-                      car: _selectedCar!,
-                      fin: _selectedFin!),
-                  widget.isAluminium);
-          if (mounted) {
-            generalAlert(
-              context: context,
-              isSuccessful: isUpdatedSuccessfully,
-              tile: "Radiator",
-              type: AlertType.updated,
-            );
-          }
+          //? all feilds are not provided
+          AppAlertUtil.showError(context, "All Feilds are required");
+          setState(() {
+            showLoading = false;
+          });
         }
-        AppRouter.pop();
       } else {
         //? all feilds are not provided
         AppAlertUtil.showError(context, "All Feilds are required");
+        setState(() {
+          showLoading = false;
+        });
       }
     } catch (error) {
       log("Unable to add Radiator : $error");
 
       AppAlertUtil.showError(context, "Error : $error");
+      setState(() {
+        showLoading = false;
+      });
     }
   }
 
@@ -169,141 +189,149 @@ class _RadiatorDialogueState extends State<RadiatorDialogue> {
         ),
         ElevatedButton(
           onPressed: submitRadiatorForm,
-          child: Text(widget.radiator != null ? "Edit" : "Save"),
+          child: Text(widget.isNew ? "Save" : "Edit"),
         ),
       ],
       title: Text(
         "Radiator Details",
         style: Theme.of(context).textTheme.titleMedium,
       ),
-      content: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: IntrinsicHeight(
-          child: Form(
-            key: formKey,
-            child: Column(
-              children: [
-                BlocProvider(
-                  create: (context) => CarCubit(
-                    carRepository: context.read<CarRepository>(),
-                  ),
-                  child: CarSelectionTileDialogue(
-                    isAluminium: widget.isAluminium,
-                    canEdit: widget.canEdit,
-                    selectedCar: _selectedCar,
-                    assignSelectedCarFunction: assignSelectedCar,
-                  ),
-                ),
-                BlocProvider(
-                  create: (context) => RowsCubit(
-                    rowsRepository: context.read<RowsRepository>(),
-                  ),
-                  child: RowSelectionTileDialogue(
-                    isAluminium: widget.isAluminium,
-                    selectedRows: _selectedRows,
-                    assignSelectedRowsFunciton: assignSelectedRows,
-                  ),
-                ),
-                BlocProvider(
-                  create: (context) =>
-                      FinCubit(finRepository: context.read<FinRepository>()),
-                  child: FinSelectionTileDialogue(
-                    isAluminium: widget.isAluminium,
-                    selectedFin: _selectedFin,
-                    assignSelectedFinFunction: assignSelectedFin,
-                  ),
-                ),
-                smallestHeightSpace(),
-                TextInputField(
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter radiator size';
-                    }
-                    return null;
-                  },
-                  controller: sizeController,
-                  label: "Enter Radiator Size",
-                ),
-                NumberInputField(
-                  controller: fromYearController,
-                  label: "Enter From Year",
-                ),
-                NumberInputField(
-                  controller: toYearController,
-                  label: "Enter To Year",
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Text(
-                      "Fuel Type",
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                    smallWidthSpace(),
-                    Expanded(
-                      child: DropdownButton<CarFuelType>(
-                        hint: Text('Select Fuel Type'),
-                        value: _selectedFuelType,
-                        isExpanded: true,
-                        onChanged: (CarFuelType? newValue) {
-                          setState(() {
-                            _selectedFuelType = newValue!;
-                          });
-                        },
-                        items: CarFuelType.values.map((CarFuelType fuelType) {
-                          return DropdownMenuItem<CarFuelType>(
-                            value: fuelType,
-                            child: Text(
-                              fuelType.toString().split('.').last,
-                              style: Theme.of(context).textTheme.bodyMedium,
-                            ),
-                          );
-                        }).toList(),
+      content: showLoading
+          ? FittedBox(fit: BoxFit.scaleDown, child: LoadingIndicator())
+          : Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: IntrinsicHeight(
+                child: Form(
+                  key: formKey,
+                  child: Column(
+                    children: [
+                      BlocProvider(
+                        create: (context) => CarCubit(
+                          carRepository: context.read<CarRepository>(),
+                        ),
+                        child: CarSelectionTileDialogue(
+                          isAluminium: widget.isAluminium,
+                          canEdit: widget.canEdit,
+                          selectedCar: _selectedCar,
+                          assignSelectedCarFunction: assignSelectedCar,
+                        ),
                       ),
-                    ),
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Text(
-                      "Automation Type",
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                    smallWidthSpace(),
-                    Expanded(
-                      child: DropdownButton<CarAutomation>(
-                        hint: Text('Select Car Automation Type'),
-                        value: _selectedCarAutomationType,
+                      BlocProvider(
+                        create: (context) => RowsCubit(
+                          rowsRepository: context.read<RowsRepository>(),
+                        ),
+                        child: RowSelectionTileDialogue(
+                          isAluminium: widget.isAluminium,
+                          selectedRows: _selectedRows,
+                          assignSelectedRowsFunciton: assignSelectedRows,
+                        ),
+                      ),
+                      BlocProvider(
+                        create: (context) => FinCubit(
+                            finRepository: context.read<FinRepository>()),
+                        child: FinSelectionTileDialogue(
+                          isAluminium: widget.isAluminium,
+                          selectedFin: _selectedFin,
+                          assignSelectedFinFunction: assignSelectedFin,
+                        ),
+                      ),
+                      smallestHeightSpace(),
+                      TextInputField(
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter radiator size';
+                          }
+                          return null;
+                        },
+                        controller: sizeController,
+                        label: "Enter Radiator Size",
+                      ),
+                      NumberInputField(
+                        controller: fromYearController,
+                        label: "Enter From Year",
+                      ),
+                      NumberInputField(
+                        controller: toYearController,
+                        label: "Enter To Year",
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text(
+                            "Fuel Type",
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                          smallWidthSpace(),
+                          Expanded(
+                            child: DropdownButton<CarFuelType>(
+                              hint: Text('Select Fuel Type'),
+                              value: _selectedFuelType,
+                              isExpanded: true,
+                              onChanged: (CarFuelType? newValue) {
+                                setState(() {
+                                  _selectedFuelType = newValue!;
+                                });
+                              },
+                              items: CarFuelType.values
+                                  .map((CarFuelType fuelType) {
+                                return DropdownMenuItem<CarFuelType>(
+                                  value: fuelType,
+                                  child: Text(
+                                    fuelType.toString().split('.').last,
+                                    style:
+                                        Theme.of(context).textTheme.bodyMedium,
+                                  ),
+                                );
+                              }).toList(),
+                            ),
+                          ),
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text(
+                            "Automation Type",
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                          smallWidthSpace(),
+                          Expanded(
+                            child: DropdownButton<CarAutomation>(
+                              hint: Text('Select Car Automation Type'),
+                              value: _selectedCarAutomationType,
 
-                        isExpanded:
-                            true, // This ensures the dropdown takes up the full width of its container
-                        onChanged: (CarAutomation? newValue) {
-                          setState(() {
-                            _selectedCarAutomationType = newValue!;
-                          });
-                        },
-                        items: CarAutomation.values
-                            .map((CarAutomation carAutomationType) {
-                          return DropdownMenuItem<CarAutomation>(
-                            value: carAutomationType,
-                            child: Text(
-                              carAutomationType.toString().split('.').last,
-                              style: Theme.of(context).textTheme.bodyMedium,
+                              isExpanded:
+                                  true, // This ensures the dropdown takes up the full width of its container
+                              onChanged: (CarAutomation? newValue) {
+                                setState(() {
+                                  _selectedCarAutomationType = newValue!;
+                                });
+                              },
+                              items: CarAutomation.values
+                                  .map((CarAutomation carAutomationType) {
+                                return DropdownMenuItem<CarAutomation>(
+                                  value: carAutomationType,
+                                  child: Text(
+                                    carAutomationType
+                                        .toString()
+                                        .split('.')
+                                        .last,
+                                    style:
+                                        Theme.of(context).textTheme.bodyMedium,
+                                  ),
+                                );
+                              }).toList(),
                             ),
-                          );
-                        }).toList(),
+                          ),
+                        ],
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ],
+              ),
             ),
-          ),
-        ),
-      ),
     );
   }
 }

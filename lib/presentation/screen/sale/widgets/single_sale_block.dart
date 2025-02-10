@@ -22,7 +22,8 @@ class SingleSaleBlock extends StatefulWidget {
       required this.saleItem,
       required this.formKey,
       required this.index,
-      this.selectedCar,required this.isAluminium});
+      this.selectedCar,
+      required this.isAluminium});
   SaleItem saleItem;
   int index;
   final GlobalKey<FormState> formKey;
@@ -113,6 +114,7 @@ class _SingleSaleBlockState extends State<SingleSaleBlock> {
                   stockRepository: context.read<StockRepository>(),
                 ),
                 child: RadiatorStockSelectionTileDialogue(
+                  isAluminium: widget.isAluminium,
                   radiator: widget.saleItem.radiator,
                   car: widget.selectedCar,
                   assignSelectedRadiatorFunciton:

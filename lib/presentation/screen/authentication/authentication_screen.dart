@@ -16,6 +16,7 @@ import '../../../domain/repositories/sale/abstract_sale_repository/abstract_sale
 import '../../../domain/repositories/sale/sale_repository_implementation/sale_repository_implementation.dart';
 import '../../../domain/repositories/stock/abstract_stock_repository/abstract_stock_repository.dart';
 import '../../../domain/repositories/stock/stock_repository_implementation/stock_repository_implementation.dart';
+import '../../../utilities/app_alerts/app_alerts.dart';
 import '../../../utilities/app_routes/app_router.dart';
 import '../../widgets/spaces/space.dart';
 import '../home/home_screen.dart';
@@ -44,11 +45,11 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> {
   }
 
   validatePin() {
-    // if (pinController1.text.trim() +
-    //         pinController2.text.trim() +
-    //         pinController3.text.trim() +
-    //         pinController4.text.trim() ==
-    //     "0202") {
+    if (pinController1.text.trim() +
+            pinController2.text.trim() +
+            pinController3.text.trim() +
+            pinController4.text.trim() ==
+        "0202") {
     AppRouter.push(
       MultiRepositoryProvider(providers: [
         RepositoryProvider<FinRepository>(
@@ -76,9 +77,9 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> {
         ),
       ], child: HomeScreen()),
     );
-    // } else {
-    //   AppAlertUtil.showError(context, "Invalid pin");
-    // }
+    } else {
+      AppAlertUtil.showError(context, "Invalid pin");
+    }
   }
 
   @override

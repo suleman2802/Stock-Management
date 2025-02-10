@@ -11,15 +11,15 @@ part 'sale_state.dart';
 class SaleCubit extends Cubit<SaleState> {
   final SaleRepository saleRepository;
   SaleCubit({required this.saleRepository}) : super(SaleInitial()) {
-    fetchAllSales();
+    fetchAllSales(true);
   }
 
   Future<void> getAllSalesByStartEndDate(
-      DateTime startDate, DateTime endDate) async {
+      DateTime startDate, DateTime endDate, bool isAluminium) async {
     try {
       emit(SaleLoadingState());
       final List<Sale> saleList =
-          await saleRepository.getAllSalesByStartEndDate(startDate, endDate);
+          await saleRepository.getAllSalesByStartEndDate(startDate, endDate,isAluminium);
       emit(
         SaleLoadedState(
           saleList: saleList,
@@ -30,11 +30,11 @@ class SaleCubit extends Cubit<SaleState> {
     }
   }
 
-  Future<void> fetchAllSalesByCustomerName(String customerName) async {
+  Future<void> fetchAllSalesByCustomerName(String customerName, bool isAluminium) async {
     try {
       emit(SaleLoadingState());
       final List<Sale> saleList =
-          await saleRepository.getAllSalesByCustomerName(customerName);
+          await saleRepository.getAllSalesByCustomerName(customerName,isAluminium);
       emit(
         SaleLoadedState(
           saleList: saleList,
@@ -45,10 +45,10 @@ class SaleCubit extends Cubit<SaleState> {
     }
   }
 
-  Future<void> fetchAllSales() async {
+  Future<void> fetchAllSales(bool isAluminium) async {
     try {
       emit(SaleLoadingState());
-      final List<Sale> saleList = await saleRepository.getAllSales();
+      final List<Sale> saleList = await saleRepository.getAllSales(isAluminium);
       emit(
         SaleLoadedState(
           saleList: saleList,
@@ -59,38 +59,38 @@ class SaleCubit extends Cubit<SaleState> {
     }
   }
 
-  Future<bool> addNewsale(Sale sale) async {
+  Future<bool> addNewsale(Sale sale, bool isAluminium) async {
     try {
-      final bool isAddedSuccessfully = await saleRepository.addNewSale(sale);
-      await fetchAllSales();
+      final bool isAddedSuccessfully = await saleRepository.addNewSale(sale,isAluminium);
+      await fetchAllSales(isAluminium);
       return isAddedSuccessfully;
     } catch (error) {
       log("Unable to add sale $error");
-      await fetchAllSales();
+      await fetchAllSales(isAluminium);
       return false;
     }
   }
 
-  Future<bool> updatesale(Sale sale) async {
+  Future<bool> updatesale(Sale sale, bool isAluminium) async {
     try {
-      final bool isUpdatedSuccessfully = await saleRepository.updateSale(sale);
-      await fetchAllSales();
+      final bool isUpdatedSuccessfully = await saleRepository.updateSale(sale,isAluminium);
+      await fetchAllSales(isAluminium);
       return isUpdatedSuccessfully;
     } catch (error) {
       log("Unable to upadate sale  $error");
-      await fetchAllSales();
+      await fetchAllSales(isAluminium);
       return false;
     }
   }
 
-  Future<bool> deleteSale(String id) async {
+  Future<bool> deleteSale(String id, bool isAluminium) async {
     try {
-      final bool isDeletedSuccessfully = await saleRepository.deleteSale(id);
-      await fetchAllSales();
+      final bool isDeletedSuccessfully = await saleRepository.deleteSale(id,isAluminium);
+      await fetchAllSales(isAluminium);
       return isDeletedSuccessfully;
     } catch (error) {
       log("Unable to delete sale $error");
-      await fetchAllSales();
+      await fetchAllSales(isAluminium);
       return false;
     }
   }

@@ -12,10 +12,11 @@ class StockCubit extends Cubit<StockState> {
   final StockRepository stockRepository;
   StockCubit({required this.stockRepository}) : super(StockInitialState());
 
-  Future<void> fetchAllStocks() async {
+  Future<void> fetchAllStocks(bool isAluminium) async {
     try {
       emit(StockLoadingState());
-      final List<Stock> stockList = await stockRepository.getAllStocks();
+      final List<Stock> stockList =
+          await stockRepository.getAllStocks(isAluminium);
       emit(
         StockLoadedState(
           stockList: stockList,
@@ -26,48 +27,50 @@ class StockCubit extends Cubit<StockState> {
     }
   }
 
-  Future<bool> addNewStock(Stock stock) async {
+  Future<bool> addNewStock(Stock stock, bool isAluminium) async {
     try {
-      final bool isAddedSuccessfully = await stockRepository.addNewStock(stock);
-      await fetchAllStocks();
+      final bool isAddedSuccessfully =
+          await stockRepository.addNewStock(stock, isAluminium);
+      await fetchAllStocks(isAluminium);
       return isAddedSuccessfully;
     } catch (error) {
       log("Unable to add Stock $error");
-      await fetchAllStocks();
+      await fetchAllStocks(isAluminium);
       return false;
     }
   }
 
-  Future<bool> updateStock(Stock stock) async {
+  Future<bool> updateStock(Stock stock, bool isAluminium) async {
     try {
       final bool isUpdatedSuccessfully =
-          await stockRepository.updateStock(stock);
-      await fetchAllStocks();
+          await stockRepository.updateStock(stock, isAluminium);
+      await fetchAllStocks(isAluminium);
       return isUpdatedSuccessfully;
     } catch (error) {
       log("Unable to upadate Stock  $error");
-      await fetchAllStocks();
+      await fetchAllStocks(isAluminium);
       return false;
     }
   }
 
-  Future<bool> deleteStock(String id) async {
+  Future<bool> deleteStock(String id, bool isAluminium) async {
     try {
-      final bool isDeletedSuccessfully = await stockRepository.deleteStock(id);
-      await fetchAllStocks();
+      final bool isDeletedSuccessfully =
+          await stockRepository.deleteStock(id, isAluminium);
+      await fetchAllStocks(isAluminium);
       return isDeletedSuccessfully;
     } catch (error) {
       log("Unable to delete Stock $error");
-      await fetchAllStocks();
+      await fetchAllStocks(isAluminium);
       return false;
     }
   }
 
-  Future<void> fetchAllStocksByCarId(String carId) async {
+  Future<void> fetchAllStocksByCarId(String carId, bool isAluminium) async {
     try {
       emit(StockLoadingState());
       final List<Stock> stockList =
-          await stockRepository.getAllStocksByCarId(carId);
+          await stockRepository.getAllStocksByCarId(carId, isAluminium);
       emit(
         StockLoadedState(
           stockList: stockList,
@@ -78,11 +81,11 @@ class StockCubit extends Cubit<StockState> {
     }
   }
 
-  Future<void> fetchAllStocksByCarName(String carName) async {
+  Future<void> fetchAllStocksByCarName(String carName, bool isAluminium) async {
     try {
       emit(StockLoadingState());
       final List<Stock> stockList =
-          await stockRepository.getAllStocksByCarName(carName);
+          await stockRepository.getAllStocksByCarName(carName, isAluminium);
       emit(
         StockLoadedState(
           stockList: stockList,

@@ -10,8 +10,8 @@ class Radiator {
   final String size;
   final CarFuelType carFuelType;
   final CarAutomation carAutomation;
-  final int fromYear;
-  final int toYear;
+  final int? fromYear;
+  final int? toYear;
   final Rows? rows;
   final Fin? fin;
   final Car car;
@@ -72,8 +72,8 @@ class Radiator {
       size: map['size'] as String,
       carFuelType: CarFuelType.values.firstWhere((e) => e.toString() == 'CarFuelType.' + map['carFuelType']),
       carAutomation: CarAutomation.values.firstWhere((e) => e.toString() == 'CarAutomation.' + map['carAutomation']),
-      fromYear: map['fromYear'] as int,
-      toYear: map['toYear'] as int,
+      fromYear: map['fromYear'] as int?,
+      toYear: map['toYear'] as int?,
       rows: Rows.fromMap(map['rows'] as Map<String, dynamic>),
       fin: Fin.fromMap(map['fin'] as Map<String, dynamic>),
       car: Car.fromMap(map['car'] as Map<String, dynamic>),

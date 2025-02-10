@@ -69,7 +69,10 @@ class _CarSelectionTileDialogueState extends State<CarSelectionTileDialogue> {
                   ),
                 ),
               ),
-              title: Text(widget.selectedCar!.carName),
+              title: Text(
+                widget.selectedCar!.carName,
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
               subtitle: Text(widget.selectedCar!.carModel),
             ),
           )
@@ -103,11 +106,24 @@ class _CarSelectionTileDialogueState extends State<CarSelectionTileDialogue> {
   }
 }
 
-class CarListBottomSheet extends StatelessWidget {
+class CarListBottomSheet extends StatefulWidget {
   CarListBottomSheet(
       {super.key, required this.selectCarFunction, required this.isAluminium});
   final Function selectCarFunction;
   bool isAluminium;
+
+  @override
+  State<CarListBottomSheet> createState() => _CarListBottomSheetState();
+}
+
+class _CarListBottomSheetState extends State<CarListBottomSheet> {
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    context.read<CarCubit>().fetchAllCars(widget.isAluminium);
+  }
+
   @override
   Widget build(BuildContext context) {
     final dimensions = Dimensions(context);
@@ -137,7 +153,7 @@ class CarListBottomSheet extends StatelessWidget {
                           builder: (ctx) => BlocProvider.value(
                             value: context.read<CarCubit>(),
                             child: CarDialogue(
-                              isAluminium: isAluminium,
+                              isAluminium: widget.isAluminium,
                             ),
                           ),
                         ),
@@ -170,7 +186,7 @@ class CarListBottomSheet extends StatelessWidget {
                           itemBuilder: (context, index) => Card(
                             child: ListTile(
                               onTap: () {
-                                selectCarFunction(state.carList[index]);
+                                widget.selectCarFunction(state.carList[index]);
                                 AppRouter.pop();
                               },
                               title: Text(

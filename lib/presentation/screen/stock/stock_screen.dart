@@ -1,4 +1,3 @@
-import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -39,7 +38,7 @@ class _StockScreenState extends State<StockScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    context.read<StockCubit>().fetchAllStocks();
+    context.read<StockCubit>().fetchAllStocks(isAluminium);
   }
 
   bool isAluminium = true;
@@ -48,7 +47,7 @@ class _StockScreenState extends State<StockScreen> {
     setState(() {
       isAluminium = isAluminiumSelected;
     });
-    context.read<StockCubit>().fetchAllStocks();
+    context.read<StockCubit>().fetchAllStocks(isAluminium);
   }
 
   @override
@@ -115,9 +114,9 @@ class _StockScreenState extends State<StockScreen> {
                   if (value.isNotEmpty) {
                     await context
                         .read<StockCubit>()
-                        .fetchAllStocksByCarName(value.trim());
+                        .fetchAllStocksByCarName(value.trim(),isAluminium);
                   } else {
-                    await context.read<StockCubit>().fetchAllStocks();
+                    await context.read<StockCubit>().fetchAllStocks(isAluminium);
                   }
                 },
                 leading: IconButton(
@@ -200,7 +199,7 @@ class _StockScreenState extends State<StockScreen> {
                                       await context
                                           .read<StockCubit>()
                                           .deleteStock(
-                                              state.stockList[index].id);
+                                              state.stockList[index].id,isAluminium);
 
                                   generalAlert(
                                     context: context,

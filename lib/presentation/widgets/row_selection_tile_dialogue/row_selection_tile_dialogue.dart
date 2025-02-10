@@ -69,7 +69,7 @@ class _RowSelectionTileDialogueState extends State<RowSelectionTileDialogue> {
                 ),
               ),
               title: Text(
-                "${widget.selectedRows!.noOfRows} mm",
+                "${widget.selectedRows!.noOfRows} ${widget.isAluminium ? "mm" : "rows"}",
               ),
             ),
           )
@@ -102,11 +102,24 @@ class _RowSelectionTileDialogueState extends State<RowSelectionTileDialogue> {
   }
 }
 
-class RowListBottomSheet extends StatelessWidget {
+class RowListBottomSheet extends StatefulWidget {
   RowListBottomSheet(
       {super.key, required this.selectRowsFunction, required this.isAluminium});
   final Function selectRowsFunction;
   bool isAluminium;
+
+  @override
+  State<RowListBottomSheet> createState() => _RowListBottomSheetState();
+}
+
+class _RowListBottomSheetState extends State<RowListBottomSheet> {
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    context.read<RowsCubit>().fetchAllRows(widget.isAluminium);
+  }
+
   @override
   Widget build(BuildContext context) {
     final dimensions = Dimensions(context);
@@ -136,7 +149,7 @@ class RowListBottomSheet extends StatelessWidget {
                           builder: (ctx) => BlocProvider.value(
                             value: context.read<RowsCubit>(),
                             child: RowsDialogue(
-                              isAluminium: isAluminium,
+                              isAluminium: widget.isAluminium,
                             ),
                           ),
                         ),
@@ -169,11 +182,12 @@ class RowListBottomSheet extends StatelessWidget {
                           itemBuilder: (context, index) => Card(
                             child: ListTile(
                               onTap: () {
-                                selectRowsFunction(state.rowsList[index]);
+                                widget
+                                    .selectRowsFunction(state.rowsList[index]);
                                 AppRouter.pop();
                               },
-                              title:
-                                  Text("${state.rowsList[index].noOfRows} mm"),
+                              title: Text(
+                                  "${state.rowsList[index].noOfRows} ${widget.isAluminium ? "mm" : "rows"}"),
                             ),
                           ),
                         );

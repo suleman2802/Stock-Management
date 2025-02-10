@@ -14,14 +14,17 @@ import '../styling/bottom_sheet_header.dart';
 import '../styling/round_icon_button.dart';
 
 class RadiatorStockSelectionTileDialogue extends StatefulWidget {
-  RadiatorStockSelectionTileDialogue(
-      {super.key,
-      this.radiator,
-      this.car,
-      required this.assignSelectedRadiatorFunciton});
+  RadiatorStockSelectionTileDialogue({
+    super.key,
+    this.radiator,
+    this.car,
+    required this.assignSelectedRadiatorFunciton,
+    required this.isAluminium,
+  });
   final RadiatorStock? radiator;
   Car? car;
   final Function assignSelectedRadiatorFunciton;
+  bool isAluminium;
 
   @override
   State<RadiatorStockSelectionTileDialogue> createState() =>
@@ -38,17 +41,19 @@ class _RadiatorStockSelectionTileDialogueState
   Widget build(BuildContext context) {
     return widget.radiator != null
         ? Card(
-          child: ListTile(
+            child: ListTile(
               onTap: () {
                 showModalBottomSheet(
                   context: context,
                   isScrollControlled: true,
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+                    borderRadius:
+                        BorderRadius.vertical(top: Radius.circular(16)),
                   ),
                   builder: (ctx) => BlocProvider.value(
                     value: context.read<StockCubit>(),
                     child: RadiatorStockListBottomSheet(
+                      isAluminium: widget.isAluminium,
                       car: widget.car,
                       selectRadiatorFunction: selectRadiator,
                     ),
@@ -59,11 +64,9 @@ class _RadiatorStockSelectionTileDialogueState
                 backgroundColor: Theme.of(context).primaryColor,
                 child: Text(
                   widget.radiator!.radiator!.car.carName
-                      .substring(0,1)
+                      .substring(0, 1)
                       .toUpperCase(),
-                      style: TextStyle(
-                        color: Colors.white
-                      ),
+                  style: TextStyle(color: Colors.white),
                 ),
               ),
               title: Text(widget.radiator!.company!.name),
@@ -77,7 +80,7 @@ class _RadiatorStockSelectionTileDialogueState
                 ],
               ),
             ),
-        )
+          )
         : BorderedContainer(
             child: Center(
               child: TextButton(
@@ -92,6 +95,7 @@ class _RadiatorStockSelectionTileDialogueState
                     builder: (ctx) => BlocProvider.value(
                       value: context.read<StockCubit>(),
                       child: RadiatorStockListBottomSheet(
+                        isAluminium: widget.isAluminium,
                         selectRadiatorFunction: selectRadiator,
                         car: widget.car,
                       ),
@@ -107,9 +111,13 @@ class _RadiatorStockSelectionTileDialogueState
 
 class RadiatorStockListBottomSheet extends StatefulWidget {
   RadiatorStockListBottomSheet(
-      {super.key, this.car, required this.selectRadiatorFunction});
+      {super.key,
+      this.car,
+      required this.selectRadiatorFunction,
+      required this.isAluminium});
   Car? car;
   final Function selectRadiatorFunction;
+  bool isAluminium;
 
   @override
   State<RadiatorStockListBottomSheet> createState() =>
@@ -123,9 +131,11 @@ class _RadiatorStockListBottomSheetState
     // TODO: implement initState
     super.initState();
     if (widget.car != null) {
-      context.read<StockCubit>().fetchAllStocksByCarId(widget.car!.id);
+      context
+          .read<StockCubit>()
+          .fetchAllStocksByCarId(widget.car!.id, widget.isAluminium);
     } else {
-      context.read<StockCubit>().fetchAllStocks();
+      context.read<StockCubit>().fetchAllStocks(widget.isAluminium);
     }
   }
 
@@ -180,8 +190,7 @@ class _RadiatorStockListBottomSheetState
                           itemBuilder: (context, index) => Card(
                             child: ListTile(
                               onTap: () {
-                                widget.selectRadiatorFunction(
-                                    list[index]);
+                                widget.selectRadiatorFunction(list[index]);
                                 AppRouter.pop();
                               },
                               title: Text(
