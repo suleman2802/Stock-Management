@@ -93,7 +93,15 @@ class _RadiatorScreenState extends State<RadiatorScreen> {
                 onTap: () {},
                 controller: searchController,
                 hintText: "Search by size",
-                onChanged: (value) {},
+                onChanged: (value) async {
+                   if (value.isNotEmpty) {
+                    await context
+                        .read<RadiatorCubit>()
+                        .fetchAllRadiatorsBySize(value.trim(), isAluminium);
+                  } else {
+                    await context.read<RadiatorCubit>().fetchAllRadiators(isAluminium);
+                  }
+                },
                 leading: IconButton(
                   icon: Icon(Icons.search),
                   onPressed: () {},

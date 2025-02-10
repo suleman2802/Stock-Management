@@ -82,4 +82,19 @@ class RadiatorCubit extends Cubit<RadiatorState> {
       return false;
     }
   }
+
+  Future<void> fetchAllRadiatorsBySize(String size,bool isAluminium)async{
+    try {
+      emit(RadiatorLoadingState());
+      final List<Radiator> radiatorList =
+          await radiatorRepository.getAllRadiatorsBySize(size,isAluminium);
+      emit(
+        RadiatorLoadedState(
+          radiatorList: radiatorList,
+        ),
+      );
+    } catch (error) {
+      emit(RadiatorErrorState(errorMessage: error.toString()));
+    }
+  }
 }

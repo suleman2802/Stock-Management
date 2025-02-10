@@ -6,4 +6,5 @@ abstract class RadiatorRepository {
   Future<bool> addNewRadiator(Radiator radiator, bool isAluminium);
   Future<bool> updateRadiator(Radiator radiator, bool isAluminium);
   Future<bool> deleteRadiator(String id, bool isAluminium);
+  Future<List<Radiator>> getAllRadiatorsBySize(String size, bool isAluminium);
 }
