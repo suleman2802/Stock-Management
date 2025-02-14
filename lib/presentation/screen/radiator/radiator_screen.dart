@@ -95,12 +95,14 @@ class _RadiatorScreenState extends State<RadiatorScreen> {
                 controller: searchController,
                 hintText: "Search by size",
                 onChanged: (value) async {
-                   if (value.isNotEmpty) {
+                  if (value.isNotEmpty) {
                     await context
                         .read<RadiatorCubit>()
                         .fetchAllRadiatorsBySize(value.trim(), isAluminium);
                   } else {
-                    await context.read<RadiatorCubit>().fetchAllRadiators(isAluminium);
+                    await context
+                        .read<RadiatorCubit>()
+                        .fetchAllRadiators(isAluminium);
                   }
                 },
                 leading: IconButton(
