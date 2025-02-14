@@ -71,17 +71,42 @@ class _SingleSaleBlockState extends State<SingleSaleBlock> {
   }
 
   void updateQuantity() {
-    double unitCost = double.parse(unitCostController.text.trim());
-    double subTotal = double.parse(subTotalController.text.trim());
-    int quantity = int.parse(quantityController.text.trim());
+    if (widget.saleItem.radiator != null) {
+      if (widget.saleItem.radiator!.quantity <
+          int.parse(quantityController.text.trim())) {
+        AppAlertUtil.showError(context, "You don't have that much stock");
+        subTotalController.text = "0";
+        unitCostController.text = "0";
+        context.read<SaleItemListCubit>().updatesaleItem(
+              widget.index,
+              widget.saleItem.copyWith(quantity: 0, subTotal: 0, unitCost: 0),
+            );
+      } else {
+        double unitCost = double.parse(unitCostController.text.trim());
+        double subTotal = double.parse(subTotalController.text.trim());
+        int quantity = int.parse(quantityController.text.trim());
 
-    subTotal = unitCost * quantity;
+        subTotal = unitCost * quantity;
 
-    subTotalController.text = subTotal.toString();
-    context.read<SaleItemListCubit>().updatesaleItem(
-          widget.index,
-          widget.saleItem.copyWith(quantity: quantity, subTotal: subTotal),
-        );
+        subTotalController.text = subTotal.toString();
+        context.read<SaleItemListCubit>().updatesaleItem(
+              widget.index,
+              widget.saleItem.copyWith(quantity: quantity, subTotal: subTotal),
+            );
+      }
+    } else {
+      double unitCost = double.parse(unitCostController.text.trim());
+      double subTotal = double.parse(subTotalController.text.trim());
+      int quantity = int.parse(quantityController.text.trim());
+
+      subTotal = unitCost * quantity;
+
+      subTotalController.text = subTotal.toString();
+      context.read<SaleItemListCubit>().updatesaleItem(
+            widget.index,
+            widget.saleItem.copyWith(quantity: quantity, subTotal: subTotal),
+          );
+    }
   }
 
   @override
@@ -182,17 +207,45 @@ class _SingleSaleBlockState extends State<SingleSaleBlock> {
                               isRetail: value,
                             );
                           });
+                          if (widget.saleItem.radiator != null) {
+                            if (widget.saleItem.radiator!.quantity <
+                                int.parse(quantityController.text.trim())) {
+                              AppAlertUtil.showError(
+                                  context, "You don't have that much stock");
+                              subTotalController.text = "0";
+                              unitCostController.text = "0";
+                              context.read<SaleItemListCubit>().updatesaleItem(
+                                    widget.index,
+                                    widget.saleItem.copyWith(
+                                        quantity: 0, subTotal: 0, unitCost: 0),
+                                  );
+                            } else {
+                              context.read<SaleItemListCubit>().updatesaleItem(
+                                    widget.index,
+                                    widget.saleItem.copyWith(isRetail: value),
+                                  );
+                              unitCostController.text = value!
+                                  ? widget.saleItem.radiator!.retailPrice
+                                      .toString()
+                                  : widget.saleItem.radiator!.wholesaleRate
+                                      .toString();
 
-                          context.read<SaleItemListCubit>().updatesaleItem(
-                                widget.index,
-                                widget.saleItem.copyWith(isRetail: value),
-                              );
-                          unitCostController.text = value!
-                              ? widget.saleItem.radiator!.retailPrice.toString()
-                              : widget.saleItem.radiator!.wholesaleRate
-                                  .toString();
+                              updateUnitCost();
+                            }
+                          } 
+                          // else {
+                          //    context.read<SaleItemListCubit>().updatesaleItem(
+                          //           widget.index,
+                          //           widget.saleItem.copyWith(isRetail: value),
+                          //         );
+                          //     unitCostController.text = value!
+                          //         ? widget.saleItem.radiator!.retailPrice
+                          //             .toString()
+                          //         : widget.saleItem.radiator!.wholesaleRate
+                          //             .toString();
 
-                          updateUnitCost();
+                          //     updateUnitCost();
+                          // }
                         },
                       ),
                     ],

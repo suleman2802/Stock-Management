@@ -32,6 +32,14 @@ class SaleItemListCubit extends Cubit<List<SaleItem>> {
       }
       if (singleSaleItem.car == null) {
         return false;
+      }if (singleSaleItem.quantity == 0) {
+        return false;
+      }
+      if (singleSaleItem.subTotal == 0) {
+        return false;
+      }
+      if (singleSaleItem.unitCost == 0) {
+        return false;
       }
     }
     return true;

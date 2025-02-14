@@ -88,15 +88,44 @@ class SaleRepositoryImplementation implements SaleRepository {
 
   @override
   Future<List<Sale>> getAllSales(bool isAluminium) async {
+    //? to get all sales record
+    // try {
+    //   QuerySnapshot snapshot = await firestoreInstance
+    //       .collection(isAluminium ? 'salesA' : 'salesC')
+    //       .get();
+    //   List<Sale> sales = snapshot.docs.map((doc) {
+    //     return Sale.fromMap(doc.data() as Map<String, dynamic>);
+    //   }).toList();
+
+    //   log('Retrieved sales: $sales');
+    //   return sales;
+    // } catch (e) {
+    //   log('Failed to retrieve sales: $e');
+    //   return [];
+    // }
+    //? to get current month sales
     try {
+      // Get the current date
+      final now = DateTime.now();
+
+      // Calculate the start and end of the current month
+      final startOfMonth = DateTime(now.year, now.month, 1);
+      final endOfMonth =
+          DateTime(now.year, now.month + 1, 1).subtract(Duration(seconds: 1));
+
+      // Query Firestore to get sales within the current month
       QuerySnapshot snapshot = await firestoreInstance
           .collection(isAluminium ? 'salesA' : 'salesC')
+          .where('date', isGreaterThanOrEqualTo: startOfMonth.toIso8601String())
+          .where('date', isLessThanOrEqualTo: endOfMonth.toIso8601String())
           .get();
+
+      // Map the documents to Sale objects
       List<Sale> sales = snapshot.docs.map((doc) {
         return Sale.fromMap(doc.data() as Map<String, dynamic>);
       }).toList();
 
-      log('Retrieved sales: $sales');
+      log('Retrieved sales for current month: $sales');
       return sales;
     } catch (e) {
       log('Failed to retrieve sales: $e');
