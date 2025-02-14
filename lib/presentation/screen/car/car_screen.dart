@@ -114,7 +114,7 @@ class _CarScreenState extends State<CarScreen> {
                                 state.carList[index].carName,
                                 style: TextStyle(fontWeight: FontWeight.bold),
                               ),
-                              subtitle: Text(state.carList[index].carModel),
+                              subtitle:state.carList[index].carModel.isNotEmpty? Text(state.carList[index].carModel):null,
                               leading: CircleAvatar(
                                 backgroundColor: Theme.of(context).primaryColor,
                                 child: Text(

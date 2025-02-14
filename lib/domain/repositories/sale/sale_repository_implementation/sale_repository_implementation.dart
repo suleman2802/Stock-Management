@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../../../models/sale.dart';
+import '../../../models/sale_item.dart';
 import '../abstract_sale_repository/abstract_sale_repository.dart';
 
 class SaleRepositoryImplementation implements SaleRepository {
@@ -17,9 +18,54 @@ class SaleRepositoryImplementation implements SaleRepository {
           .set(sale.toMap());
 
       log('sale with ID $sale.id added successfully.');
+      for (SaleItem saleItem in sale.saleItems) {
+        updateRadiatorStockQuantity(saleItem.radiator!.id, saleItem.quantity);
+      }
+
       return true;
     } catch (e) {
       log('Failed to add sale: $e');
+      return false;
+    }
+  }
+
+  Future<bool> updateRadiatorStockQuantity(
+      String radiatorStockId, int newQuantity) async {
+    try {
+      // Retrieve all documents from the 'stocksA' collection
+      QuerySnapshot snapshot =
+          await firestoreInstance.collection('stocksA').get();
+
+      // Iterate through each document
+      for (var doc in snapshot.docs) {
+        final data = doc.data() as Map<String, dynamic>;
+        final radiatorStockList = data['radiatorStock'] as List<dynamic>?;
+
+        if (radiatorStockList != null) {
+          // Check if any RadiatorStock object matches the provided radiatorStockId
+          final updatedRadiatorStockList = radiatorStockList.map((item) {
+            final radiatorStock = item as Map<String, dynamic>;
+            if (radiatorStock['id'] == radiatorStockId) {
+              // Update the quantity of the matching RadiatorStock object
+              radiatorStock['quantity'] =
+                  radiatorStock['quantity'] - newQuantity;
+            }
+            return radiatorStock;
+          }).toList();
+
+          // Update the document with the modified radiatorStock list
+          await doc.reference.update({
+            'radiatorStock': updatedRadiatorStockList,
+          });
+
+          log('Updated quantity for RadiatorStock with ID $radiatorStockId in document ${doc.id}');
+        }
+      }
+
+      log('Successfully updated quantity for RadiatorStock with ID $radiatorStockId');
+      return true;
+    } catch (e) {
+      log('Failed to update quantity for RadiatorStock with ID $radiatorStockId: $e');
       return false;
     }
   }

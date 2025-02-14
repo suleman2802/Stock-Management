@@ -135,7 +135,10 @@ class _SaleFormScreenState extends State<SaleFormScreen> {
                 bool isAddedSuccessfully =
                     await context.read<SaleCubit>().addNewsale(
                         Sale(
-                          customerName: customerNameController.text.trim(),
+                          customerName:
+                              customerNameController.text.trim().isEmpty
+                                  ? "user"
+                                  : customerNameController.text.trim(),
                           totalBill: 0.0,
                           time: _selectedTime!,
                           date: _selectedDate!,
@@ -153,32 +156,33 @@ class _SaleFormScreenState extends State<SaleFormScreen> {
                   );
                 }
               } else {
-                //edit
-                bool isUpdatedSuccessfully =
-                    await context.read<SaleCubit>().updatesale(
-                          Sale(
-                            totalBill: 0.0,
-                            customerName:
-                                customerNameController.text.trim().isEmpty
-                                    ? "Customer"
-                                    : customerNameController.text.trim(),
-                            id: widget.sale!.id,
-                            time: _selectedTime!,
-                            date: _selectedDate!,
-                            saleItems: context
-                                .read<SaleItemListCubit>()
-                                .getAllListRecord(),
-                          ),
-                          widget.isAluminium,
-                        );
-                if (context.mounted) {
-                  generalAlert(
-                    context: context,
-                    isSuccessful: isUpdatedSuccessfully,
-                    tile: "Sale",
-                    type: AlertType.updated,
-                  );
-                }
+                // //edit
+                // bool isUpdatedSuccessfully =
+                //     await context.read<SaleCubit>().updatesale(
+                //           Sale(
+                //             totalBill: 0.0,
+                //             customerName:
+                //                 customerNameController.text.trim().isEmpty
+                //                     ? "Customer"
+                //                     : customerNameController.text.trim(),
+                //             id: widget.sale!.id,
+                //             time: _selectedTime!,
+                //             date: _selectedDate!,
+                //             saleItems: context
+                //                 .read<SaleItemListCubit>()
+                //                 .getAllListRecord(),
+                //           ),
+                //           widget.isAluminium,
+                //         );
+                // if (context.mounted) {
+                //   generalAlert(
+                //     context: context,
+                //     isSuccessful: isUpdatedSuccessfully,
+                //     tile: "Sale",
+                //     type: AlertType.updated,
+                //   );
+                // }
+                AppAlertUtil.showError(context, "Sale cann't be edited");
               }
               AppRouter.pop();
             } else {

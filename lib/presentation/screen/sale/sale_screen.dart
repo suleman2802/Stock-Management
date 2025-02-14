@@ -270,24 +270,24 @@ class _SaleScreenState extends State<SaleScreen> {
                                   style: TextStyle(color: Colors.white),
                                 ),
                               ),
-                              trailing: IconButton(
-                                onPressed: () async {
-                                  final bool isDeletedSuccessfully =
-                                      await context
-                                          .read<SaleCubit>()
-                                          .deleteSale(state.saleList[index].id,
-                                              isAluminium);
+                              // trailing: IconButton(
+                              //   onPressed: () async {
+                              //     final bool isDeletedSuccessfully =
+                              //         await context
+                              //             .read<SaleCubit>()
+                              //             .deleteSale(state.saleList[index].id,
+                              //                 isAluminium);
 
-                                  generalAlert(
-                                    context: context,
-                                    isSuccessful: isDeletedSuccessfully,
-                                    tile: "Sale",
-                                    type: AlertType.deleted,
-                                  );
-                                },
-                                icon: Icon(Icons.delete_forever,
-                                    color: Colors.red),
-                              ),
+                              //     generalAlert(
+                              //       context: context,
+                              //       isSuccessful: isDeletedSuccessfully,
+                              //       tile: "Sale",
+                              //       type: AlertType.deleted,
+                              //     );
+                              //   },
+                              //   icon: Icon(Icons.delete_forever,
+                              //       color: Colors.red),
+                              // ),
                             ),
                           ),
                         );

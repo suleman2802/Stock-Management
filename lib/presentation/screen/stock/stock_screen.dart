@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../domain/repositories/car/abstract_car_repository/abstract_car_repository.dart';
@@ -114,9 +113,11 @@ class _StockScreenState extends State<StockScreen> {
                   if (value.isNotEmpty) {
                     await context
                         .read<StockCubit>()
-                        .fetchAllStocksByCarName(value.trim(),isAluminium);
+                        .fetchAllStocksByCarName(value.trim(), isAluminium);
                   } else {
-                    await context.read<StockCubit>().fetchAllStocks(isAluminium);
+                    await context
+                        .read<StockCubit>()
+                        .fetchAllStocks(isAluminium);
                   }
                 },
                 leading: IconButton(
@@ -183,8 +184,10 @@ class _StockScreenState extends State<StockScreen> {
                                 state.stockList[index].car.carName,
                                 style: TextStyle(fontWeight: FontWeight.bold),
                               ),
-                              subtitle:
-                                  Text(state.stockList[index].car.carModel),
+                              subtitle: state
+                                      .stockList[index].car.carModel.isNotEmpty
+                                  ? Text(state.stockList[index].car.carModel)
+                                  : null,
                               leading: CircleAvatar(
                                 backgroundColor: Theme.of(context).primaryColor,
                                 child: Text(
@@ -199,7 +202,8 @@ class _StockScreenState extends State<StockScreen> {
                                       await context
                                           .read<StockCubit>()
                                           .deleteStock(
-                                              state.stockList[index].id,isAluminium);
+                                              state.stockList[index].id,
+                                              isAluminium);
 
                                   generalAlert(
                                     context: context,

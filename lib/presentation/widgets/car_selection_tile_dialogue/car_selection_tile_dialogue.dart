@@ -73,12 +73,12 @@ class _CarSelectionTileDialogueState extends State<CarSelectionTileDialogue> {
                 widget.selectedCar!.carName,
                 style: TextStyle(fontWeight: FontWeight.bold),
               ),
-              subtitle: Text(widget.selectedCar!.carModel),
+              subtitle:widget.selectedCar!.carModel.isNotEmpty? Text(widget.selectedCar!.carModel):null,
             ),
           )
         : Container(
             margin: EdgeInsets.only(bottom: 3),
-            child: BorderedContainer(
+            child: BorderedContainer(    
               child: Center(
                 child: TextButton(
                   onPressed: () {

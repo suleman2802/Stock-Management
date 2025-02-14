@@ -79,7 +79,7 @@ class _RowsScreenState extends State<RowsScreen> {
                             ),
                           ),
                         ),
-                        title: Text("${state.rowsList[index].noOfRows} mm"),
+                        title: Text("${state.rowsList[index].noOfRows} ${isAluminium?"mm":"rows"}"),
                         trailing: IconButton(
                           onPressed: () async {
                             final bool isDeletedSuccessfully = await context

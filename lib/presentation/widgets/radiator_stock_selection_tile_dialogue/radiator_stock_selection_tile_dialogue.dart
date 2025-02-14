@@ -209,9 +209,6 @@ class _RadiatorStockListBottomSheetState
                                 ],
                               ),
                               subtitle: Text(
-                                  //"(" +
-                                  //  list[index].company!.name +
-                                  //   ")" +
                                   list[index].radiator!.size),
                               leading: CircleAvatar(
                                 backgroundColor: Theme.of(context).primaryColor,
